@@ -1,3 +1,14 @@
+<?php
+
+// Consulta SQL para seleccionar los nombres de las canchas de fútbol
+$sql = "SELECT NOMBRE FROM canchas";
+
+// Ejecutar la consulta
+$canchas = mysqli_query($con, $sql);
+
+?>
+
+
 <div class="modal" id="exampleModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -20,7 +31,7 @@
         <div class="form-group">
           <label for="fecha_inicio" class="col-sm-12 control-label">Fecha Inicio</label>
           <div class="col-sm-10">
-            <select class="form-control" name="hora_inicio" id="select_hora_inicio">
+            <select class="form-control" name="select_hora_inicio" id="select_hora_inicio">
               <?php for ($i = 15; $i <= 23; $i++) {
                 echo "<option value='$i:00'>$i:00</option>";
               } ?>
@@ -30,31 +41,50 @@
         <div class="form-group">
           <label for="fecha_fin" class="col-sm-12 control-label">Fecha Final</label>
           <div class="col-sm-10">
-            <select class="form-control" name="hora_fin" id="select_hora_fin">
+            <select class="form-control" name="select_hora_fin" id="select_hora_fin">
               <?php for ($i = 16; $i <= 24; $i++) {
                 echo "<option value='$i:00'>$i:00</option>";
               } ?>
             </select>
           </div>
-
         </div>
-        
+
         <!-- campos escondidos que contienen la fecha       -->
         <div class="form-group">
-          
+
           <div class="col-sm-10">
-            <input type="hidden" class="form-control" name="hidden_hora_inicio" id="hidden_hora_inicio" placeholder="Fecha Inicio">
+            <input type="hidden" class="form-control" name="hidden_hora_inicio" id="hidden_hora_inicio"
+              placeholder="Fecha Inicio">
           </div>
         </div>
         <div class="form-group">
-          
+
           <div class="col-sm-10">
-            <input type="hidden" class="form-control" name="hidden_hora_fin" id="hidden_hora_fin" placeholder="Fecha Final">
+            <input type="hidden" class="form-control" name="hidden_hora_fin" id="hidden_hora_fin"
+              placeholder="Fecha Final">
           </div>
         </div>
 
-
-        <div class="col-md-12" id="grupoRadio">
+        <!-- Verificar si se obtuvieron resultados -->
+        <?php
+        if (mysqli_num_rows($canchas) > 0) {
+          // Generar el código HTML del desplegable
+          echo '<div class="form-group">
+                  <label for="fecha_fin" class="col-sm-12 control-label">Cancha:</label>
+                  <div class="col-sm-10">
+                    <select name="canchas" id="canchas" class="col-md-12 form-control mb-2">';
+          while ($fila = mysqli_fetch_assoc($canchas)) {
+            echo '<option value="' . $fila['_id'] . '">' . $fila['NOMBRE'] . '</option>';
+          }
+          echo '    </select>
+                  </div>
+                </div>
+                ';
+        } else {
+          echo "No se encontraron canchas de fútbol en la base de datos.";
+        }
+        ?>
+        <!-- <div class="col-md-12" id="grupoRadio">
 
           <input type="radio" name="color_evento" id="orange" value="#FF5722" checked>
           <label for="orange" class="circu" style="background-color: #FF5722;"> </label>
@@ -74,7 +104,7 @@
           <input type="radio" name="color_evento" id="indigo" value="#9c27b0">
           <label for="indigo" class="circu" style="background-color: #9c27b0;"> </label>
 
-        </div>
+        </div> -->
 
         <div class="modal-footer">
           <button type="submit" class="btn btn-success">Guardar Evento</button>

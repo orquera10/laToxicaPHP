@@ -17,7 +17,7 @@
   <?php
   include ('config.php');
 
-  $SqlEventos = ("SELECT * FROM eventoscalendar");
+  $SqlEventos = ("SELECT * FROM turnos");
   $resulEventos = mysqli_query($con, $SqlEventos);
 
   ?>
@@ -82,13 +82,15 @@
           $("#exampleModal").modal();
 
           // Obtener valores de los selectores de hora
-          var horaInicio = $("#select_hora_inicio").val();
-          var horaFin = $("#select_hora_fin").val();
+          // var horaInicio = $("#select_hora_inicio").val();
+          // var horaFin = $("#select_hora_fin").val();
+          // console.log(horaInicio);
+          // console.log(horaFin);
 
           // Construir fechas completas combinando las fechas seleccionadas del calendario con las horas seleccionadas
-          var fechaInicio = start.format('DD-MM-YYYY') + ' ' + horaInicio;
-          var fechaFin = end.format('DD-MM-YYYY') + ' ' + horaFin;
-          var fechaFinal =  moment(fechaFin, "DD-MM-YYYY HH:mm").subtract(1, 'days').format('DD-MM-YYYY HH:mm');
+          var fechaInicio = start.format('DD-MM-YYYY');
+          var fechaFin = end.format('DD-MM-YYYY');
+          var fechaFinal = moment(fechaFin, "DD-MM-YYYY").subtract(1, 'days').format('DD-MM-YYYY');
 
           // Asignar valores a los campos de fecha y hora
           $("input[name=hidden_hora_inicio]").val(fechaInicio);
@@ -98,12 +100,12 @@
         events: [
           <?php
           while ($dataEvento = mysqli_fetch_array($resulEventos)) { ?>
-                {
-              _id: '<?php echo $dataEvento['id']; ?>',
-              title: '<?php echo $dataEvento['evento']; ?>',
-              start: '<?php echo $dataEvento['fecha_inicio']; ?>',
-              end: '<?php echo $dataEvento['fecha_fin']; ?>',
-              color: '<?php echo $dataEvento['color_evento']; ?>'
+                  {
+              _id: '<?php echo $dataEvento['_id']; ?>',
+              title: '<?php echo $dataEvento['NOMBRE']; ?>',
+              start: '<?php echo $dataEvento['HORA_INICIO']; ?>',
+              end: '<?php echo $dataEvento['HORA_FIN']; ?>',
+              color: '<?php echo $dataEvento['FECHA']; ?>'
             },
           <?php } ?>
         ],
@@ -164,7 +166,7 @@
           // $('input[name=evento').val(event.title);
           // $('input[name=fecha_inicio').val(event.start.format('DD-MM-YYYY'));
           // $('input[name=fecha_fin').val(event.end.format("DD-MM-YYYY"));
-          
+
           $('label[name=evento').text(event.title);
           $('label[name=fecha_inicio').text(event.start.format('HH:mm'));
           $('label[name=fecha_fin').text(event.end.format("HH:mm"));

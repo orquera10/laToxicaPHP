@@ -11,7 +11,7 @@ $end              = $_REQUEST['end'];
 $fecha_fin        = date('Y-m-d', strtotime($end));  
 
 
-$UpdateProd = ("UPDATE eventoscalendar 
+$UpdateProd = ("UPDATE turnos 
     SET 
         fecha_inicio ='$fecha_inicio',
         fecha_fin ='$fecha_fin'
