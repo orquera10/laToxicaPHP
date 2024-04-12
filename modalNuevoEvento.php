@@ -1,17 +1,3 @@
-<?php
-// Obtener la fecha y hora actual
-$fechaHoraActual = date('yyyy-mm-dd'); // Formato: YYYY-MM-DD
-$horaInicio = '15:00';
-$horaFin = date('H:i', strtotime('+1 hour')); // Una hora después de la hora de inicio
-
-// Concatenar la fecha y la hora para obtener el formato adecuado para el campo de entrada "datetime-local"
-$fechaHoraInicio = $fechaHoraActual . 'T' . $horaInicio;
-$fechaHoraFin = $fechaHoraActual . 'T' . $horaFin;
-
-echo "<script>console.log('Nombre:', '" . $fechaHoraInicio . "');</script>";
-echo "<script>console.log('Nombre:', '" . $fechaHoraFin . "');</script>";
-?>
-
 <div class="modal" id="exampleModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -32,17 +18,39 @@ echo "<script>console.log('Nombre:', '" . $fechaHoraFin . "');</script>";
         <div class="form-group">
           <label for="fecha_inicio" class="col-sm-12 control-label">Fecha Inicio</label>
           <div class="col-sm-10">
-            <input type="datetime-local" class="form-control" name="fecha_inicio" id="fecha_inicio"
-              value="<?php echo $fechaHoraInicio; ?>" placeholder="Fecha Inicio">
+            <select class="form-control" name="hora_inicio" id="select_hora_inicio">
+              <?php for ($i = 15; $i <= 23; $i++) {
+                echo "<option value='$i:00'>$i:00</option>";
+              } ?>
+            </select>
           </div>
         </div>
         <div class="form-group">
           <label for="fecha_fin" class="col-sm-12 control-label">Fecha Final</label>
           <div class="col-sm-10">
-            <input type="datetime-local" class="form-control" name="fecha_fin" id="fecha_fin"
-              value="<?php echo $fechaHoraFin; ?>" placeholder="Fecha Final">
+            <select class="form-control" name="hora_fin" id="select_hora_fin">
+              <?php for ($i = 16; $i <= 24; $i++) {
+                echo "<option value='$i:00'>$i:00</option>";
+              } ?>
+            </select>
+          </div>
+
+        </div>
+        
+        <!-- campos escondidos que contienen la fecha       -->
+        <div class="form-group">
+          
+          <div class="col-sm-10">
+            <input type="hidden" class="form-control" name="hidden_hora_inicio" id="hidden_hora_inicio" placeholder="Fecha Inicio">
           </div>
         </div>
+        <div class="form-group">
+          
+          <div class="col-sm-10">
+            <input type="hidden" class="form-control" name="hidden_hora_fin" id="hidden_hora_fin" placeholder="Fecha Final">
+          </div>
+        </div>
+
 
         <div class="col-md-12" id="grupoRadio">
 

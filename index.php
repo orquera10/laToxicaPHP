@@ -80,18 +80,25 @@
         //Nuevo Evento
         select: function (start, end) {
           $("#exampleModal").modal();
-          $("input[name=fecha_inicio]").val(start.format('DD-MM-YYYY HH:mm'));
 
-          var valorFechaFin = end.format("DD-MM-YYYY HH:mm");
-          var F_final = moment(valorFechaFin, "DD-MM-YYYY HH:mm").subtract(1, 'days').format('DD-MM-YYYY HH:mm');
-          $('input[name=fecha_fin').val(F_final);
+          // Obtener valores de los selectores de hora
+          var horaInicio = $("#select_hora_inicio").val();
+          var horaFin = $("#select_hora_fin").val();
 
+          // Construir fechas completas combinando las fechas seleccionadas del calendario con las horas seleccionadas
+          var fechaInicio = start.format('DD-MM-YYYY') + ' ' + horaInicio;
+          var fechaFin = end.format('DD-MM-YYYY') + ' ' + horaFin;
+          var fechaFinal =  moment(fechaFin, "DD-MM-YYYY HH:mm").subtract(1, 'days').format('DD-MM-YYYY HH:mm');
+
+          // Asignar valores a los campos de fecha y hora
+          $("input[name=hidden_hora_inicio]").val(fechaInicio);
+          $("input[name=hidden_hora_fin]").val(fechaFinal);
         },
 
         events: [
           <?php
           while ($dataEvento = mysqli_fetch_array($resulEventos)) { ?>
-            {
+                {
               _id: '<?php echo $dataEvento['id']; ?>',
               title: '<?php echo $dataEvento['evento']; ?>',
               start: '<?php echo $dataEvento['fecha_inicio']; ?>',
