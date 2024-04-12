@@ -56,3 +56,7 @@ input {
 .activado input[type=radio]:checked + label {
   border: 3px solid #555 !important;  
 }
+
+.modalUpdate .modal-dialog{
+  min-width: 90vw !important;
+}

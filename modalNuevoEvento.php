@@ -7,6 +7,8 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+
+      <!-- llamada a la funcion para agregar evento -->
       <form name="formEvento" id="formEvento" action="nuevoEvento.php" class="form-horizontal" method="POST">
         <div class="form-group">
           <label for="evento" class="col-sm-12 control-label">Nombre del Evento</label>

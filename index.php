@@ -160,10 +160,14 @@
         //Modificar Evento del Calendario 
         eventClick: function (event) {
           var idEvento = event._id;
-          $('input[name=idEvento').val(idEvento);
-          $('input[name=evento').val(event.title);
-          $('input[name=fecha_inicio').val(event.start.format('DD-MM-YYYY'));
-          $('input[name=fecha_fin').val(event.end.format("DD-MM-YYYY"));
+          // $('input[name=idEvento').val(idEvento);
+          // $('input[name=evento').val(event.title);
+          // $('input[name=fecha_inicio').val(event.start.format('DD-MM-YYYY'));
+          // $('input[name=fecha_fin').val(event.end.format("DD-MM-YYYY"));
+          
+          $('label[name=evento').text(event.title);
+          $('label[name=fecha_inicio').text(event.start.format('HH:mm'));
+          $('label[name=fecha_fin').text(event.end.format("HH:mm"));
 
           $("#modalUpdateEvento").modal();
         },
