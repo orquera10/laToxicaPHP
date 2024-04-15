@@ -2,32 +2,66 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Actualizar mi Eventox</h5>
+        <h5 class="modal-title">Agregar productos</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="row">
-        <div class="col-4">
-          <div class="d-flex">
-            <p>Nombre:</p>
-            <label id="evento" name="evento" class="col-sm-12"></label>
-          </div>
-          <div class="d-flex">
-            <p>Hora Entrada:</p>
-            <label id="fecha_inicio" name="fecha_inicio" class="col-sm-12"></label>
-          </div>
-          <div class="d-flex">
-            <p>Hora Salida:</p>
-            <label id="fecha_fin" name="fecha_fin" class="col-sm-12"></label>
-          </div>
-        </div>
-        <div class="col-8">
+      <div class="row m-0 p-0">
+        <div class="col-4 my-3">
+          <div class="row m-0 p-0">
+            <h5 class="mb-3">Datos Turno</h5>
 
+            <div class="d-flex col-12">
+              <p class="mr-2">Nombre:</p>
+              <label id="evento" name="evento"></label>
+            </div>
+            <div class="d-flex col-12">
+              <p class="mr-2">Hora Entrada:</p>
+              <label id="fecha_inicio" name="fecha_inicio"></label>
+            </div>
+            <div class="d-flex col-12">
+              <p class="mr-2">Hora Salida:</p>
+              <label id="fecha_fin" name="fecha_fin"></label>
+            </div>
+            <div class="d-flex col-12">
+              <p class="mr-2">Cancha:</p>
+              <label id="cancha" name="cancha"></label>
+            </div>
+          </div>
+
+          <!-- id evento oculto en el input -->
+          <input type="hidden" class="form-control" name="idEvento" id="idEvento">
+        </div>
+        <div class="col-8 my-3">
+          <h5 class="mb-3">Detalle</h5>
+          <!-- Tabla para productos -->
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Producto</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Precio Unitario</th>
+                <th scope="col">Total</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody id="tablaProductos">
+              <!-- completar tabla con productos en detalle -->
+            </tbody>
+          </table>
         </div>
       </div>
-      <!-- llamada a funciona para actualizar evento -->
-      <!-- <form name="formEventoUpdate" id="formEventoUpdate" action="UpdateEvento.php" class="form-horizontal"
+
+      <div class="row m-0 p-0">
+        <div class="col-4">
+          <p>Total Cancha:</p>
+        </div>
+        <div class="col-8">
+          <p>Total Productos:</p>
+        </div>
+        <!-- llamada a funciona para actualizar evento -->
+        <!-- <form name="formEventoUpdate" id="formEventoUpdate" action="UpdateEvento.php" class="form-horizontal"
         method="POST">
         <input type="hidden" class="form-control" name="idEvento" id="idEvento">
         <div class="form-group">
@@ -78,6 +112,8 @@
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
         </div>
       </form> -->
+
+      </div>
 
     </div>
   </div>

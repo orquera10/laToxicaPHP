@@ -17,10 +17,11 @@
   <?php
   include ('config.php');
 
-  $SqlEventos = ("SELECT * FROM turnos");
+  $SqlEventos = ('SELECT turnos.*, clientes.NOMBRE as nombre_usuario, canchas.NOMBRE as nombre_cancha FROM turnos INNER JOIN clientes ON turnos.id_CLIENTE = clientes._id INNER JOIN canchas ON turnos.id_CANCHA = canchas._id');
   $resulEventos = mysqli_query($con, $SqlEventos);
 
   ?>
+
   <div class="mt-5"></div>
 
   <div class="container">
@@ -39,8 +40,6 @@
     </div>
   </div>
 
-
-
   <div id="calendar"></div>
 
 
@@ -48,8 +47,6 @@
   include ('modalNuevoEvento.php');
   include ('modalUpdateEvento.php');
   ?>
-
-
 
   <script src="js/jquery-3.0.0.min.js"> </script>
   <script src="js/popper.min.js"></script>
@@ -81,12 +78,6 @@
         select: function (start, end) {
           $("#exampleModal").modal();
 
-          // Obtener valores de los selectores de hora
-          // var horaInicio = $("#select_hora_inicio").val();
-          // var horaFin = $("#select_hora_fin").val();
-          // console.log(horaInicio);
-          // console.log(horaFin);
-
           // Construir fechas completas combinando las fechas seleccionadas del calendario con las horas seleccionadas
           var fechaInicio = start.format('DD-MM-YYYY');
           var fechaFin = end.format('DD-MM-YYYY');
@@ -100,12 +91,13 @@
         events: [
           <?php
           while ($dataEvento = mysqli_fetch_array($resulEventos)) { ?>
-                  {
+                                {
               _id: '<?php echo $dataEvento['_id']; ?>',
-              title: '<?php echo $dataEvento['NOMBRE']; ?>',
+              title: '<?php echo $dataEvento['nombre_usuario']; ?>',
               start: '<?php echo $dataEvento['HORA_INICIO']; ?>',
               end: '<?php echo $dataEvento['HORA_FIN']; ?>',
-              color: '<?php echo $dataEvento['FECHA']; ?>'
+              color: '<?php echo $dataEvento['COLOR']; ?>',
+              cancha: '<?php echo $dataEvento['nombre_cancha']; ?>',
             },
           <?php } ?>
         ],
@@ -162,36 +154,86 @@
         //Modificar Evento del Calendario 
         eventClick: function (event) {
           var idEvento = event._id;
-          // $('input[name=idEvento').val(idEvento);
-          // $('input[name=evento').val(event.title);
-          // $('input[name=fecha_inicio').val(event.start.format('DD-MM-YYYY'));
-          // $('input[name=fecha_fin').val(event.end.format("DD-MM-YYYY"));
-
+          $('input[name=idEvento').val(idEvento);
           $('label[name=evento').text(event.title);
           $('label[name=fecha_inicio').text(event.start.format('HH:mm'));
           $('label[name=fecha_fin').text(event.end.format("HH:mm"));
+          $('label[name=cancha').text(event.cancha);
 
-          $("#modalUpdateEvento").modal();
+          // Enviar una solicitud AJAX para cargar los productos correspondientes al idEvento
+          $.ajax({
+            url: 'cargarProductosModalUpdate.php',
+            type: 'POST',
+            data: { idEvento: idEvento },
+            success: function (response) {
+              // Insertar los productos en la tabla dentro del modal
+              $('#tablaProductos').html(response);
+              // Abrir el modal
+              $("#modalUpdateEvento").modal();
+            },
+            error: function (xhr, status, error) {
+              console.error(xhr.responseText);
+            }
+          });
         },
-
-
       });
-
 
       //Oculta mensajes de Notificacion
       setTimeout(function () {
         $(".alert").slideUp(300);
       }, 3000);
+    });
+  </script>
 
+  <!-- Script para manejar la selección de cliente ------------------------------------------->
+  <script>
+    // Función para manejar la selección de cliente
+    $(document).on('click', '.seleccionar-cliente', function () {
+      var cliente_id = $(this).data('id');
+      var cliente_nombre = $(this).text();
+      // Actualizar el valor del input del cliente
+      $('#evento').val(cliente_nombre);
+      // Opcional: Puedes guardar el ID del cliente en un campo oculto si lo necesitas
+      $('#cliente_id').val(cliente_id);
+      // Cerrar solo el modal de selección de clientes
+      $('#clientesModal').modal('hide');
+    });
+  </script>
 
+  <!-- Script para eliminar un producto del evento --------------------------------------------->
+
+  <script>
+    function actualizarTablaProductos() {
+      $("#tablaProductos").load("contenidoModalUpdate.php", { idEvento: $('#idEvento').val() }, function (response, status, xhr) {
+        if (status == "error") {
+          console.error(xhr.responseText);
+        }
+      });
+    }
+    // Capturar el clic del botón "Eliminar"
+    $(document).on("click", ".btnEliminarProducto", function () {
+      // Obtener el idProducto desde el atributo data
+      var idProducto = $(this).data("idproducto");
+
+      // Realizar una solicitud AJAX para eliminar el producto
+      $.ajax({
+        url: 'deleteProductoEvento.php',
+        method: 'POST',
+        data: { idProducto: idProducto },
+        success: function (response) {
+          // Manejar la respuesta del servidor si es necesario
+          console.log(response);
+          // Actualizar la tabla de productos si se eliminó correctamente
+          actualizarTablaProductos();
+        },
+        error: function (xhr, status, error) {
+          // Manejar errores si los hay
+          console.error(xhr.responseText);
+        }
+      });
     });
 
   </script>
-
-
-  <!--------- WEB DEVELOPER ------>
-  <!--------- URIAN VIERA   ----------->
-  <!--------- PORTAFOLIO:  https://blogangular-c7858.web.app  -------->
 
 </body>
 
