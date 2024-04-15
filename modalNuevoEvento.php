@@ -14,9 +14,10 @@ $canchas = mysqli_query($con, $sql);
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Registrar Nuevo Evento</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button>
+        </button> -->
       </div>
 
       <!-- llamada a la funcion para agregar evento -->
@@ -29,8 +30,7 @@ $canchas = mysqli_query($con, $sql);
               <input type="text" class="form-control" name="evento" id="evento" placeholder="Cliente" disabled
                 required />
               <!-- Botón para abrir el modal -->
-              <button type="button" class="btn btn-primary ml-2" data-toggle="modal"
-                data-target="#clientesModal">Buscar</button>
+              <button type="button" class="btn btn-primary ml-2" onclick="abrirModalCliente()">Buscar</button>
             </div>
             <!-- campo oculto para almacenar id de usuario seleccionado -->
             <input type="hidden" name="cliente_id" id="cliente_id" value="">
@@ -38,14 +38,13 @@ $canchas = mysqli_query($con, $sql);
         </div>
 
         <!-- Modal de clientes ----------------------------------------------------------------------------------------------->
-        <div class="modal" id="clientesModal" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
+        <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Seleccionar Cliente</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title fs-5" id="clientesModalLabel">Seleccionar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
               <div class="modal-body">
@@ -67,7 +66,7 @@ $canchas = mysqli_query($con, $sql);
                 ?>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
               </div>
             </div>
           </div>
@@ -149,10 +148,17 @@ $canchas = mysqli_query($con, $sql);
 
         <div class="modal-footer">
           <button type="submit" class="btn btn-success">Guardar Evento</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
         </div>
       </form>
 
     </div>
   </div>
 </div>
+
+<!-- abre el modal que muestra los clientes cargados --------------------------------------->
+<script>
+  function abrirModalCliente() {
+    $('#clientesModal').modal('show');
+  }
+</script>

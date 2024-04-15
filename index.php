@@ -8,7 +8,9 @@
   <link rel="stylesheet" type="text/css" href="css/fullcalendar.min.css">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"> -->
   <link rel="stylesheet" type="text/css" href="css/home.css">
 </head>
 
@@ -50,7 +52,10 @@
 
   <script src="js/jquery-3.0.0.min.js"> </script>
   <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <!-- <script src="js/bootstrap.min.js"></script> -->
 
   <script type="text/javascript" src="js/moment.min.js"></script>
   <script type="text/javascript" src="js/fullcalendar.min.js"></script>
@@ -76,7 +81,7 @@
 
         //Nuevo Evento
         select: function (start, end) {
-          $("#exampleModal").modal();
+          $("#exampleModal").modal("show");
 
           // Construir fechas completas combinando las fechas seleccionadas del calendario con las horas seleccionadas
           var fechaInicio = start.format('DD-MM-YYYY');
@@ -86,12 +91,16 @@
           // Asignar valores a los campos de fecha y hora
           $("input[name=hidden_hora_inicio]").val(fechaInicio);
           $("input[name=hidden_hora_fin]").val(fechaFinal);
+
+          // myModal.addEventListener('shown.bs.modal', () => {
+          //   myInput.focus()
+          // })
         },
 
         events: [
           <?php
           while ($dataEvento = mysqli_fetch_array($resulEventos)) { ?>
-                                {
+                                        {
               _id: '<?php echo $dataEvento['_id']; ?>',
               title: '<?php echo $dataEvento['nombre_usuario']; ?>',
               start: '<?php echo $dataEvento['HORA_INICIO']; ?>',
@@ -169,7 +178,7 @@
               // Insertar los productos en la tabla dentro del modal
               $('#tablaProductos').html(response);
               // Abrir el modal
-              $("#modalUpdateEvento").modal();
+              $("#modalUpdateEvento").modal("show");
             },
             error: function (xhr, status, error) {
               console.error(xhr.responseText);
@@ -201,10 +210,9 @@
   </script>
 
   <!-- Script para eliminar un producto del evento --------------------------------------------->
-
   <script>
     function actualizarTablaProductos() {
-      $("#tablaProductos").load("contenidoModalUpdate.php", { idEvento: $('#idEvento').val() }, function (response, status, xhr) {
+      $("#tablaProductos").load("cargarProductosModalUpdate.php", { idEvento: $('#idEvento').val() }, function (response, status, xhr) {
         if (status == "error") {
           console.error(xhr.responseText);
         }

@@ -1,5 +1,6 @@
 <?php
 include('config.php');
+
 // Obtener el idEvento desde $_POST
 if (isset($_POST['idEvento'])) {
     $idEvento = $_POST['idEvento'];
@@ -30,7 +31,7 @@ if (isset($_POST['idEvento'])) {
             $html .= "<td>" . $row["cantidad"] . "</td>";
             $html .= "<td>" . $row["precio"] . "</td>";
             $html .= "<td>" . $row["total"] . "</td>";
-            $html .= "<td><button class='btn-danger btnEliminarProducto' data-idProducto='" . $row["idProducto"] . "'>Eliminar</button></td>";
+            $html .= "<td><button class='btn btn-danger btnEliminarProducto' data-idProducto='" . $row["idProducto"] . "'>Eliminar</button></td>";
             $html .= "</tr>";
         }
         // Imprimir el HTML
