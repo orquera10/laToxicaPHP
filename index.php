@@ -100,7 +100,7 @@
         events: [
           <?php
           while ($dataEvento = mysqli_fetch_array($resulEventos)) { ?>
-                                        {
+                                                          {
               _id: '<?php echo $dataEvento['_id']; ?>',
               title: '<?php echo $dataEvento['nombre_usuario']; ?>',
               start: '<?php echo $dataEvento['HORA_INICIO']; ?>',
@@ -160,7 +160,7 @@
         //   });
         // },
 
-        //Modificar Evento del Calendario 
+        //Abrir ventana modal para visualizar datos del turno y productos que contiene 
         eventClick: function (event) {
           var idEvento = event._id;
           $('input[name=idEvento').val(idEvento);
@@ -222,12 +222,13 @@
     $(document).on("click", ".btnEliminarProducto", function () {
       // Obtener el idProducto desde el atributo data
       var idProducto = $(this).data("idproducto");
+      var idEvento = $('#idEvento').val();
 
       // Realizar una solicitud AJAX para eliminar el producto
       $.ajax({
         url: 'deleteProductoEvento.php',
         method: 'POST',
-        data: { idProducto: idProducto },
+        data: { idProducto: idProducto, idEvento: idEvento },
         success: function (response) {
           // Manejar la respuesta del servidor si es necesario
           console.log(response);
@@ -241,6 +242,104 @@
       });
     });
 
+  </script>
+
+<!-- script para al hacer click en una tarjeta y obtener datos del producto seleccionado ----------------->
+  <script>
+    $(document).ready(function () {
+      // Al hacer clic en una tarjeta
+      $('.tarjeta').click(function () {
+        // Quitar la clase 'selected' de todas las tarjetas
+        $('.tarjeta').removeClass('selected');
+
+        // Agregar la clase 'selected' a la tarjeta clicada
+        $(this).addClass('selected');
+
+        // Obtener los datos del producto seleccionado
+        var nombre = $(this).data('nombre');
+        var precio = $(this).data('precio');
+        var idProducto = $(this).data('id');
+
+        // Mostrar los detalles del producto en los cuadros de texto
+        $('#nombreProducto').val(nombre);
+        $('#precioProducto').val(precio);
+        $('#idProducto').val(idProducto);
+      });
+    });
+  </script>
+
+  <!-- Script para manejar el evento de clic del botón "Agregar" en el modal de productos -->
+  <script>
+    $(document).ready(function () {
+      // Evento de clic del botón "Agregar" en el modal de productos
+      $('#agregarProducto').click(function () {
+        // Obtener los detalles del producto seleccionado
+        var idEvento = $('#idEvento').val();
+        var idProducto = $('#idProducto').val();
+        var cantidad = $('#cantidadProducto').val();
+
+        // Validar la cantidad
+        if (cantidad <= 0) {
+          alert('La cantidad debe ser mayor que cero.');
+          return;
+        }
+
+        // Realizar la petición AJAX para insertar el detalle del ticket
+        $.ajax({
+          url: 'agregarProductoTicket.php', // URL del script PHP que insertará el detalle del ticket
+          method: 'POST',
+          data: {
+            idEvento: idEvento,
+            idProducto: idProducto,
+            cantidad: cantidad
+          },
+          success: function (response) {
+            var jsonResponse = JSON.parse(response);
+            // Manejar la respuesta del servidor
+            if (jsonResponse.success) {
+              // Actualizar la tabla de productos en el modal
+              actualizarTablaProductos();
+
+              // Cerrar el modal de productos
+              $('#productosModal').modal('hide');
+            } else {
+              // Error al agregar el producto al ticket
+              alert('Error al agregar el producto al ticket: ' + response.message);
+            }
+          },
+          error: function () {
+            alert('Error de conexión con el servidor.');
+          }
+        });
+      });
+    });
+  </script>
+
+  <!-- script para reestablecer el modal de agregar productos ---------------------------->
+  <script>
+    $(document).ready(function () {
+      // Evento que se activa cuando se muestra el modal de productos
+      $('#productosModal').on('show.bs.modal', function () {
+        // Restablecer la selección de tarjetas
+        $('.tarjeta').removeClass('selected');
+
+        // Restablecer los valores de los campos
+        $('#nombreProducto').val('');
+        $('#precioProducto').val('');
+        $('#cantidadProducto').val('1');
+      });
+
+      // Evento de clic del botón "Agregar"
+      $('#agregarProducto').click(function () {
+        // Obtener los detalles del producto seleccionado y la cantidad
+        var idProducto = $('#idProducto').val();
+        var nombreProducto = $('#nombreProducto').val();
+        var precioProducto = $('#precioProducto').val();
+        var cantidadProducto = $('#cantidadProducto').val();
+
+        // Aquí puedes agregar tu lógica para agregar el producto al ticket
+      });
+    });
   </script>
 
 </body>

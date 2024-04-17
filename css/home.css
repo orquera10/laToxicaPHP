@@ -60,3 +60,33 @@ input {
 .modalUpdate .modal-dialog{
   min-width: 90vw !important;
 }
+
+/* Estilos para el contenedor de las tarjetas */
+#contenedorTarjetas {
+  max-height: 200px; /* Altura fija */
+  overflow-x: auto; /* Desbordamiento horizontal con barra de desplazamiento */
+  white-space: nowrap; /* Evitar el salto de línea */
+}
+
+/* Estilos para las tarjetas */
+.tarjeta {
+  display: inline-block;
+  width: 150px; /* Ancho fijo */
+  margin-right: 10px; /* Espacio entre tarjetas */
+  border: 1px solid #ccc; /* Borde predeterminado */
+  padding: 10px;
+  cursor: pointer; /* Cambiar el cursor a mano */
+}
+
+/* Estilo para tarjeta seleccionada */
+.tarjeta.selected {
+  border-color: #007bff; /* Cambiar el borde a color primario */
+}
+
+/* Estilos para la imagen */
+.imagenProducto {
+  width: 100%; /* Ancho completo */
+  height: 100px; /* Altura fija */
+  object-fit: cover; /* Escalar la imagen para que se ajuste */
+  margin-bottom: 5px; /* Espacio inferior */
+}
