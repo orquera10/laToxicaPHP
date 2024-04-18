@@ -18,10 +18,18 @@
 
   <?php
   include ('config.php');
-
-  $SqlEventos = ('SELECT turnos.*, clientes.NOMBRE as nombre_usuario, canchas.NOMBRE as nombre_cancha FROM turnos INNER JOIN clientes ON turnos.id_CLIENTE = clientes._id INNER JOIN canchas ON turnos.id_CANCHA = canchas._id');
+  $SqlEventos = "SELECT 
+                  turnos.*, 
+                  clientes.NOMBRE as nombre_usuario, 
+                  canchas.NOMBRE as nombre_cancha, 
+                  ticket.TOTAL_CANCHA,
+                  ticket.TOTAL_DETALLE,
+                  ticket.TOTAL
+                FROM turnos 
+                INNER JOIN clientes ON turnos.id_CLIENTE = clientes._id 
+                INNER JOIN canchas ON turnos.id_CANCHA = canchas._id
+                LEFT JOIN ticket ON turnos._id = ticket.id_TURNO";
   $resulEventos = mysqli_query($con, $SqlEventos);
-
   ?>
 
   <div class="mt-5"></div>
@@ -100,13 +108,16 @@
         events: [
           <?php
           while ($dataEvento = mysqli_fetch_array($resulEventos)) { ?>
-                                                          {
+                                                                  {
               _id: '<?php echo $dataEvento['_id']; ?>',
               title: '<?php echo $dataEvento['nombre_usuario']; ?>',
               start: '<?php echo $dataEvento['HORA_INICIO']; ?>',
               end: '<?php echo $dataEvento['HORA_FIN']; ?>',
               color: '<?php echo $dataEvento['COLOR']; ?>',
               cancha: '<?php echo $dataEvento['nombre_cancha']; ?>',
+              total_cancha: '<?php echo $dataEvento['TOTAL_CANCHA']; ?>',
+              total_detalle: '<?php echo $dataEvento['TOTAL_DETALLE']; ?>',
+              total: '<?php echo $dataEvento['TOTAL']; ?>'
             },
           <?php } ?>
         ],
@@ -168,6 +179,10 @@
           $('label[name=fecha_inicio').text(event.start.format('HH:mm'));
           $('label[name=fecha_fin').text(event.end.format("HH:mm"));
           $('label[name=cancha').text(event.cancha);
+
+          $('span[name=total_cancha').text(event.total_cancha);
+          $('span[name=total_detalle').text(event.total_detalle);
+          $('span[name=total').text(event.total);
 
           // Enviar una solicitud AJAX para cargar los productos correspondientes al idEvento en la vista de detalle
           $.ajax({
@@ -233,6 +248,23 @@
         }
       });
     }
+    function actualizarTotales() {
+      $('span[name=total_cancha').load("cargarTotal.php", { idEvento: $('#idEvento').val(), tipoTotal:'total_cancha' }, function (response, status, xhr) {
+        if (status == "error") {
+          console.error(xhr.responseText);
+        }
+      });
+      $('span[name=total_detalle').load("cargarTotal.php", { idEvento: $('#idEvento').val(), tipoTotal:'total_detalle' }, function (response, status, xhr) {
+        if (status == "error") {
+          console.error(xhr.responseText);
+        }
+      });
+      $('span[name=total').load("cargarTotal.php", { idEvento: $('#idEvento').val(), tipoTotal:'total' }, function (response, status, xhr) {
+        if (status == "error") {
+          console.error(xhr.responseText);
+        }
+      });
+    }
     // Capturar el clic del botón "Eliminar"
     $(document).on("click", ".btnEliminarProducto", function () {
       // Obtener el idProducto desde el atributo data
@@ -249,6 +281,7 @@
           console.log(response);
           // Actualizar la tabla de productos si se eliminó correctamente
           actualizarTablaProductos();
+          actualizarTotales();
         },
         error: function (xhr, status, error) {
           // Manejar errores si los hay
@@ -259,7 +292,7 @@
 
   </script>
 
-<!-- script para al hacer click en una tarjeta y obtener datos del producto seleccionado ----------------->
+  <!-- script para al hacer click en una tarjeta y obtener datos del producto seleccionado ----------------->
   <script>
     $(document).ready(function () {
       // Al hacer clic en una tarjeta
@@ -314,6 +347,7 @@
             if (jsonResponse.success) {
               // Actualizar la tabla de productos en el modal
               actualizarTablaProductos();
+              actualizarTotales();
 
               // Cerrar el modal de productos
               $('#productosModal').modal('hide');
@@ -345,34 +379,17 @@
       });
 
       // Evento de clic del botón "Agregar"
-      $('#agregarProducto').click(function () {
-        // Obtener los detalles del producto seleccionado y la cantidad
-        var idProducto = $('#idProducto').val();
-        var nombreProducto = $('#nombreProducto').val();
-        var precioProducto = $('#precioProducto').val();
-        var cantidadProducto = $('#cantidadProducto').val();
+      // $('#agregarProducto').click(function () {
+      //   // Obtener los detalles del producto seleccionado y la cantidad
+      //   var idProducto = $('#idProducto').val();
+      //   var nombreProducto = $('#nombreProducto').val();
+      //   var precioProducto = $('#precioProducto').val();
+      //   var cantidadProducto = $('#cantidadProducto').val();
 
-        // Aquí puedes agregar tu lógica para agregar el producto al ticket
-      });
+      // Aquí puedes agregar tu lógica para agregar el producto al ticket
     });
+    // });
   </script>
-
-  <!-- script para cargar datos turno en modal de finalizar turno ---------------------------->
-  <!-- <script>
-    $(document).ready(function () {
-      // Evento que se activa cuando se muestra el modal de productos
-      $('#modalPago').on('show.bs.modal', function () {
-        
-        var nombreEvento = $('#evento').text();
-        // Restablecer los valores de los campos
-        $('#textoCliente').text(nombreEvento);
-        
-        
-      });
-
-      
-    });
-  </script> -->
 
   <!-- Script para actualizar productos en el modal de pago --------------------------------------------->
   <script>
@@ -384,7 +401,8 @@
       });
     }
     $('#modalPago').on('show.bs.modal', function () {
-        actualizarTablaProductosPago();
+      actualizarTablaProductosPago();
+      actualizarTotales();
     });
 
   </script>

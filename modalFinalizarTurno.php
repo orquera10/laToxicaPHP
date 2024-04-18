@@ -39,9 +39,9 @@
         <!-- Parte 3: Totales -->
         <div class="mb-3">
           <h5>Totales:</h5>
-          <p>Total Cancha: $50.00</p>
-          <p>Total Productos: $30.00</p>
-          <p>Total General: $80.00</p>
+          <p>Total Cancha: <span name="total_cancha"></span></p>
+          <p>Total Productos: <span name="total_detalle"></span></p>
+          <p>Total General: <span name="total"></span></p>
         </div>
       </div>
       <div class="modal-footer">

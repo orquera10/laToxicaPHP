@@ -1,6 +1,6 @@
 <?php
 // Conectar a la base de datos (configura tus propias credenciales)
-require ("config.php");
+require("config.php");
 
 // Verificar si se reciben los datos del formulario
 if (isset($_POST['idEvento'], $_POST['idProducto'], $_POST['cantidad'])) {
@@ -22,12 +22,12 @@ if (isset($_POST['idEvento'], $_POST['idProducto'], $_POST['cantidad'])) {
         $sql_exist = "SELECT * FROM detalle_ticket WHERE id_TICKET = '$idTicket' AND id_PRODUCTO = '$idProducto'";
         $result_exist = mysqli_query($con, $sql_exist);
 
-        // Si el producto ya existe en el ticket, aumentar la cantidad
+        // Si el producto ya existe en el ticket, aumentar la cantidad y actualizar el total
         if (mysqli_num_rows($result_exist) > 0) {
             $row_exist = mysqli_fetch_assoc($result_exist);
             $cantidad_existente = $row_exist['CANTIDAD'];
 
-            // Calcular la nueva cantidad
+            // Calcular la nueva cantidad y el nuevo subtotal
             $nueva_cantidad = $cantidad_existente + $cantidad;
 
             // Actualizar la cantidad del producto en el ticket
@@ -35,6 +35,8 @@ if (isset($_POST['idEvento'], $_POST['idProducto'], $_POST['cantidad'])) {
             $result_update = mysqli_query($con, $sql_update);
 
             if ($result_update) {
+                // Actualizar el total del ticket
+                actualizarTotalTicket($idTicket, $con);
                 $response = array("success" => true, "message" => "Cantidad del producto actualizada con éxito.");
                 echo json_encode($response);
             } else {
@@ -42,11 +44,13 @@ if (isset($_POST['idEvento'], $_POST['idProducto'], $_POST['cantidad'])) {
                 echo json_encode($response);
             }
         } else {
-            // El producto no existe en el ticket, insertarlo
+            // El producto no existe en el ticket, insertarlo y actualizar el total
             $sql_insert = "INSERT INTO detalle_ticket (id_TICKET, id_PRODUCTO, CANTIDAD) VALUES ('$idTicket', '$idProducto', '$cantidad')";
             $result_insert = mysqli_query($con, $sql_insert);
 
             if ($result_insert) {
+                // Actualizar el total del ticket
+                actualizarTotalTicket($idTicket, $con);
                 $response = array("success" => true, "message" => "Producto agregado al ticket con éxito.");
                 echo json_encode($response);
             } else {
@@ -67,4 +71,31 @@ if (isset($_POST['idEvento'], $_POST['idProducto'], $_POST['cantidad'])) {
     $response = array("success" => false, "message" => "No se recibieron los datos del formulario.");
     echo json_encode($response);
 }
+
+// Función para actualizar el total del ticket
+function actualizarTotalTicket($idTicket, $con) {
+    // Consulta SQL para obtener el total de los productos en el ticket
+    $sql_total_productos = "SELECT SUM(producto.PRECIO * detalle_ticket.CANTIDAD) AS total 
+                            FROM detalle_ticket 
+                            INNER JOIN producto ON detalle_ticket.id_PRODUCTO = producto._id 
+                            WHERE detalle_ticket.id_TICKET = '$idTicket'";
+    $result_total_productos = mysqli_query($con, $sql_total_productos);
+    $fila_total_productos = mysqli_fetch_assoc($result_total_productos);
+    $total_productos = $fila_total_productos['total'];
+
+    // Consulta SQL para obtener el total de la cancha en el ticket
+    $sql_total_cancha = "SELECT TOTAL_CANCHA FROM ticket WHERE _id = '$idTicket'";
+    $result_total_cancha = mysqli_query($con, $sql_total_cancha);
+    $fila_total_cancha = mysqli_fetch_assoc($result_total_cancha);
+    $total_cancha = $fila_total_cancha['TOTAL_CANCHA'];
+
+    // Calcular el nuevo total del ticket
+    $total_general = $total_cancha + $total_productos;
+
+    // Actualizar el total del ticket en la base de datos
+    $sql_update_total = "UPDATE ticket SET TOTAL_DETALLE = '$total_productos', TOTAL = '$total_general' WHERE _id = '$idTicket'";
+    mysqli_query($con, $sql_update_total);
+}
+
 ?>
+

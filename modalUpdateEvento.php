@@ -148,11 +148,14 @@ if ($resultado) {
         </div>
         <div class="row m-0 p-0">
           <div class="col-4">
-            <p>Total Cancha:</p>
+            <p>Total Cancha: <span name="total_cancha"></span></p>
           </div>
           <div class="col-8">
-            <p>Total Productos:</p>
+            <p>Total Productos: <span name="total_detalle"></span></p>
           </div>
+        </div>
+        <div class="row m-0 p-0" >
+            <p>Total Productos: <span name="total"></span></p>                
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
