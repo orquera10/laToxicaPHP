@@ -12,10 +12,10 @@
         <div class="mb-3">
           <h5>Datos del Turno:</h5>
           <!-- Aquí puedes mostrar los datos del turno -->
-          <p>Cliente: Nombre del Cliente</p>
-          <p>Hora Entrada: 08:00 AM</p>
-          <p>Hora Salida: 10:00 AM</p>
-          <p>Cancha: Nombre de la Cancha</p>
+          <p>Cliente: <label name="evento"></label></p>
+          <p>Hora Entrada: <label name="fecha_inicio"></label></p>
+          <p>Hora Salida: <label name="fecha_fin"></label></p>
+          <p>Cancha: <label name="cancha"></label></p>
         </div>
 
         <!-- Parte 2: Lista de Productos -->
@@ -30,13 +30,7 @@
                 <th>Subtotal</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Producto 1</td>
-                <td>$10.00</td>
-                <td>2</td>
-                <td>$20.00</td>
-              </tr>
+            <tbody id="tablaProductosPago" >
               <!-- Agrega más filas según los productos -->
             </tbody>
           </table>

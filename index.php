@@ -169,16 +169,31 @@
           $('label[name=fecha_fin').text(event.end.format("HH:mm"));
           $('label[name=cancha').text(event.cancha);
 
-          // Enviar una solicitud AJAX para cargar los productos correspondientes al idEvento
+          // Enviar una solicitud AJAX para cargar los productos correspondientes al idEvento en la vista de detalle
           $.ajax({
             url: 'cargarProductosModalUpdate.php',
             type: 'POST',
             data: { idEvento: idEvento },
             success: function (response) {
               // Insertar los productos en la tabla dentro del modal
-              $('#tablaProductos').html(response);
+              $('#tablaProductosDetalle').html(response);
               // Abrir el modal
               $("#modalUpdateEvento").modal("show");
+            },
+            error: function (xhr, status, error) {
+              console.error(xhr.responseText);
+            }
+          });
+          // Enviar una solicitud AJAX para cargar los productos correspondientes al idEvento en la vista de compra
+          $.ajax({
+            url: 'cargarProductosModalPago.php',
+            type: 'POST',
+            data: { idEvento: idEvento },
+            success: function (response) {
+              // Insertar los productos en la tabla dentro del modal
+              $('#tablaProductosPago').html(response);
+              // Abrir el modal
+              // $("#modalFinalizarTurno").modal("show");
             },
             error: function (xhr, status, error) {
               console.error(xhr.responseText);
@@ -212,7 +227,7 @@
   <!-- Script para eliminar un producto del evento --------------------------------------------->
   <script>
     function actualizarTablaProductos() {
-      $("#tablaProductos").load("cargarProductosModalUpdate.php", { idEvento: $('#idEvento').val() }, function (response, status, xhr) {
+      $("#tablaProductosDetalle").load("cargarProductosModalUpdate.php", { idEvento: $('#idEvento').val() }, function (response, status, xhr) {
         if (status == "error") {
           console.error(xhr.responseText);
         }
@@ -340,6 +355,38 @@
         // Aquí puedes agregar tu lógica para agregar el producto al ticket
       });
     });
+  </script>
+
+  <!-- script para cargar datos turno en modal de finalizar turno ---------------------------->
+  <!-- <script>
+    $(document).ready(function () {
+      // Evento que se activa cuando se muestra el modal de productos
+      $('#modalPago').on('show.bs.modal', function () {
+        
+        var nombreEvento = $('#evento').text();
+        // Restablecer los valores de los campos
+        $('#textoCliente').text(nombreEvento);
+        
+        
+      });
+
+      
+    });
+  </script> -->
+
+  <!-- Script para actualizar productos en el modal de pago --------------------------------------------->
+  <script>
+    function actualizarTablaProductosPago() {
+      $("#tablaProductosPago").load("cargarProductosModalPago.php", { idEvento: $('#idEvento').val() }, function (response, status, xhr) {
+        if (status == "error") {
+          console.error(xhr.responseText);
+        }
+      });
+    }
+    $('#modalPago').on('show.bs.modal', function () {
+        actualizarTablaProductosPago();
+    });
+
   </script>
 
 </body>

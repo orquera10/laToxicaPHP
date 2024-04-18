@@ -81,7 +81,7 @@ if ($resultado) {
                   <th scope="col"></th>
                 </tr>
               </thead>
-              <tbody id="tablaProductos">
+              <tbody id="tablaProductosDetalle">
                 <!-- completar tabla con productos en detalle -->
               </tbody>
             </table>
