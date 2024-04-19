@@ -234,22 +234,6 @@
               console.error(xhr.responseText);
             }
           });
-          // Enviar una solicitud AJAX para cargar los productos correspondientes al idEvento en la vista de compra
-          // $.ajax({
-          //   url: 'cargarProductos.php',
-          //   type: 'POST',
-          //   data: { idEvento: idEvento },
-          //   success: function (response) {
-          //     console.log(response);
-          //     // Insertar los productos en la tabla dentro del modal
-          //     $('#tablaProductosPago').html(response);
-          //     // Abrir el modal
-          //     // $("#modalFinalizarTurno").modal("show");
-          //   },
-          //   error: function (xhr, status, error) {
-          //     console.error(xhr.responseText);
-          //   }
-          // });
         },
       });
 
