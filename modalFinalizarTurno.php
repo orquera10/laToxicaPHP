@@ -43,11 +43,20 @@
           <p>Total Productos: <span name="total_detalle"></span></p>
           <p>Total General: <span name="total"></span></p>
         </div>
+
+        <!-- Parte 4: Inputs para tipo de pago -->
+        <div class="mb-3">
+          <h5>Pago:</h5>
+          <label for="pagoEfectivo" class="col-sm-12 control-label">Pago efectivo: </label>
+          <input type="number" class="form-control" name="pagoEfectivo" id="pagoEfectivo" value="0" required />
+          <label for="pagoTransf" class="col-sm-12 control-label">Pago Transferencia: </label>
+          <input type="number" class="form-control" name="pagoTransf" id="pagoTransf" value="0" required />
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         <!-- Botón para realizar alguna acción, como guardar los datos -->
-        <button type="button" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-primary" id="btnFinalizar" >Guardar</button>
       </div>
     </div>
   </div>

@@ -26,13 +26,15 @@ $InsertNuevoEvento = "INSERT INTO turnos (
         HORA_INICIO,
         HORA_FIN,
         COLOR,
-        id_CANCHA
+        id_CANCHA,
+        FINALIZADO
     ) VALUES (
         '" . $cliente_id . "',
         '" . $hora_inicial . "',
         '" . $hora_final . "',
         '" . $color_evento . "',
-        '" . $id_cancha . "'
+        '" . $id_cancha . "',
+        0
     )";
 
 $resultadoNuevoEvento = mysqli_query($con, $InsertNuevoEvento);
@@ -64,7 +66,9 @@ $diferencia_horas = round($diferencia_segundos / 3600); // 3600 segundos en una 
 $total_cancha = $diferencia_horas * $precio_cancha;
 
 // Consulta para insertar un nuevo detalle con total 0 y la fecha del turno
-$sql_insert_ticket = "INSERT INTO ticket (id_TURNO, FECHA, TOTAL_CANCHA, TOTAL_DETALLE, TOTAL, PAGO_TRANSFERENCIA, PAGO_EFECTIVO) VALUES ('$id_turno','$fecha_actual','$total_cancha', 0, '$total_cancha', 0, 0)";
+$sql_insert_ticket = "INSERT INTO ticket (id_TURNO, FECHA, TOTAL_CANCHA, TOTAL_DETALLE, TOTAL, PAGO_TRANSFERENCIA, PAGO_EFECTIVO) VALUES ('$id_turno', '$fecha_actual', '$total_cancha', 0, '$total_cancha', 0, 0)";
+
+
 $resultadoNuevoTicket = mysqli_query($con, $sql_insert_ticket);
 
 header("Location:index.php?e=1");

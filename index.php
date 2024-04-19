@@ -68,6 +68,7 @@
   <script type="text/javascript" src="js/moment.min.js"></script>
   <script type="text/javascript" src="js/fullcalendar.min.js"></script>
   <script src='locales/es.js'></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script type="text/javascript">
     $(document).ready(function () {
@@ -108,7 +109,7 @@
         events: [
           <?php
           while ($dataEvento = mysqli_fetch_array($resulEventos)) { ?>
-                                                                  {
+                                                                    {
               _id: '<?php echo $dataEvento['_id']; ?>',
               title: '<?php echo $dataEvento['nombre_usuario']; ?>',
               start: '<?php echo $dataEvento['HORA_INICIO']; ?>',
@@ -180,9 +181,9 @@
           $('label[name=fecha_fin').text(event.end.format("HH:mm"));
           $('label[name=cancha').text(event.cancha);
 
-          $('span[name=total_cancha').text(event.total_cancha);
-          $('span[name=total_detalle').text(event.total_detalle);
-          $('span[name=total').text(event.total);
+          // $('span[name=total_cancha').text(event.total_cancha);
+          // $('span[name=total_detalle').text(event.total_detalle);
+          // $('span[name=total').text(event.total);
 
           // Enviar una solicitud AJAX para cargar los productos correspondientes al idEvento en la vista de detalle
           $.ajax({
@@ -190,6 +191,7 @@
             type: 'POST',
             data: { idEvento: idEvento },
             success: function (response) {
+              actualizarTotales();
               // Insertar los productos en la tabla dentro del modal
               $('#tablaProductosDetalle').html(response);
               // Abrir el modal
@@ -249,17 +251,17 @@
       });
     }
     function actualizarTotales() {
-      $('span[name=total_cancha').load("cargarTotal.php", { idEvento: $('#idEvento').val(), tipoTotal:'total_cancha' }, function (response, status, xhr) {
+      $('span[name=total_cancha').load("cargarTotal.php", { idEvento: $('#idEvento').val(), tipoTotal: 'total_cancha' }, function (response, status, xhr) {
         if (status == "error") {
           console.error(xhr.responseText);
         }
       });
-      $('span[name=total_detalle').load("cargarTotal.php", { idEvento: $('#idEvento').val(), tipoTotal:'total_detalle' }, function (response, status, xhr) {
+      $('span[name=total_detalle').load("cargarTotal.php", { idEvento: $('#idEvento').val(), tipoTotal: 'total_detalle' }, function (response, status, xhr) {
         if (status == "error") {
           console.error(xhr.responseText);
         }
       });
-      $('span[name=total').load("cargarTotal.php", { idEvento: $('#idEvento').val(), tipoTotal:'total' }, function (response, status, xhr) {
+      $('span[name=total').load("cargarTotal.php", { idEvento: $('#idEvento').val(), tipoTotal: 'total' }, function (response, status, xhr) {
         if (status == "error") {
           console.error(xhr.responseText);
         }
@@ -405,6 +407,63 @@
       actualizarTotales();
     });
 
+  </script>
+
+  <!-- Script para manejar el evento de clic del botón "Agregar" en el modal de productos -->
+  <script>
+    $(document).ready(function () {
+      $('#btnFinalizar').click(function () {
+        // Obtener los valores de los campos
+        var idEvento = $('#idEvento').val();
+        var pagoEfectivo = $('#pagoEfectivo').val();
+        var pagoTransf = $('#pagoTransf').val();
+
+        console.log(idEvento, pagoEfectivo, pagoTransf);
+        // Realizar la solicitud AJAX
+        $.ajax({
+          url: 'finalizarTurno.php', // Ruta al script PHP
+          type: 'POST',
+          data: {
+            idTurno: idEvento,
+            pagoEfectivo: pagoEfectivo,
+            pagoTransferencia: pagoTransf
+          },
+          dataType: 'json',
+          success: function (response) {
+            console.log(response.success);
+            if (response.success) {
+              // Mostrar un mensaje de éxito utilizando SweetAlert2
+              Swal.fire({
+                icon: 'success',
+                title: '¡Turno finalizado!',
+                text: 'El turno se finalizó correctamente.',
+                confirmButtonText: 'Aceptar'
+              }).then((result) => {
+                // Redirigir al usuario al index.php
+                window.location.href = 'index.php';
+              });
+            } else {
+              // Mostrar un mensaje de error utilizando SweetAlert2
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un error al finalizar el turno: ' + response.message,
+                confirmButtonText: 'Aceptar'
+              });
+            }
+          },
+          error: function (xhr, status, error) {
+            // Mostrar un mensaje de error en caso de problemas con la solicitud AJAX
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Ocurrió un error al procesar la solicitud: ' + error,
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        });
+      });
+    });
   </script>
 
 </body>
