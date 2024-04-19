@@ -109,7 +109,7 @@
         events: [
           <?php
           while ($dataEvento = mysqli_fetch_array($resulEventos)) { ?>
-                                                                    {
+                                                                            {
               _id: '<?php echo $dataEvento['_id']; ?>',
               title: '<?php echo $dataEvento['nombre_usuario']; ?>',
               start: '<?php echo $dataEvento['HORA_INICIO']; ?>',
@@ -128,30 +128,63 @@
         eventRender: function (event, element) {
           element
             .find(".fc-content")
-            .prepend("<span id='btnCerrar'; class='closeon material-icons'>&#xe5cd;</span>");
+            .prepend("<span id='btnCerrar' class='closeon material-icons'>&#xe5cd;</span>");
 
           //Eliminar evento
           element.find(".closeon").on("click", function () {
+            // Desactivar eventos de clic en otros elementos
+            $('body').addClass('modal-open');
 
-            var pregunta = confirm("Deseas Borrar este Evento?");
-            if (pregunta) {
+            Swal.fire({
+              title: '¿Deseas borrar este evento?',
+              text: "Esta acción no se puede deshacer",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Sí, borrar',
+              cancelButtonText: 'Cancelar',
+              allowOutsideClick: false // Evitar cerrar el modal haciendo clic fuera de él
+            }).then((result) => {
+              if (result.isConfirmed) {
+                $("#calendar").fullCalendar("removeEvents", event._id);
 
-              $("#calendar").fullCalendar("removeEvents", event._id);
+                $.ajax({
+                  type: "POST",
+                  url: 'deleteEvento.php',
+                  data: { id: event._id },
+                  success: function () {
+                    // Habilitar eventos de clic en otros elementos
+                    $('body').removeClass('modal-open');
 
-              $.ajax({
-                type: "POST",
-                url: 'deleteEvento.php',
-                data: { id: event._id },
-                success: function () {
-                  $(".alert-danger").show();
+                    Swal.fire({
+                      icon: 'success',
+                      title: '¡Evento eliminado!',
+                      text: 'El evento ha sido eliminado correctamente.',
+                      showConfirmButton: false,
+                      timer: 1500
+                    }).then(() => {
+                      // Redireccionar a index.php
+                      window.location.href = 'index.php';
+                    });
+                  },
+                  error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    // Habilitar eventos de clic en otros elementos
+                    $('body').removeClass('modal-open');
 
-                  setTimeout(function () {
-                    $(".alert-danger").slideUp(500);
-                  }, 3000);
-
-                }
-              });
-            }
+                    Swal.fire({
+                      icon: 'error',
+                      title: '¡Error!',
+                      text: 'Hubo un problema al eliminar el evento.'
+                    });
+                  }
+                });
+              } else {
+                // Habilitar eventos de clic en otros elementos
+                $('body').removeClass('modal-open');
+              }
+            });
           });
         },
 
@@ -187,9 +220,9 @@
 
           // Enviar una solicitud AJAX para cargar los productos correspondientes al idEvento en la vista de detalle
           $.ajax({
-            url: 'cargarProductosModalUpdate.php',
+            url: 'cargarProductos.php',
             type: 'POST',
-            data: { idEvento: idEvento },
+            data: { idEvento: idEvento, includeButtons: true },
             success: function (response) {
               actualizarTotales();
               // Insertar los productos en la tabla dentro del modal
@@ -202,20 +235,21 @@
             }
           });
           // Enviar una solicitud AJAX para cargar los productos correspondientes al idEvento en la vista de compra
-          $.ajax({
-            url: 'cargarProductosModalPago.php',
-            type: 'POST',
-            data: { idEvento: idEvento },
-            success: function (response) {
-              // Insertar los productos en la tabla dentro del modal
-              $('#tablaProductosPago').html(response);
-              // Abrir el modal
-              // $("#modalFinalizarTurno").modal("show");
-            },
-            error: function (xhr, status, error) {
-              console.error(xhr.responseText);
-            }
-          });
+          // $.ajax({
+          //   url: 'cargarProductos.php',
+          //   type: 'POST',
+          //   data: { idEvento: idEvento },
+          //   success: function (response) {
+          //     console.log(response);
+          //     // Insertar los productos en la tabla dentro del modal
+          //     $('#tablaProductosPago').html(response);
+          //     // Abrir el modal
+          //     // $("#modalFinalizarTurno").modal("show");
+          //   },
+          //   error: function (xhr, status, error) {
+          //     console.error(xhr.responseText);
+          //   }
+          // });
         },
       });
 
@@ -244,7 +278,7 @@
   <!-- Script para eliminar un producto del evento --------------------------------------------->
   <script>
     function actualizarTablaProductos() {
-      $("#tablaProductosDetalle").load("cargarProductosModalUpdate.php", { idEvento: $('#idEvento').val() }, function (response, status, xhr) {
+      $("#tablaProductosDetalle").load("cargarProductos.php", { idEvento: $('#idEvento').val(), includeButtons: true }, function (response, status, xhr) {
         if (status == "error") {
           console.error(xhr.responseText);
         }
@@ -349,6 +383,7 @@
             if (jsonResponse.success) {
               // Actualizar la tabla de productos en el modal
               actualizarTablaProductos();
+              actualizarTablaPago();
               actualizarTotales();
 
               // Cerrar el modal de productos
@@ -395,21 +430,24 @@
 
   <!-- Script para actualizar productos en el modal de pago --------------------------------------------->
   <script>
-    function actualizarTablaProductosPago() {
-      $("#tablaProductosPago").load("cargarProductosModalPago.php", { idEvento: $('#idEvento').val() }, function (response, status, xhr) {
+    function actualizarTablaPago() {
+      $("#tablaProductosPago").load("cargarProductos.php", { idEvento: $('#idEvento').val() }, function (response, status, xhr) {
         if (status == "error") {
           console.error(xhr.responseText);
+        } else {
+          console.log(response); // Agrega este registro para imprimir el contenido devuelto por cargarProductos.php en la consola
         }
       });
     }
     $('#modalPago').on('show.bs.modal', function () {
-      actualizarTablaProductosPago();
+      idEvento = $('input[name=idEvento').val();
+      actualizarTablaPago();
       actualizarTotales();
     });
 
   </script>
 
-  <!-- Script para manejar el evento de clic del botón "Agregar" en el modal de productos -->
+  <!-- Guardar detalle del pago por transferencia y efectivo -->
   <script>
     $(document).ready(function () {
       $('#btnFinalizar').click(function () {
