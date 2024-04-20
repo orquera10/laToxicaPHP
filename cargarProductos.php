@@ -1,10 +1,9 @@
 <?php
-include('config.php');
+include ('config.php');
 
 // Obtener el idEvento desde $_POST
 if (isset($_POST['idEvento'])) {
     $idEvento = $_POST['idEvento'];
-    $includeButtons = isset($_POST['includeButtons']) ? $_POST['includeButtons'] : false;
 
     // Consulta preparada SQL para obtener los productos
     $sql = "SELECT p.NOMBRE AS producto, d.CANTIDAD AS cantidad, p.PRECIO AS precio, d.CANTIDAD * p.PRECIO AS total, p._id AS idProducto
@@ -30,15 +29,13 @@ if (isset($_POST['idEvento'])) {
     if (mysqli_num_rows($result) > 0) {
         // Construir el HTML de la tabla de productos
         $html = '';
-        while($row = mysqli_fetch_assoc($result)) {
+        while ($row = mysqli_fetch_assoc($result)) {
             $html .= "<tr>";
             $html .= "<td>" . htmlspecialchars($row["producto"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["cantidad"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["precio"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["total"]) . "</td>";
-            if ($includeButtons) {
-                $html .= "<td><button class='btn btn-danger btnEliminarProducto' data-idProducto='" . $row["idProducto"] . "'>Eliminar</button></td>";
-            }
+            $html .= "<td><button class='btn btn-danger btnEliminarProducto' data-idProducto='" . $row["idProducto"] . "'>Eliminar</button></td>";
             $html .= "</tr>";
         }
         // Imprimir el HTML
@@ -55,4 +52,3 @@ if (isset($_POST['idEvento'])) {
     echo "<tr><td colspan='4'>No se encuentra variable idEvento</td></tr>";
 }
 ?>
-

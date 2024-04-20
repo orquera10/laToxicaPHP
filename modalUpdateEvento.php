@@ -87,7 +87,7 @@ if ($resultado) {
             </table>
 
             <div class="d-flex justify-content-center">
-              <button class="btn btn-primary" onclick="abrirModalProductos()">Agregar</button>
+              <button class="btn btn-primary" id="agregarProductoModalUpdate" onclick="abrirModalProductos()">Agregar</button>
 
               <!-- Modal de carga de productos-------------------------------------------------------------->
               <div class="modal fade" id="productosModal" tabindex="-1" role="dialog"
@@ -159,7 +159,7 @@ if ($resultado) {
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="abrirModalPago()">Finalizar Turno</button>
+          <button type="button" class="btn btn-primary" id="finalizarTurno" onclick="abrirModalPago()">Finalizar Turno</button>
         </div>
       </div>
     </div>
