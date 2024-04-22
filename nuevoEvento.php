@@ -2,12 +2,12 @@
 date_default_timezone_set("America/Bogota");
 setlocale(LC_ALL, "es_ES");
 
-require ("config.php");
+require("config.php");
 
 $cliente_id = intval($_REQUEST['cliente_id']);
 $fecha = $_POST['hidden_hora_inicio'];
 
-$color_evento = "#2196F3"; //color predetermindado azul
+$color_evento = "#2196F3"; //color predeterminado azul
 $id_cancha = intval($_REQUEST["canchas"]);
 
 $hora_inicio = $_POST['select_hora_inicio'];
@@ -20,18 +20,30 @@ if (strtotime($hora_inicio) >= strtotime($hora_fin)) {
     exit; // Terminar la ejecución del script
 }
 
-// Consulta SQL para verificar si hay solapamiento de turnos
-$sql = "SELECT t.* FROM turnos t
-        INNER JOIN canchas c ON t.id_CANCHA = c._id
-        WHERE t.FECHA = '$fecha' 
-        AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
-        OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
-        AND (t.id_CANCHA = $id_cancha OR (c.NOMBRE = 'Cancha 1 y Cancha 2' AND t.id_CANCHA != $id_cancha))";
+// Inicializar la consulta SQL
+$sql = "";
+
+if ($id_cancha == 7) {
+    $sql = "SELECT t.* FROM turnos t
+            INNER JOIN canchas c ON t.id_CANCHA = c._id
+            WHERE t.FECHA = '$fecha' 
+            AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
+            OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
+            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1' OR c.NOMBRE = 'Cancha 2')";
+} else {
+    // Consulta SQL para verificar si hay solapamiento de turnos
+    $sql = "SELECT t.* FROM turnos t
+            INNER JOIN canchas c ON t.id_CANCHA = c._id
+            WHERE t.FECHA = '$fecha' 
+            AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
+            OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
+            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1 y Cancha 2')";
+}
 
 // Ejecutar consulta
 $resultado = mysqli_query($con, $sql);
 if (mysqli_num_rows($resultado) > 0) {
-    // Si la hora de inicio es mayor o igual que la hora de finalización, redirigir con un mensaje de error
+    // Si hay algún solapamiento de turnos, redirigir con un mensaje de error
     header("Location:index.php?error=El nuevo turno se solapa con otro existente en ese horario.");
     exit; // Terminar la ejecución del script
 }
@@ -56,17 +68,22 @@ $InsertNuevoEvento = "INSERT INTO turnos (
 
 $resultadoNuevoEvento = mysqli_query($con, $InsertNuevoEvento);
 
-// Crear detalle del turno y asignarle el id
+// Verificar si la inserción fue exitosa
+if (!$resultadoNuevoEvento) {
+    // Si hubo un error al insertar el evento, redirigir con un mensaje de error
+    header("Location:index.php?error=Error al insertar el nuevo turno: " . mysqli_error($con));
+    exit;
+}
 
 // Obtener el ID del último turno insertado
 $id_turno = mysqli_insert_id($con);
 
 // Obtener la fecha del turno para el detalle
-$fecha_actual = date('Y-m-d', strtotime($hora_inicial));
+$fecha_actual = date('Y-m-d', strtotime($hora_inicio));
 
-// Prepara la consulta SQL para obtener el precio de la cancha con el ID dado
+// Preparar la consulta SQL para obtener el precio de la cancha con el ID dado
 $sql = "SELECT PRECIO FROM canchas WHERE _id = $id_cancha";
-// Ejecuta la consulta SQL
+// Ejecutar la consulta SQL
 $resultado = mysqli_query($con, $sql);
 $fila = mysqli_fetch_assoc($resultado);
 $precio_cancha = $fila['PRECIO'];
