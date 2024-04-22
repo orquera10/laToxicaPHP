@@ -35,8 +35,12 @@ if (isset($_POST['idEvento'], $_POST['idProducto'], $_POST['cantidad'])) {
             $result_update = mysqli_query($con, $sql_update);
 
             if ($result_update) {
+                // Actualizar el stock del producto
+                actualizarStockProducto($idProducto, -$cantidad, $con);
+
                 // Actualizar el total del ticket
                 actualizarTotalTicket($idTicket, $con);
+
                 $response = array("success" => true, "message" => "Cantidad del producto actualizada con éxito.");
                 echo json_encode($response);
             } else {
@@ -49,8 +53,12 @@ if (isset($_POST['idEvento'], $_POST['idProducto'], $_POST['cantidad'])) {
             $result_insert = mysqli_query($con, $sql_insert);
 
             if ($result_insert) {
+                // Actualizar el stock del producto
+                actualizarStockProducto($idProducto, -$cantidad, $con);
+
                 // Actualizar el total del ticket
                 actualizarTotalTicket($idTicket, $con);
+
                 $response = array("success" => true, "message" => "Producto agregado al ticket con éxito.");
                 echo json_encode($response);
             } else {
@@ -70,6 +78,22 @@ if (isset($_POST['idEvento'], $_POST['idProducto'], $_POST['cantidad'])) {
     // Si no se reciben los datos del formulario, devolver un mensaje de error
     $response = array("success" => false, "message" => "No se recibieron los datos del formulario.");
     echo json_encode($response);
+}
+
+// Función para actualizar el stock del producto
+function actualizarStockProducto($idProducto, $cantidad, $con) {
+    // Consulta SQL para obtener el stock actual del producto
+    $sql_stock = "SELECT STOCK FROM producto WHERE _id = '$idProducto'";
+    $result_stock = mysqli_query($con, $sql_stock);
+    $fila_stock = mysqli_fetch_assoc($result_stock);
+    $stock_actual = $fila_stock['STOCK'];
+
+    // Calcular el nuevo stock
+    $nuevo_stock = $stock_actual + $cantidad;
+
+    // Actualizar el stock del producto en la base de datos
+    $sql_update_stock = "UPDATE producto SET STOCK = '$nuevo_stock' WHERE _id = '$idProducto'";
+    mysqli_query($con, $sql_update_stock);
 }
 
 // Función para actualizar el total del ticket
@@ -96,6 +120,4 @@ function actualizarTotalTicket($idTicket, $con) {
     $sql_update_total = "UPDATE ticket SET TOTAL_DETALLE = '$total_productos', TOTAL = '$total_general' WHERE _id = '$idTicket'";
     mysqli_query($con, $sql_update_total);
 }
-
 ?>
-
