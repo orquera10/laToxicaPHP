@@ -3,7 +3,7 @@
   margin: 0 auto;
 }
 
-#title{
+#title {
   color: #9c27b0;
   font-weight: 800;
   border-bottom: 3px solid coral;
@@ -16,55 +16,49 @@ input {
   display: none;
 }
 
-
-.fc-content{
+.fc-content {
   color: #fff !important;
   display: flex !important;
   /* justify-content: center !important; */
   align-items: center !important;
 }
 
-.fc-time{
+.fc-time {
   padding: 0 5px !important;
 }
 
-
-
-#btnCerrar{
-  color:crimson;
+#btnCerrar {
+  color: crimson;
   padding: 5px;
   background: #8888;
   border-radius: 25px;
   font-size: 17px;
   font-weight: 600;
 }
-#btnCerrar:hover{
+#btnCerrar:hover {
   cursor: pointer;
   background-color: #333;
 }
 
-
-
-.circu{
+.circu {
   padding: 25px;
   background: #ccc;
   border-radius: 50px;
 }
 
-#grupoRadio label:hover{
+#grupoRadio label:hover {
   cursor: pointer;
 }
 
 #grupoRadio input[type="radio"]:checked + label {
-  border: 3px solid #ccc !important;  
+  border: 3px solid #ccc !important;
 }
 
-
-.activado input[type=radio]:checked + label {
-  border: 3px solid #555 !important;  
+.activado input[type="radio"]:checked + label {
+  border: 3px solid #555 !important;
 }
 
-.modalUpdate .modal-dialog{
+.modalUpdate .modal-dialog {
   min-width: 90vw !important;
 }
 
@@ -96,4 +90,23 @@ input {
   height: 100px; /* Altura fija */
   object-fit: cover; /* Escalar la imagen para que se ajuste */
   margin-bottom: 5px; /* Espacio inferior */
+}
+
+/* Estilo para el elemento li en estado de hover */
+.modal-body ul li:hover {
+  background-color: #f0f0f0; /* Cambia el color de fondo al pasar el mouse */
+}
+
+/* Estilo para el enlace dentro del elemento li */
+.modal-body ul li a {
+  display: block;
+  padding: 5px 0;
+  text-decoration: none; /* Quita la subrayado que indica un enlace */
+  color: inherit; /* Hereda el color del texto del elemento padre */
+}
+
+/* Estilo para el enlace dentro del elemento li cuando se pasa el mouse */
+.modal-body ul li a:hover {
+  color: inherit; /* Mantiene el color del texto al pasar el mouse */
+  text-decoration: none; /* Quita el subrayado al pasar el mouse */
 }

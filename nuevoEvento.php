@@ -79,7 +79,7 @@ if (!$resultadoNuevoEvento) {
 $id_turno = mysqli_insert_id($con);
 
 // Obtener la fecha del turno para el detalle
-$fecha_actual = date('Y-m-d', strtotime($hora_inicio));
+$fecha_actual = date('Y-m-d', strtotime($fecha));
 
 // Preparar la consulta SQL para obtener el precio de la cancha con el ID dado
 $sql = "SELECT PRECIO FROM canchas WHERE _id = $id_cancha";
