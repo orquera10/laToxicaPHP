@@ -249,11 +249,6 @@
       });
     }
     function actualizarTotales() {
-      $('span[name=total_cancha').load("cargarTotal.php", { idEvento: $('#idEvento').val(), tipoTotal:'total_cancha' }, function (response, status, xhr) {
-        if (status == "error") {
-          console.error(xhr.responseText);
-        }
-      });
       $('span[name=total_detalle').load("cargarTotal.php", { idEvento: $('#idEvento').val(), tipoTotal:'total_detalle' }, function (response, status, xhr) {
         if (status == "error") {
           console.error(xhr.responseText);

@@ -43,11 +43,17 @@
           <p>Total Productos: <span name="total_detalle"></span></p>
           <p>Total General: <span name="total"></span></p>
         </div>
+
+        <!-- Parte 4: input efectivo y transferencia -->
+        <div class="mb-3">
+          
+        </div>
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         <!-- Botón para realizar alguna acción, como guardar los datos -->
-        <button type="button" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-primary" id="btnFinalizarTurno" >Guardar</button>
       </div>
     </div>
   </div>

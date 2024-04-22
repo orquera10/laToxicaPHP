@@ -26,13 +26,15 @@ $InsertNuevoEvento = "INSERT INTO turnos (
         HORA_INICIO,
         HORA_FIN,
         COLOR,
-        id_CANCHA
+        id_CANCHA,
+        FINALIZADO
     ) VALUES (
         '" . $cliente_id . "',
         '" . $hora_inicial . "',
         '" . $hora_final . "',
         '" . $color_evento . "',
-        '" . $id_cancha . "'
+        '" . $id_cancha . "',
+        TRUE
     )";
 
 $resultadoNuevoEvento = mysqli_query($con, $InsertNuevoEvento);

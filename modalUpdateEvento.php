@@ -155,7 +155,7 @@ if ($resultado) {
           </div>
         </div>
         <div class="row m-0 p-0" >
-            <p>Total Productos: <span name="total"></span></p>                
+            <p>Total: <span name="total"></span></p>                
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

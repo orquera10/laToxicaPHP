@@ -48,7 +48,7 @@ if (isset($_POST['idProducto'], $_POST['idEvento'])) {
                 mysqli_query($con, $sql_update_total);
 
                 // Actualizar el total general del ticket
-                $total_general = ($total_productos !== null) ? $total_productos : $total_cancha;
+                $total_general =  $total_productos + $total_cancha;
                 $sql_update_total_general = "UPDATE ticket SET TOTAL = '$total_general' WHERE _id = $idTicket";
                 mysqli_query($con, $sql_update_total_general);
 
