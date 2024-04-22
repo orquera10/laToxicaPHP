@@ -8,9 +8,7 @@
   <link rel="stylesheet" type="text/css" href="css/fullcalendar.min.css">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <!-- <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"> -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/home.css">
 </head>
 
@@ -60,10 +58,7 @@
 
   <script src="js/jquery-3.0.0.min.js"> </script>
   <script src="js/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
-  <!-- <script src="js/bootstrap.min.js"></script> -->
+  <script src="js/bootstrap.min.js"></script>
 
   <script type="text/javascript" src="js/moment.min.js"></script>
   <script type="text/javascript" src="js/fullcalendar.min.js"></script>
@@ -79,6 +74,9 @@
           right: "month,agendaWeek,agendaDay"
         },
 
+        minTime: '12:00:00', // Configuración para empezar a mostrar horarios desde el mediodía
+        maxTime: '24:00:00', // Configuración para terminar de mostrar horarios a medianoche
+
         locale: 'es',
 
         defaultView: "month",
@@ -93,12 +91,24 @@
 
           // Construir fechas completas combinando las fechas seleccionadas del calendario con las horas seleccionadas
           var fechaInicio = start.format('DD-MM-YYYY');
-          var fechaFin = end.format('DD-MM-YYYY');
-          var fechaFinal = moment(fechaFin, "DD-MM-YYYY").subtract(1, 'days').format('DD-MM-YYYY');
+          // var fechaFin = end.format('DD-MM-YYYY');
+          // var fechaFinal = moment(fechaFin, "DD-MM-YYYY").subtract(1, 'days').format('DD-MM-YYYY');
 
           // Asignar valores a los campos de fecha y hora
           $("input[name=hidden_hora_inicio]").val(fechaInicio);
-          $("input[name=hidden_hora_fin]").val(fechaFinal);
+          // $("input[name=hidden_hora_fin]").val(fechaFinal);
+
+          $.ajax({
+            url: 'cargarDesplegableCancha.php',
+            type: 'POST',
+            data: { fecha: fechaInicio },
+            success: function (response) {
+              $('#canchas').html(response);
+            },
+            error: function (xhr, status, error) {
+              console.error(xhr.responseText);
+            }
+          });
 
           $("#exampleModal").modal("show");
           // myModal.addEventListener('shown.bs.modal', () => {
@@ -108,12 +118,17 @@
 
         events: [
           <?php
-          while ($dataEvento = mysqli_fetch_array($resulEventos)) { ?>
-                                                                                      {
+          while ($dataEvento = mysqli_fetch_array($resulEventos)) {
+            // Concatenar la fecha y la hora de inicio y fin
+            $start = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_INICIO']));
+            $end = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_FIN']));
+
+            ?>
+              {
               _id: '<?php echo $dataEvento['_id']; ?>',
               title: '<?php echo $dataEvento['nombre_usuario']; ?>',
-              start: '<?php echo $dataEvento['HORA_INICIO']; ?>',
-              end: '<?php echo $dataEvento['HORA_FIN']; ?>',
+              start: '<?php echo $start; ?>',
+              end: '<?php echo $end; ?>',
               color: '<?php echo $dataEvento['COLOR']; ?>',
               cancha: '<?php echo $dataEvento['nombre_cancha']; ?>',
               finalizado: '<?php echo $dataEvento['FINALIZADO']; ?>',
@@ -125,13 +140,13 @@
         ],
 
 
+
         //Eliminar Evento
         eventRender: function (event, element) {
           // Convertir la propiedad 'finalizado' a un número entero
           var finalizado = parseInt(event.finalizado);
           // Verificar si el evento no está finalizado
           if (finalizado !== 1) {
-            console.log(typeof event.finalizado);
             element
               .find(".fc-content")
               .prepend("<span id='btnCerrar' class='closeon material-icons'>&#xe5cd;</span>");
@@ -333,8 +348,6 @@
         method: 'POST',
         data: { idProducto: idProducto, idEvento: idEvento },
         success: function (response) {
-          // Manejar la respuesta del servidor si es necesario
-          console.log(response);
           // Actualizar la tabla de productos si se eliminó correctamente
           actualizarTablaProductos();
           actualizarTotales();
@@ -468,7 +481,6 @@
         var pagoEfectivo = $('#pagoEfectivo').val();
         var pagoTransf = $('#pagoTransf').val();
 
-        console.log(idEvento, pagoEfectivo, pagoTransf);
         // Realizar la solicitud AJAX
         $.ajax({
           url: 'finalizarTurno.php', // Ruta al script PHP
@@ -480,7 +492,6 @@
           },
           dataType: 'json',
           success: function (response) {
-            console.log(response.success);
             if (response.success) {
               // Mostrar un mensaje de éxito utilizando SweetAlert2
               Swal.fire({

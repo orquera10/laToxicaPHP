@@ -1,13 +1,3 @@
-<?php
-
-// Consulta SQL para seleccionar los nombres de las canchas de fútbol
-$sql = "SELECT _id, NOMBRE FROM canchas";
-
-// Ejecutar la consulta
-$canchas = mysqli_query($con, $sql);
-
-?>
-
 <!-- Modal para agregar un nuevo turno -------------------------------------------------------------------------------->
 <div class="modal" id="exampleModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -104,47 +94,15 @@ $canchas = mysqli_query($con, $sql);
         <!------------------------------------------------------------------------------------------------------------------>
 
         <!-- Desplgable para obtener canchas ------------------------------------------------------------------------------->
-        <?php
-        if (mysqli_num_rows($canchas) > 0) {
-          // Generar el código HTML del desplegable
-          echo '<div class="form-group">
-                  <label for="fecha_fin" class="col-sm-12 control-label">Cancha:</label>
-                  <div class="col-sm-12">
-                    <select name="canchas" id="canchas" class="col-md-12 form-control mb-3">';
-          while ($fila = mysqli_fetch_assoc($canchas)) {
-            echo '<option value="' . $fila['_id'] . '">' . $fila['NOMBRE'] . '</option>';
-          }
-          echo '    </select>
-                  </div>
-                </div>
-                ';
-        } else {
-          echo "No se encontraron canchas de fútbol en la base de datos.";
-        }
-        ?>
+        <div class="form-group">
+          <label for="fecha_fin" class="col-sm-12 control-label">Cancha:</label>
+          <div class="col-sm-12">
+            <select name="canchas" id="canchas" class="col-md-12 form-control mb-3">
+            </select>
+          </div>
+        </div>
+
         <!------------------------------------------------------------------------------------------------------------------>
-
-        <!-- <div class="col-md-12" id="grupoRadio">
-
-          <input type="radio" name="color_evento" id="orange" value="#FF5722" checked>
-          <label for="orange" class="circu" style="background-color: #FF5722;"> </label>
-
-          <input type="radio" name="color_evento" id="amber" value="#FFC107">
-          <label for="amber" class="circu" style="background-color: #FFC107;"> </label>
-
-          <input type="radio" name="color_evento" id="lime" value="#8BC34A">
-          <label for="lime" class="circu" style="background-color: #8BC34A;"> </label>
-
-          <input type="radio" name="color_evento" id="teal" value="#009688">
-          <label for="teal" class="circu" style="background-color: #009688;"> </label>
-
-          <input type="radio" name="color_evento" id="blue" value="#2196F3">
-          <label for="blue" class="circu" style="background-color: #2196F3;"> </label>
-
-          <input type="radio" name="color_evento" id="indigo" value="#9c27b0">
-          <label for="indigo" class="circu" style="background-color: #9c27b0;"> </label>
-
-        </div> -->
 
         <div class="modal-footer">
           <button type="submit" class="btn btn-success">Guardar Evento</button>

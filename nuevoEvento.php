@@ -5,34 +5,51 @@ setlocale(LC_ALL, "es_ES");
 require ("config.php");
 
 $cliente_id = intval($_REQUEST['cliente_id']);
-$fecha_inicio = $_POST['hidden_hora_inicio'];
-$fecha_fin = $_POST['hidden_hora_fin'];
-// $color_evento = $_REQUEST['color_evento'];
+$fecha = $_POST['hidden_hora_inicio'];
+
 $color_evento = "#2196F3"; //color predetermindado azul
 $id_cancha = intval($_REQUEST["canchas"]);
 
 $hora_inicio = $_POST['select_hora_inicio'];
 $hora_fin = $_POST['select_hora_fin'];
 
-$hora_inicial = $fecha_inicio . " " . $hora_inicio;
-$hora_final = $fecha_fin . " " . $hora_fin;
+// Verificar si la hora de inicio es menor que la hora de finalización
+if (strtotime($hora_inicio) >= strtotime($hora_fin)) {
+    // Si la hora de inicio es mayor o igual que la hora de finalización, redirigir con un mensaje de error
+    header("Location:index.php?error=La hora de inicio debe ser menor que la hora de finalización");
+    exit; // Terminar la ejecución del script
+}
 
-// Formatear fechas en el formato adecuado (Y-m-d H:i:s)
-$hora_inicial = date('Y-m-d H:i:s', strtotime($hora_inicial));
-$hora_final = date('Y-m-d H:i:s', strtotime($hora_final));
+// Consulta SQL para verificar si hay solapamiento de turnos
+$sql = "SELECT t.* FROM turnos t
+        INNER JOIN canchas c ON t.id_CANCHA = c._id
+        WHERE t.FECHA = '$fecha' 
+        AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
+        OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
+        AND (t.id_CANCHA = $id_cancha OR (c.NOMBRE = 'Cancha 1 y Cancha 2' AND t.id_CANCHA != $id_cancha))";
+
+// Ejecutar consulta
+$resultado = mysqli_query($con, $sql);
+if (mysqli_num_rows($resultado) > 0) {
+    // Si la hora de inicio es mayor o igual que la hora de finalización, redirigir con un mensaje de error
+    header("Location:index.php?error=El nuevo turno se solapa con otro existente en ese horario.");
+    exit; // Terminar la ejecución del script
+}
 
 $InsertNuevoEvento = "INSERT INTO turnos (
         id_CLIENTE,
         HORA_INICIO,
         HORA_FIN,
         COLOR,
+        FECHA,
         id_CANCHA,
         FINALIZADO
     ) VALUES (
         '" . $cliente_id . "',
-        '" . $hora_inicial . "',
-        '" . $hora_final . "',
+        '" . $hora_inicio . "',
+        '" . $hora_fin . "',
         '" . $color_evento . "',
+        '" . $fecha . "',
         '" . $id_cancha . "',
         0
     )";
