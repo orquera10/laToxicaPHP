@@ -1,17 +1,16 @@
-*{
+* {
   padding: 0;
   margin: 0;
   font-family: Roboto, sans-serif;
 }
 
 :root {
-  --color-primario: #0378E3;
-  --color-secundario: #4E9BE1;
-  --color-enfasis: #E1574E;
+  --color-primario: #0378e3;
+  --color-secundario: #4e9be1;
+  --color-enfasis: #e1574e;
   --color-enfasis-secundario: #e49c97;
   --color-terciario: #c4daee;
 }
-
 
 #calendar {
   max-width: 900px;
@@ -80,32 +79,46 @@ input {
 
 /* Estilos para el contenedor de las tarjetas */
 #contenedorTarjetas {
-  max-height: 200px; /* Altura fija */
+  max-height: 300px; /* Altura fija */
   overflow-x: auto; /* Desbordamiento horizontal con barra de desplazamiento */
-  white-space: nowrap; /* Evitar el salto de línea */
+   /* Evitar el salto de línea */
 }
 
 /* Estilos para las tarjetas */
 .tarjeta {
-  display: inline-block;
-  width: 150px; /* Ancho fijo */
+  
+  min-width: 200px; /* Ancho fijo */
   margin-right: 10px; /* Espacio entre tarjetas */
-  border: 1px solid #ccc; /* Borde predeterminado */
+  border: 2px solid #ccc; /* Borde predeterminado */
   padding: 10px;
   cursor: pointer; /* Cambiar el cursor a mano */
 }
 
+.card-title{
+  color: var(--color-primario);
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.card-text{
+  font-size: 0.8rem;
+}
+
 /* Estilo para tarjeta seleccionada */
 .tarjeta.selected {
-  border-color: #007bff; /* Cambiar el borde a color primario */
+  border-color: var(--color-primario); /* Cambiar el borde a color primario */
 }
 
 /* Estilos para la imagen */
 .imagenProducto {
   width: 100%; /* Ancho completo */
-  height: 100px; /* Altura fija */
+   /* Altura fija */
   object-fit: cover; /* Escalar la imagen para que se ajuste */
   margin-bottom: 5px; /* Espacio inferior */
+}
+
+.card-body{
+  min-height: 120px;
 }
 
 /* Estilo para el elemento li en estado de hover */
@@ -149,23 +162,23 @@ input {
   margin: 2px;
 }
 
-.fc-center h2{
-  color: var(--color-primario) ;
+.fc-center h2 {
+  color: var(--color-primario);
 }
 
-.fc-day-header span{
-  color: var(--color-primario) ;
+.fc-day-header span {
+  color: var(--color-primario);
 }
 
-.fc-widget-header a{
+.fc-widget-header a {
   color: var(--color-primario) !important;
 }
 
-.fc-time span{
-  color: var(--color-primario) ;
+.fc-time span {
+  color: var(--color-primario);
 }
 
-.fc-axis span{
+.fc-axis span {
   color: var(--color-primario);
 }
 
@@ -173,14 +186,57 @@ input {
   background-color: var(--color-terciario) !important;
 }
 
-.fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead{
+.fc-unthemed .fc-content,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-list-heading td,
+.fc-unthemed .fc-list-view,
+.fc-unthemed .fc-popover,
+.fc-unthemed .fc-row,
+.fc-unthemed tbody,
+.fc-unthemed td,
+.fc-unthemed th,
+.fc-unthemed thead {
   border-color: var(--color-primario) !important;
 }
 
-.iconMenu{
+.iconMenu {
   color: #fff;
 }
 
-.nav-item:hover{
+.nav-item:hover {
   background-color: var(--color-secundario);
+}
+
+.iconTrash {
+  color: var(--color-enfasis);
+}
+
+.titulosColumna {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}
+
+.iconAdd {
+  color: var(--color-primario);
+}
+
+.img-small {
+  max-width: 50px;
+}
+
+.contLabelDatos label {
+  color: var(--color-primario);
+  font-weight: bold;
+}
+
+.styleTotal {
+  font-weight: bold;
+  color: var(--color-primario);
+}
+
+.styleTabla {
+  max-height: 400px;
+  overflow-y: auto;
 }

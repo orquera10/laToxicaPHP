@@ -30,13 +30,23 @@
   $resulEventos = mysqli_query($con, $SqlEventos);
   ?>
 
+  <div class="container">
+    <div class="row">
+      <div class="col msjs position-absolute top-0 start-50 translate-middle-x" style="z-index: 1000;">
+        <?php
+        include ('msjs.php');
+        ?>
+      </div>
+    </div>
+  </div>
+
   <?php
   include ('headerUsuario.php');
   include ('barraNavegacion.php');
   ?>
 
-  <div class="d-flex justify-content-center" > 
-    <div id="calendar" class="m-4 calendario" ></div>
+  <div class="d-flex justify-content-center">
+    <div id="calendar" class="m-4 calendario"></div>
   </div>
 
 
@@ -113,7 +123,7 @@
             $end = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_FIN']));
 
             ?>
-                  {
+                    {
               _id: '<?php echo $dataEvento['_id']; ?>',
               title: '<?php echo $dataEvento['nombre_usuario']; ?>',
               start: '<?php echo $start; ?>',

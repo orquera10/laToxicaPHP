@@ -12,7 +12,7 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active m-2 m-lg-0 " aria-current="page" href="#">Turnos</a>
+                    <a class="nav-link active m-2 m-lg-0 " aria-current="page" href="index.php">Turnos</a>
                 </li>
 
                 <li class="nav-item dropdown">

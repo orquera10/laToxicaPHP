@@ -43,51 +43,60 @@ if ($resultado) {
       </div>
       <div class="modal-body">
         <div class="row m-0 p-0">
-          <div class="col-4 my-3">
-            <div class="row m-0 p-0">
-              <h5 class="mb-3">Datos Turno</h5>
+          <div class="col-12 col-md-4 my-3">
+            <div class="row m-0 p-0 contLabelDatos">
+              <h5 class="mb-3 p-0">Datos Turno</h5>
 
-              <div class="d-flex col-12">
+              <div class="d-flex col-12 p-0">
                 <p class="mr-2">Nombre:</p>
-                <label id="evento" name="evento"></label>
+                <label id="evento" name="evento" class="ms-2"></label>
               </div>
-              <div class="d-flex col-12">
+              <div class="d-flex col-12 p-0">
                 <p class="mr-2">Hora Entrada:</p>
-                <label id="fecha_inicio" name="fecha_inicio"></label>
+                <label id="fecha_inicio" name="fecha_inicio" class="ms-2"></label>
               </div>
-              <div class="d-flex col-12">
+              <div class="d-flex col-12 p-0">
                 <p class="mr-2">Hora Salida:</p>
-                <label id="fecha_fin" name="fecha_fin"></label>
+                <label id="fecha_fin" name="fecha_fin" class="ms-2"></label>
               </div>
-              <div class="d-flex col-12">
+              <div class="d-flex col-12 p-0">
                 <p class="mr-2">Cancha:</p>
-                <label id="cancha" name="cancha"></label>
+                <label id="cancha" name="cancha" class="ms-2"></label>
               </div>
             </div>
 
             <!-- id evento oculto en el input -->
             <input type="hidden" class="form-control" name="idEvento" id="idEvento">
           </div>
-          <div class="col-8 my-3">
+
+          <div class="col-12 col-md-8 my-3">
             <h5 class="mb-3">Detalle</h5>
             <!-- Tabla para productos -->
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Producto</th>
-                  <th scope="col">Cantidad</th>
-                  <th scope="col">Precio Unitario</th>
-                  <th scope="col">Total</th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody id="tablaProductosDetalle">
-                <!-- completar tabla con productos en detalle -->
-              </tbody>
-            </table>
+            <div class="styleTabla">
+              <table class="table">
+                <thead class="titulosColumna">
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Total</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody id="tablaProductosDetalle">
+                  <!-- completar tabla con productos en detalle -->
+                </tbody>
+              </table>
+            </div>
 
             <div class="d-flex justify-content-center">
-              <button class="btn btn-primary" id="agregarProductoModalUpdate" onclick="abrirModalProductos()">Agregar</button>
+              <button class="btn" id="agregarProductoModalUpdate" onclick="abrirModalProductos()"><svg
+                  xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                  class="bi bi-plus-circle-fill iconAdd" viewBox="0 0 16 16">
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
+                </svg></button>
 
               <!-- Modal de carga de productos-------------------------------------------------------------->
               <div class="modal fade" id="productosModal" tabindex="-1" role="dialog"
@@ -100,21 +109,18 @@ if ($resultado) {
                     </div>
                     <!-- Parte 1: Lista de productos -->
                     <div class="modal-body">
-                      <h5>Productos</h5>
-
-                      <div id="contenedorTarjetas" class="row">
+                      <div id="contenedorTarjetas" class="row mx-4">
                         <!-- Tarjetas -->
                         <?php foreach ($productos as $producto): ?>
-                          <div class="col-md-4 mb-4">
+                          <div class="col-12 col-sm-6 mb-2 col-md-4 col-lg-3">
                             <div class="card tarjeta" data-id="<?php echo $producto['id']; ?>"
                               data-nombre="<?php echo $producto['nombre']; ?>"
                               data-precio="<?php echo $producto['precio']; ?>">
                               <img class="card-img-top imagenProducto" src="<?php echo $producto['url_img']; ?>"
                                 alt="<?php echo $producto['nombre']; ?>">
                               <div class="card-body">
-                                <h5 class="card-title"><?php echo $producto['nombre']; ?></h5>
+                                <p class="card-title"><?php echo $producto['nombre']; ?></p>
                                 <p class="card-text"><?php echo $producto['descripcion']; ?></p>
-                                <p class="card-text">$<?php echo $producto['precio']; ?></p>
                               </div>
                             </div>
                           </div>
@@ -123,7 +129,7 @@ if ($resultado) {
 
                     </div>
                     <!-- Parte 2: Detalles del producto seleccionado -->
-                    <div class="modal-footer">
+                    <div class="row m-4">
                       <div class="col-md-6">
                         <label for="nombreProducto">Nombre del Producto:</label>
                         <input type="text" class="form-control" id="nombreProducto" readonly>
@@ -137,6 +143,8 @@ if ($resultado) {
                         <label for="cantidadProducto">Cantidad:</label>
                         <input type="number" class="form-control" id="cantidadProducto" value="1" min="1">
                       </div>
+                    </div>
+                    <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                       <button type="button" class="btn btn-primary" id="agregarProducto">Agregar</button>
                     </div>
@@ -147,19 +155,20 @@ if ($resultado) {
           </div>
         </div>
         <div class="row m-0 p-0">
-          <div class="col-4">
-            <p>Total Cancha: <span name="total_cancha"></span></p>
+          <div class="col-12 col-md-4">
+            <p class="text-md-end">Total Cancha: <span name="total_cancha"> $</span></p>
           </div>
-          <div class="col-8">
-            <p>Total Productos: <span name="total_detalle"></span></p>
+          <div class="col-12 col-md-8">
+            <p class="text-md-end">Total Productos: <span name="total_detalle"> $</span></p>
           </div>
         </div>
-        <div class="row m-0 p-0" >
-            <p>Total Productos: <span name="total"></span></p>                
+        <div class="row m-0 p-0">
+          <p class="text-md-end h3 styleTotal">Total: <span name="total"> $</span></p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="finalizarTurno" onclick="abrirModalPago()">Finalizar Turno</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" id="finalizarTurno" onclick="abrirModalPago()">Finalizar
+            Turno</button>
         </div>
       </div>
     </div>
@@ -179,7 +188,7 @@ include ('modalFinalizarTurno.php');
 
 <script>
   function abrirModalPago() {
-    
+
     $('#modalUpdateEvento').modal('hide');
     $('#modalPago').modal('show');
   }

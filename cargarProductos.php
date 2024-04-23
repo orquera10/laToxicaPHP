@@ -6,7 +6,7 @@ if (isset($_POST['idEvento'])) {
     $idEvento = $_POST['idEvento'];
 
     // Consulta preparada SQL para obtener los productos
-    $sql = "SELECT p.NOMBRE AS producto, d.CANTIDAD AS cantidad, p.PRECIO AS precio, d.CANTIDAD * p.PRECIO AS total, p._id AS idProducto
+    $sql = "SELECT p.NOMBRE AS producto, d.CANTIDAD AS cantidad, p.PRECIO AS precio, d.CANTIDAD * p.PRECIO AS total, p._id AS idProducto, p.URL_IMG AS url_img
             FROM turnos e
             JOIN ticket t ON e._id = t.id_TURNO
             JOIN detalle_ticket d ON t._id = d.id_TICKET
@@ -30,12 +30,15 @@ if (isset($_POST['idEvento'])) {
         // Construir el HTML de la tabla de productos
         $html = '';
         while ($row = mysqli_fetch_assoc($result)) {
-            $html .= "<tr>";
+            $html .= "<tr class='align-middle'>";
+            $html .= "<td><img src='" . htmlspecialchars($row["url_img"]) . "' alt='Imagen de producto' class='img-small'></td>";
             $html .= "<td>" . htmlspecialchars($row["producto"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["cantidad"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["precio"]) . "</td>";
             $html .= "<td>" . htmlspecialchars($row["total"]) . "</td>";
-            $html .= "<td><button class='btn btn-danger btnEliminarProducto' data-idProducto='" . $row["idProducto"] . "'>Eliminar</button></td>";
+            $html .= "<td><button class='btn btnEliminarProducto' data-idProducto='" . $row["idProducto"] . "'><svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='currentColor' class='bi bi-trash-fill iconTrash' viewBox='0 0 16 16'>
+            <path d='M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0'/>
+          </svg></button></td>";
             $html .= "</tr>";
         }
         // Imprimir el HTML
