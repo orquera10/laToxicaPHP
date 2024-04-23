@@ -79,6 +79,8 @@
 
         locale: 'es',
 
+        selectable: true, // Habilitar la selección en dispositivos táctiles
+
         defaultView: (window.innerWidth < 768) ? 'agendaDay' : 'month',
         navLinks: true,
         // editable: true,

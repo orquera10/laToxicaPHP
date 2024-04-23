@@ -164,6 +164,7 @@ input {
 
 .fc-center h2 {
   color: var(--color-primario);
+  margin-top: 15px !important;
 }
 
 .fc-day-header span {
@@ -239,4 +240,12 @@ input {
 .styleTabla {
   max-height: 300px;
   overflow-y: auto;
+}
+
+.fc-widget-content .fc-scroller{
+  height: 100% !important;
+}
+
+.fc-event{
+  max-width: 40vh !important;
 }
