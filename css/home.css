@@ -1,3 +1,18 @@
+*{
+  padding: 0;
+  margin: 0;
+  font-family: Roboto, sans-serif;
+}
+
+:root {
+  --color-primario: #0378E3;
+  --color-secundario: #4E9BE1;
+  --color-enfasis: #E1574E;
+  --color-enfasis-secundario: #e49c97;
+  --color-terciario: #c4daee;
+}
+
+
 #calendar {
   max-width: 900px;
   margin: 0 auto;
@@ -28,16 +43,17 @@ input {
 }
 
 #btnCerrar {
-  color: crimson;
-  padding: 5px;
-  background: #8888;
+  color: #fff;
+  padding: 4px;
+  margin: 2px;
+  background: var(--color-enfasis);
   border-radius: 25px;
   font-size: 17px;
   font-weight: 600;
 }
 #btnCerrar:hover {
   cursor: pointer;
-  background-color: #333;
+  background-color: var(--color-enfasis-secundario);
 }
 
 .circu {
@@ -109,4 +125,62 @@ input {
 .modal-body ul li a:hover {
   color: inherit; /* Mantiene el color del texto al pasar el mouse */
   text-decoration: none; /* Quita el subrayado al pasar el mouse */
+}
+
+.navbar {
+  background-color: var(--color-primario) !important;
+}
+
+.nav-item a {
+  color: white !important;
+}
+
+.dropMenu a {
+  color: var(--color-primario) !important;
+}
+
+.fc-day-number {
+  min-width: 25px;
+  background-color: var(--color-primario);
+  border-radius: 20px;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  margin: 2px;
+}
+
+.fc-center h2{
+  color: var(--color-primario) ;
+}
+
+.fc-day-header span{
+  color: var(--color-primario) ;
+}
+
+.fc-widget-header a{
+  color: var(--color-primario) !important;
+}
+
+.fc-time span{
+  color: var(--color-primario) ;
+}
+
+.fc-axis span{
+  color: var(--color-primario);
+}
+
+.fc-today {
+  background-color: var(--color-terciario) !important;
+}
+
+.fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead{
+  border-color: var(--color-primario) !important;
+}
+
+.iconMenu{
+  color: #fff;
+}
+
+.nav-item:hover{
+  background-color: var(--color-secundario);
 }

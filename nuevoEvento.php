@@ -7,7 +7,7 @@ require("config.php");
 $cliente_id = intval($_REQUEST['cliente_id']);
 $fecha = $_POST['hidden_hora_inicio'];
 
-$color_evento = "#2196F3"; //color predeterminado azul
+$color_evento = "#4E9BE1"; //color predeterminado azul
 $id_cancha = intval($_REQUEST["canchas"]);
 
 $hora_inicio = $_POST['select_hora_inicio'];

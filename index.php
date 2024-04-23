@@ -30,25 +30,15 @@
   $resulEventos = mysqli_query($con, $SqlEventos);
   ?>
 
-  <div class="mt-5"></div>
+  <?php
+  include ('headerUsuario.php');
+  include ('barraNavegacion.php');
+  ?>
 
-  <div class="container">
-    <div class="row">
-      <div class="col msjs">
-        <?php
-        include ('msjs.php');
-        ?>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12 mb-3">
-        <h3 class="text-center" id="title">Calendario de Eventos con PHP y MYSQL</h3>
-      </div>
-    </div>
+  <div class="d-flex justify-content-center" > 
+    <div id="calendar" class="m-4 calendario" ></div>
   </div>
 
-  <div id="calendar"></div>
 
 
   <?php
@@ -58,8 +48,7 @@
 
   <script src="js/jquery-3.0.0.min.js"> </script>
   <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-
+  <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript" src="js/moment.min.js"></script>
   <script type="text/javascript" src="js/fullcalendar.min.js"></script>
   <script src='locales/es.js'></script>
@@ -124,7 +113,7 @@
             $end = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_FIN']));
 
             ?>
-              {
+                  {
               _id: '<?php echo $dataEvento['_id']; ?>',
               title: '<?php echo $dataEvento['nombre_usuario']; ?>',
               start: '<?php echo $start; ?>',
