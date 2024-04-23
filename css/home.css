@@ -118,7 +118,7 @@ input {
 }
 
 .card-body{
-  min-height: 120px;
+  min-height: 130px;
 }
 
 /* Estilo para el elemento li en estado de hover */
@@ -237,6 +237,6 @@ input {
 }
 
 .styleTabla {
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
 }

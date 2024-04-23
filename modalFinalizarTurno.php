@@ -1,4 +1,3 @@
-
 <!-- Modal -->
 <div class="modal fade" id="modalPago" tabindex="-1" aria-labelledby="modalPagoLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -24,13 +23,14 @@
           <table class="table">
             <thead>
               <tr>
+                <th></th>
                 <th>Producto</th>
-                <th>Precio</th>
                 <th>Cantidad</th>
+                <th>Precio</th>
                 <th>Subtotal</th>
               </tr>
             </thead>
-            <tbody id="tablaProductosPago" >
+            <tbody id="tablaProductosPago">
               <!-- Agrega más filas según los productos -->
             </tbody>
           </table>
@@ -56,7 +56,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         <!-- Botón para realizar alguna acción, como guardar los datos -->
-        <button type="button" class="btn btn-primary" id="btnFinalizar" >Guardar</button>
+        <button type="button" class="btn btn-primary" id="btnFinalizar">Guardar</button>
       </div>
     </div>
   </div>
