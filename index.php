@@ -126,7 +126,7 @@
             $end = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_FIN']));
 
             ?>
-                        {
+                          {
               _id: '<?php echo $dataEvento['_id']; ?>',
               title: '<?php echo $dataEvento['nombre_usuario']; ?>',
               start: '<?php echo $start; ?>',
@@ -528,6 +528,8 @@
       });
     });
   </script>
+
+  
 
 </body>
 

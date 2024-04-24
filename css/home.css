@@ -246,6 +246,7 @@ input {
   height: 100% !important;
 }
 
-.fc-event{
-  max-width: 40vh !important;
+.listaNombres{
+  max-height: 200px;
+  overflow-y: scroll;
 }

@@ -65,6 +65,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <!-- Campo de búsqueda -->
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" id="buscarCliente" placeholder="Buscar cliente...">
+              <button class="btn btn-primary" type="button" id="btnBuscarCliente">Buscar</button>
+            </div>
+          </div>
+        </div>
         <!-- Contenido dinámico de la lista de clientes -->
         <?php
         // Consulta SQL para seleccionar los nombres de los clientes
@@ -72,9 +81,9 @@
         // Ejecutar la consulta
         $clientes = mysqli_query($con, $sql_clientes);
         if (mysqli_num_rows($clientes) > 0) {
-          echo '<ul class="list-group">';
+          echo '<ul class="list-group listaNombres">';
           while ($fila_cliente = mysqli_fetch_assoc($clientes)) {
-            echo '<li class="list-group-item"><a href="#" class="seleccionar-cliente" data-id="' . $fila_cliente['_id'] . '">' . $fila_cliente['NOMBRE'] . '</a></li>';
+            echo '<li class="list-group-item nombreCliente"><a href="#" class="seleccionar-cliente" data-id="' . $fila_cliente['_id'] . '">' . $fila_cliente['NOMBRE'] . '</a></li>';
           }
           echo '</ul>';
         } else {
@@ -89,9 +98,33 @@
   </div>
 </div>
 
+
 <!-- Script para abrir el modal de clientes -->
 <script>
   function abrirModalCliente() {
     $('#clientesModal').modal('show');
   }
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Obtener el campo de búsqueda y la lista de nombres de clientes
+      const campoBuscar = document.getElementById('buscarCliente');
+      const listaNombres = document.querySelectorAll('.nombreCliente');
+
+      // Agregar un evento de escucha al campo de búsqueda
+      campoBuscar.addEventListener('input', function () {
+        const textoBuscar = campoBuscar.value.trim().toLowerCase();
+
+        // Iterar sobre la lista de nombres y ocultar aquellos que no coincidan con la búsqueda
+        listaNombres.forEach(function (nombre) {
+          const nombreCliente = nombre.textContent.trim().toLowerCase();
+          if (nombreCliente.includes(textoBuscar)) {
+            nombre.style.display = 'block';
+          } else {
+            nombre.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>

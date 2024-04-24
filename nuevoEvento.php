@@ -2,22 +2,41 @@
 date_default_timezone_set("America/Bogota");
 setlocale(LC_ALL, "es_ES");
 
-require("config.php");
+require ("config.php");
 
 $cliente_id = intval($_REQUEST['cliente_id']);
 $fecha = $_POST['hidden_hora_inicio'];
 
-$color_evento = "#4E9BE1"; //color predeterminado azul
 $id_cancha = intval($_REQUEST["canchas"]);
 
 $hora_inicio = $_POST['select_hora_inicio'];
 $hora_fin = $_POST['select_hora_fin'];
 
-// Verificar si la hora de inicio es menor que la hora de finalización
-if (strtotime($hora_inicio) >= strtotime($hora_fin)) {
-    // Si la hora de inicio es mayor o igual que la hora de finalización, redirigir con un mensaje de error
-    header("Location:index.php?error=La hora de inicio debe ser menor que la hora de finalización");
-    exit; // Terminar la ejecución del script
+// Definir el color del evento basado en el nombre de la cancha
+if ($id_cancha == 7) {
+    $color_evento = "#9747FF"; // Color púrpura para la cancha 1 y cancha 2
+} elseif ($id_cancha == 5) {
+    $color_evento = "#4A8006"; // Color verde para la Cancha 1
+} elseif ($id_cancha == 6) {
+    $color_evento = "#61A0DB"; // Color azul para la Cancha 2
+} elseif ($id_cancha == 8) {
+    $color_evento = "#E08837"; // Color naranja para Cumpleaños
+} else {
+    $color_evento = "#4E9BE1"; // Color predeterminado azul
+}
+
+// Ajustar la hora final si id_cancha es 8 y sumar 3 horas a la hora_inicio
+if ($id_cancha == 8) {
+    // Sumar 3 horas a la hora_inicio
+    $hora_fin = date('H:i', strtotime($hora_inicio . ' +3 hours'));
+
+} else {
+    // Verificar si la hora de inicio es menor que la hora de finalización
+    if (strtotime($hora_inicio) >= strtotime($hora_fin)) {
+        // Si la hora de inicio es mayor o igual que la hora de finalización, redirigir con un mensaje de error
+        header("Location:index.php?error=La hora de inicio debe ser menor que la hora de finalización");
+        exit; // Terminar la ejecución del script
+    }
 }
 
 // Inicializar la consulta SQL
@@ -29,7 +48,14 @@ if ($id_cancha == 7) {
             WHERE t.FECHA = '$fecha' 
             AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
             OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
-            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1' OR c.NOMBRE = 'Cancha 2')";
+            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1' OR c.NOMBRE = 'Cancha 2' OR c.NOMBRE = 'Cumpleaños')";
+} elseif ($id_cancha == 8) {
+    $sql = "SELECT t.* FROM turnos t
+            INNER JOIN canchas c ON t.id_CANCHA = c._id
+            WHERE t.FECHA = '$fecha' 
+            AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
+            OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
+            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1' OR c.NOMBRE = 'Cancha 2' OR c.NOMBRE = 'Cancha 1 y Cancha 2')";
 } else {
     // Consulta SQL para verificar si hay solapamiento de turnos
     $sql = "SELECT t.* FROM turnos t
@@ -37,7 +63,7 @@ if ($id_cancha == 7) {
             WHERE t.FECHA = '$fecha' 
             AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
             OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
-            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1 y Cancha 2')";
+            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1 y Cancha 2' OR c.NOMBRE = 'Cumpleaños')";
 }
 
 // Ejecutar consulta
@@ -98,6 +124,12 @@ $diferencia_horas = round($diferencia_segundos / 3600); // 3600 segundos en una 
 
 //TOTAL A PAGAR CALCULADO CON LAS HORAS Y EL PRECIO DE LAS CANCHAS
 $total_cancha = $diferencia_horas * $precio_cancha;
+
+// Definir el precio de la cancha basado en el id_cancha
+if ($id_cancha == 8) {
+    // Si es un cumpleaños, solo asignar el precio de la cancha
+    $total_cancha = $fila['PRECIO'];
+}
 
 // Consulta para insertar un nuevo detalle con total 0 y la fecha del turno
 $sql_insert_ticket = "INSERT INTO ticket (id_TURNO, FECHA, TOTAL_CANCHA, TOTAL_DETALLE, TOTAL, PAGO_TRANSFERENCIA, PAGO_EFECTIVO) VALUES ('$id_turno', '$fecha_actual', '$total_cancha', 0, '$total_cancha', 0, 0)";
