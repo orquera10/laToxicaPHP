@@ -27,8 +27,18 @@ if ($id_cancha == 7) {
 
 // Ajustar la hora final si id_cancha es 8 y sumar 3 horas a la hora_inicio
 if ($id_cancha == 8) {
+    // Verificar si la hora de inicio es mayor o igual a las 21:00
+    if (strtotime($hora_inicio) > strtotime('21:00')) {
+        // Si la hora de inicio es mayor o igual a las 21:00, redirigir con un mensaje de error
+        header("Location:index.php?error=La hora de inicio debe ser anterior a las 21:00 para los eventos de cumpleaños");
+        exit; // Terminar la ejecución del script
+    }
     // Sumar 3 horas a la hora_inicio
     $hora_fin = date('H:i', strtotime($hora_inicio . ' +3 hours'));
+    // Si la hora_fin es 0:00, cambiarla a 24:00
+    if ($hora_fin == '00:00') {
+        $hora_fin = '24:00';
+    }
 
 } else {
     // Verificar si la hora de inicio es menor que la hora de finalización

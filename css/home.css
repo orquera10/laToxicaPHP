@@ -73,9 +73,9 @@ input {
   border: 3px solid #555 !important;
 }
 
-.modalUpdate .modal-dialog {
+/* .modalUpdate .modal-dialog {
   min-width: 90vw !important;
-}
+} */
 
 /* Estilos para el contenedor de las tarjetas */
 #contenedorTarjetas {
@@ -250,3 +250,8 @@ input {
   max-height: 200px;
   overflow-y: scroll;
 }
+
+.modalUpdate .modal-dialog{
+  max-width: 1000px;
+}
+
