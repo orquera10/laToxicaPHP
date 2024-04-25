@@ -4,6 +4,10 @@
   font-family: Roboto, sans-serif;
 }
 
+body{
+  height: 100vh;
+}
+
 :root {
   --color-primario: #0378e3;
   --color-secundario: #4e9be1;
@@ -255,3 +259,18 @@ input {
   max-width: 1000px;
 }
 
+.contenedorLogin{
+  background-color: var(--color-secundario);
+}
+
+.fondoLogin{
+  background-image: url('../img/fondoMessiMaradona.png');
+  /* Ajusta la imagen de fondo para que cubra todo el cuerpo */
+  background-size: cover;
+  /* Centra la imagen de fondo */
+  background-position: center;
+  /* Evita que la imagen de fondo se repita */
+  background-repeat: no-repeat;
+  /* Establece un color de fondo como respaldo si la imagen no se carga o no está disponible */
+  background-color: var(--color-terciario);
+}
