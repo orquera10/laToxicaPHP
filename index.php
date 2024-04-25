@@ -19,7 +19,7 @@
         <div class="row h-100">
             <div class="col-12 col-md-4 h-100">
                 <div class="row justify-content-center h-100 align-items-center contenedorLogin">
-                    <div class="col-12">
+                    <div class="col-12 formLogin">
                         <form action="iniciar_sesion.php" method="POST" class="p-4">
                             <div class="d-flex justify-content-center"><img src="img/logoLogin.png" alt="logo la toxica"></div>
                             <div class="col border-top border-white my-5"></div>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-8 fondoLogin h-100">
+            <div class="d-none d-md-block col-12 col-md-8 fondoLogin h-100">
             </div>
         </div>
 

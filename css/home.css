@@ -274,3 +274,7 @@ input {
   /* Establece un color de fondo como respaldo si la imagen no se carga o no está disponible */
   background-color: var(--color-terciario);
 }
+
+.formLogin{
+  max-width: 400px;
+}
