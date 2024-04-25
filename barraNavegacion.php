@@ -26,8 +26,9 @@
                         <li><a class="dropdown-item" href="#">Canchas</a></li>
                     </ul>
                 </li>
+                
                 <li class="nav-item">
-                    <a class="nav-link m-2 m-lg-0" href="#">Informes</a>
+                    <a class="nav-link m-2 m-lg-0" href="informe_diario_page.php">Informes</a>
                 </li>
 
             </ul>
