@@ -98,7 +98,6 @@ if ($resultado) {
                     d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
                 </svg></button>
 
-              <!-- Modal de carga de productos-------------------------------------------------------------->
               <div class="modal fade" id="productosModal" tabindex="-1" role="dialog"
                 aria-labelledby="productosModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -109,14 +108,14 @@ if ($resultado) {
                     </div>
                     <!-- Parte 1: Lista de productos -->
                     <div class="modal-body">
-                      <div id="contenedorTarjetas" class="row mx-4">
+                      <div id="contenedorTarjetas" class="row mx-4 py-3">
                         <!-- Tarjetas -->
                         <?php foreach ($productos as $producto): ?>
-                          <div class="col-12 col-sm-6 mb-2 col-md-4 col-lg-3">
-                            <div class="card tarjeta" data-id="<?php echo $producto['id']; ?>"
-                              data-nombre="<?php echo $producto['nombre']; ?>"
-                              data-precio="<?php echo $producto['precio']; ?>">
-                              <img class="card-img-top imagenProducto" src="<?php echo $producto['url_img']; ?>"
+                          <div class="col-12 col-sm-6 mb-2 col-md-4 col-lg-3 tarjeta"
+                            data-id="<?php echo $producto['id']; ?>" data-nombre="<?php echo $producto['nombre']; ?>"
+                            data-precio="<?php echo $producto['precio']; ?>">
+                            <div class="card">
+                              <img class="card-img-top imagenProducto m-auto" src="<?php echo $producto['url_img']; ?>"
                                 alt="<?php echo $producto['nombre']; ?>">
                               <div class="card-body">
                                 <p class="card-title"><?php echo $producto['nombre']; ?></p>
@@ -126,20 +125,20 @@ if ($resultado) {
                           </div>
                         <?php endforeach; ?>
                       </div>
-
                     </div>
                     <!-- Parte 2: Detalles del producto seleccionado -->
                     <div class="row m-4">
-                      <div class="col-md-6">
+                      <div class="col-12 col-md-6">
                         <label for="nombreProducto">Nombre del Producto:</label>
-                        <input type="text" class="form-control" id="nombreProducto" readonly>
+                        <input type="text" class="form-control" id="nombreProducto" oninput="filtrarProductos()"
+                          placeholder="Producto...">
                         <input type="hidden" id="idProducto" name="idProducto">
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-12 col-md-6">
                         <label for="precioProducto">Precio:</label>
-                        <input type="text" class="form-control" id="precioProducto" readonly>
+                        <input type="text" class="form-control" id="precioProducto" disabled>
                       </div>
-                      <div class="col-md-12 mt-3">
+                      <div class="col-12 col-md-6 mt-3">
                         <label for="cantidadProducto">Cantidad:</label>
                         <input type="number" class="form-control" id="cantidadProducto" value="1" min="1">
                       </div>
@@ -191,5 +190,27 @@ include ('modalFinalizarTurno.php');
 
     $('#modalUpdateEvento').modal('hide');
     $('#modalPago').modal('show');
+  }
+</script>
+
+<script>
+  
+  // Función para filtrar productos
+  function filtrarProductos() {
+    var input, filter, cards, card, title, i, txtValue;
+    input = document.getElementById("nombreProducto");
+    filter = input.value.toUpperCase();
+    cards = document.getElementsByClassName("tarjeta");
+
+    for (i = 0; i < cards.length; i++) {
+      card = cards[i];
+      title = card.getElementsByTagName("p")[0];
+      txtValue = title.textContent || title.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        card.style.display = "block"; // Mostrar tarjeta
+      } else {
+        card.style.display = "none"; // Ocultar tarjeta
+      }
+    }
   }
 </script>

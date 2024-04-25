@@ -4,6 +4,12 @@ setlocale(LC_ALL, "es_ES");
 
 require ("config.php");
 
+// Verificar si se ha enviado el cliente_id y si no está vacío
+if (!isset($_REQUEST['cliente_id']) || empty($_REQUEST['cliente_id'])) {
+    // Si no se ha proporcionado un cliente_id válido, redirigir con un mensaje de error
+    header("Location:page_turnos.php?error=El nombre del cliente no se ha proporcionado correctamente");
+    exit; // Terminar la ejecución del script
+}
 $cliente_id = intval($_REQUEST['cliente_id']);
 $fecha = $_POST['hidden_hora_inicio'];
 

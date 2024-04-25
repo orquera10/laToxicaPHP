@@ -83,6 +83,8 @@ input {
 
 /* Estilos para el contenedor de las tarjetas */
 #contenedorTarjetas {
+  border: 1px solid var(--color-terciario);
+  min-height: 300px;
   max-height: 300px; /* Altura fija */
   overflow-x: auto; /* Desbordamiento horizontal con barra de desplazamiento */
    /* Evitar el salto de línea */
@@ -90,11 +92,7 @@ input {
 
 /* Estilos para las tarjetas */
 .tarjeta {
-  
   min-width: 200px; /* Ancho fijo */
-  margin-right: 10px; /* Espacio entre tarjetas */
-  border: 2px solid #ccc; /* Borde predeterminado */
-  padding: 10px;
   cursor: pointer; /* Cambiar el cursor a mano */
 }
 
@@ -115,7 +113,7 @@ input {
 
 /* Estilos para la imagen */
 .imagenProducto {
-  width: 100%; /* Ancho completo */
+  width: 70%; /* Ancho completo */
    /* Altura fija */
   object-fit: cover; /* Escalar la imagen para que se ajuste */
   margin-bottom: 5px; /* Espacio inferior */
