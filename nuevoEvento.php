@@ -30,7 +30,7 @@ if ($id_cancha == 8) {
     // Verificar si la hora de inicio es mayor o igual a las 21:00
     if (strtotime($hora_inicio) > strtotime('21:00')) {
         // Si la hora de inicio es mayor o igual a las 21:00, redirigir con un mensaje de error
-        header("Location:index.php?error=La hora de inicio debe ser anterior a las 21:00 para los eventos de cumpleaños");
+        header("Location:page_turnos.php?error=La hora de inicio debe ser anterior a las 21:00 para los eventos de cumpleaños");
         exit; // Terminar la ejecución del script
     }
     // Sumar 3 horas a la hora_inicio
@@ -44,7 +44,7 @@ if ($id_cancha == 8) {
     // Verificar si la hora de inicio es menor que la hora de finalización
     if (strtotime($hora_inicio) >= strtotime($hora_fin)) {
         // Si la hora de inicio es mayor o igual que la hora de finalización, redirigir con un mensaje de error
-        header("Location:index.php?error=La hora de inicio debe ser menor que la hora de finalización");
+        header("Location:page_turnos.php?error=La hora de inicio debe ser menor que la hora de finalización");
         exit; // Terminar la ejecución del script
     }
 }
@@ -80,7 +80,7 @@ if ($id_cancha == 7) {
 $resultado = mysqli_query($con, $sql);
 if (mysqli_num_rows($resultado) > 0) {
     // Si hay algún solapamiento de turnos, redirigir con un mensaje de error
-    header("Location:index.php?error=El nuevo turno se solapa con otro existente en ese horario.");
+    header("Location:page_turnos.php?error=El nuevo turno se solapa con otro existente en ese horario.");
     exit; // Terminar la ejecución del script
 }
 
@@ -107,7 +107,7 @@ $resultadoNuevoEvento = mysqli_query($con, $InsertNuevoEvento);
 // Verificar si la inserción fue exitosa
 if (!$resultadoNuevoEvento) {
     // Si hubo un error al insertar el evento, redirigir con un mensaje de error
-    header("Location:index.php?error=Error al insertar el nuevo turno: " . mysqli_error($con));
+    header("Location:page_turnos.php?error=Error al insertar el nuevo turno: " . mysqli_error($con));
     exit;
 }
 
@@ -147,6 +147,6 @@ $sql_insert_ticket = "INSERT INTO ticket (id_TURNO, FECHA, TOTAL_CANCHA, TOTAL_D
 
 $resultadoNuevoTicket = mysqli_query($con, $sql_insert_ticket);
 
-header("Location:index.php?e=1");
+header("Location:page_turnos.php?e=1");
 
 ?>

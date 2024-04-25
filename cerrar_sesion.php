@@ -12,6 +12,6 @@ setcookie("USUARIO", "", time() - 3600); // Establece el tiempo de expiración e
 setcookie("TIPO", "", time() - 3600); // Establece el tiempo de expiración en el pasado para eliminar la cookie
 
 // Redirigir al usuario a la página de inicio
-header("Location: login_page.php");
+header("Location: index.php");
 exit(); // Asegurar que el script se detenga después de redirigir
 ?>

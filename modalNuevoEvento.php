@@ -39,7 +39,7 @@
           <!-- campos escondidos que contienen la fecha       -->
           <input type="hidden" class="form-control" name="hidden_hora_inicio" id="hidden_hora_inicio"
             placeholder="Fecha Inicio">
-          
+
           <div class="mb-3">
             <label for="canchas" class="form-label">Cancha</label>
             <select name="canchas" id="canchas" class="form-select">
@@ -48,8 +48,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Guardar Evento</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+          <button type="submit" class="btn btn-primary">Guardar Evento</button>
         </div>
       </form>
     </div>
@@ -107,24 +107,24 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Obtener el campo de búsqueda y la lista de nombres de clientes
-      const campoBuscar = document.getElementById('buscarCliente');
-      const listaNombres = document.querySelectorAll('.nombreCliente');
+  document.addEventListener('DOMContentLoaded', function () {
+    // Obtener el campo de búsqueda y la lista de nombres de clientes
+    const campoBuscar = document.getElementById('buscarCliente');
+    const listaNombres = document.querySelectorAll('.nombreCliente');
 
-      // Agregar un evento de escucha al campo de búsqueda
-      campoBuscar.addEventListener('input', function () {
-        const textoBuscar = campoBuscar.value.trim().toLowerCase();
+    // Agregar un evento de escucha al campo de búsqueda
+    campoBuscar.addEventListener('input', function () {
+      const textoBuscar = campoBuscar.value.trim().toLowerCase();
 
-        // Iterar sobre la lista de nombres y ocultar aquellos que no coincidan con la búsqueda
-        listaNombres.forEach(function (nombre) {
-          const nombreCliente = nombre.textContent.trim().toLowerCase();
-          if (nombreCliente.includes(textoBuscar)) {
-            nombre.style.display = 'block';
-          } else {
-            nombre.style.display = 'none';
-          }
-        });
+      // Iterar sobre la lista de nombres y ocultar aquellos que no coincidan con la búsqueda
+      listaNombres.forEach(function (nombre) {
+        const nombreCliente = nombre.textContent.trim().toLowerCase();
+        if (nombreCliente.includes(textoBuscar)) {
+          nombre.style.display = 'block';
+        } else {
+          nombre.style.display = 'none';
+        }
       });
     });
-  </script>
+  });
+</script>

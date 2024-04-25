@@ -22,10 +22,10 @@ if ($existe == 1) {
     setcookie("TIPO", $tipo_usuario . '|' . $firma_tipo, time() + 3600, '/', '', true, true);
 
     // Redireccionar a otra página
-    header("Location: index.php");
+    header("Location: page_turnos.php");
     exit(); // Asegurarse de que el script se detenga después de redireccionar
 } else {
     // Si el usuario o la clave son incorrectos, mostrar un alert y redirigir a la página de inicio de sesión
-    echo "<script>alert('Verifique que el usuario y la clave sean correctos'); window.location='login_page.php';</script>";
+    echo "<script>alert('Verifique que el usuario y la clave sean correctos'); window.location='index.php';</script>";
 }
 ?>
