@@ -82,7 +82,7 @@ if (isset($_POST['fechaInforme'])) {
                     <td colspan="6" style="font-weight:bold;">Totales</td>
                     <td><?php echo array_sum(array_column($resultado, 'TOTAL_CANCHA')); ?></td>
                     <td><?php echo array_sum(array_column($resultado, 'TOTAL_DETALLE')); ?></td>
-                    <td><?php echo array_sum(array_column($resultado, 'TOTAL')); ?></td>
+                    <td style='font-weight: bold;font-size: 0.8rem;'><?php echo array_sum(array_column($resultado, 'TOTAL')); ?></td>
                     <td><?php echo array_sum(array_column($resultado, 'PAGO_EFECTIVO')); ?></td>
                     <td><?php echo array_sum(array_column($resultado, 'PAGO_TRANSFERENCIA')); ?></td>
                 </tr>

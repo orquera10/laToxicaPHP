@@ -14,6 +14,7 @@ body{
   --color-enfasis: #e1574e;
   --color-enfasis-secundario: #e49c97;
   --color-terciario: #c4daee;
+  --color-cuaternario: #E2F1FF;
 }
 
 #calendar {
@@ -279,7 +280,7 @@ input {
 
 .tablaTurnosAll{
   min-height: 200px;
-  background-color: var(--color-terciario);
+  background-color: var(--color-cuaternario);
 }
 
 #fechaInforme{
@@ -287,6 +288,10 @@ input {
 }
 
 .tablaTurnosAll .table{
-  --bs-table-bg: var(--color-terciario);
+  --bs-table-bg: var(--color-cuaternario);
   font-size: 0.7rem;
+}
+
+tbody, td, tfoot, th, thead, tr{
+  border-color: var(--color-primario);
 }
