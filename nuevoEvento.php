@@ -2,7 +2,7 @@
 date_default_timezone_set("America/Bogota");
 setlocale(LC_ALL, "es_ES");
 
-require("config.php");
+require ("config.php");
 
 // Verificar si se ha enviado el cliente_id y si no está vacío
 if (!isset($_REQUEST['cliente_id']) || empty($_REQUEST['cliente_id'])) {
@@ -54,6 +54,66 @@ if ($id_cancha == 8) {
     }
 }
 
+// Inicializar la consulta SQL
+$sql = "";
+
+if ($id_cancha == 7) {
+    $sql = "SELECT t.* FROM turnos t
+            INNER JOIN canchas c ON t.id_CANCHA = c._id
+            WHERE t.FECHA = '$fecha' 
+            AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
+            OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
+            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1' OR c.NOMBRE = 'Cancha 2' OR c.NOMBRE = 'Cumpleaños')";
+} elseif ($id_cancha == 8) {
+    $sql = "SELECT t.* FROM turnos t
+            INNER JOIN canchas c ON t.id_CANCHA = c._id
+            WHERE t.FECHA = '$fecha' 
+            AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
+            OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
+            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1' OR c.NOMBRE = 'Cancha 2' OR c.NOMBRE = 'Cancha 1 y Cancha 2')";
+} else {
+    // Consulta SQL para verificar si hay solapamiento de turnos
+    $sql = "SELECT t.* FROM turnos t
+            INNER JOIN canchas c ON t.id_CANCHA = c._id
+            WHERE t.FECHA = '$fecha' 
+            AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
+            OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
+            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1 y Cancha 2' OR c.NOMBRE = 'Cumpleaños')";
+}
+
+// Ejecutar consulta
+$resultado = mysqli_query($con, $sql);
+if (mysqli_num_rows($resultado) > 0) {
+    // Si hay algún solapamiento de turnos, redirigir con un mensaje de error
+    header("Location:page_turnos.php?error=El nuevo turno se solapa con otro existente en ese horario.");
+    exit; // Terminar la ejecución del script
+}
+
+// Preparar la consulta SQL para obtener el precio de la cancha con el ID dado
+$sql = "SELECT PRECIO FROM canchas WHERE _id = $id_cancha";
+// Ejecutar la consulta SQL
+$resultado = mysqli_query($con, $sql);
+$fila = mysqli_fetch_assoc($resultado);
+$precio_cancha = $fila['PRECIO'];
+
+// Convierte las cadenas de tiempo en marcas de tiempo UNIX
+$timestamp_inicio = strtotime($hora_inicio);
+$timestamp_fin = strtotime($hora_fin);
+// Calcula la diferencia en segundos
+$diferencia_segundos = $timestamp_fin - $timestamp_inicio;
+// Convierte la diferencia de segundos a horas (redondeado al número entero más cercano)
+$diferencia_horas = round($diferencia_segundos / 3600); // 3600 segundos en una hora
+
+//TOTAL A PAGAR CALCULADO CON LAS HORAS Y EL PRECIO DE LAS CANCHAS
+$total_cancha = $diferencia_horas * $precio_cancha;
+
+// Definir el precio de la cancha basado en el id_cancha
+if ($id_cancha == 8) {
+    // Si es un cumpleaños, solo asignar el precio de la cancha
+    $total_cancha = $fila['PRECIO'];
+}
+
+
 // Obtener la opción seleccionada para repetir el evento
 $repetir = isset($_POST['repetir']) ? $_POST['repetir'] : '';
 
@@ -87,8 +147,11 @@ if (empty($repetir)) {
         exit; // Terminar la ejecución del script
     }
 
-    // Obtener el ID del turno insertado
+    // Obtener el ID del último turno insertado
     $id_turno = mysqli_insert_id($con);
+
+    // Obtener la fecha del turno para el detalle
+    $fecha_actual = date('d-m-Y', strtotime($fecha));
 
     // Insertar el ticket para el turno con el mismo total y fecha que el turno original
     $sql_insert_ticket = "INSERT INTO ticket (
@@ -122,18 +185,6 @@ if (empty($repetir)) {
     header("Location:page_turnos.php?success=El evento se insertó correctamente para el día $fecha.");
     exit; // Terminar la ejecución del script
 }
-
-// Si se selecciona una opción de repetición, se utilizará el código que calcula y maneja las fechas de los turnos repetidos según la opción seleccionada.
-// Dependiendo de la opción seleccionada, puedes insertar los turnos repetidos en la base de datos.
-
-// Obtener el día de la semana del turno original
-$dia_semana = date('N', strtotime($fecha));
-
-// Calcular el primer día del mes para el turno original
-$primer_dia_mes = date('Y-m-01', strtotime($fecha));
-
-// Calcular el último día del mes para el turno original
-$ultimo_dia_mes = date('Y-m-t', strtotime($fecha));
 
 // Inicializar la fecha de inicio y la fecha de fin para la repetición
 $fecha_inicio_repetir = '';
