@@ -23,10 +23,10 @@ if (isset($_COOKIE['USUARIO']) && isset($_COOKIE['TIPO'])) {
     exit(); // Asegurar que el script se detenga después de redirigir
 }
 ?>
-<header class="p-3 border-bottom">
+<header class="p-3 border-bottom" style="border-bottom: none !important">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-end">
-            <p class="m-0 me-3">
+            <p class="m-0 me-3 textUser">
                 <?php // Verificar si las firmas coinciden
                 if ($firma_usuario === $firma_verificada_usuario && $firma_tipo === $firma_verificada_tipo) {
                     // Verificar si el tipo de usuario es admin
@@ -51,11 +51,11 @@ if (isset($_COOKIE['USUARIO']) && isset($_COOKIE['TIPO'])) {
                     <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
                 </a>
                 <ul class="dropdown-menu text-small" style="">
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><a class="dropdown-item" href="#">Perfil</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="cerrar_sesion.php">Sign out</a></li>
+                    <li><a class="dropdown-item" href="cerrar_sesion.php">Cerrar Sesión</a></li>
                 </ul>
             </div>
         </div>

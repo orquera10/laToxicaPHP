@@ -58,7 +58,7 @@ include 'common_scripts.php';
         right: "month,agendaWeek,agendaDay"
       },
 
-      minTime: '12:00:00', // Configuración para empezar a mostrar horarios desde el mediodía
+      minTime: '09:00:00', // Configuración para empezar a mostrar horarios desde el mediodía
       maxTime: '24:00:00', // Configuración para terminar de mostrar horarios a medianoche
 
       locale: 'es',
@@ -221,6 +221,8 @@ include 'common_scripts.php';
         $('label[name=fecha_inicio').text(event.start.format('HH:mm'));
         $('label[name=fecha_fin').text(event.end.format("HH:mm"));
         $('label[name=cancha').text(event.cancha);
+
+        $('.colorModalUpdate').css('background-color', event.color);
 
         // $('span[name=total_cancha').text(event.total_cancha);
         // $('span[name=total_detalle').text(event.total_detalle);

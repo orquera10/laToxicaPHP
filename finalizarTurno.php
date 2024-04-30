@@ -9,8 +9,6 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
     $pagoEfectivo = $_POST['pagoEfectivo'];
     $pagoTransferencia = $_POST['pagoTransferencia'];
 
-    // Valor del campo COLOR
-    $color = "#E1574E";
     
     // Obtener el TOTAL de la tabla ticket para el idTurno proporcionado
     $sql_total = "SELECT TOTAL FROM ticket WHERE id_TURNO = ?";
@@ -33,7 +31,6 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
             JOIN ticket AS ti ON t._id = ti.id_TURNO
             SET ti.PAGO_EFECTIVO = ?, 
                 ti.PAGO_TRANSFERENCIA = ?,
-                t.COLOR = ?,
                 t.FINALIZADO = 1
             WHERE t._id = ?";
 
@@ -41,7 +38,7 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
     $stmt = mysqli_prepare($con, $sql);
 
     // Vincular los parámetros con la declaración SQL
-    mysqli_stmt_bind_param($stmt, "ddsd", $pagoEfectivo, $pagoTransferencia, $color, $idTurno);
+    mysqli_stmt_bind_param($stmt, "ddd", $pagoEfectivo, $pagoTransferencia, $idTurno);
 
     // Ejecutar la consulta
     if(mysqli_stmt_execute($stmt)) {

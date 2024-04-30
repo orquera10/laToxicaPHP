@@ -31,13 +31,14 @@ if ($resultado) {
   // Manejar el error si la consulta falla
   echo "Error al obtener los productos: " . mysqli_error($con);
 }
+
 ?>
 
 
 <div class="modal modalUpdate" id="modalUpdateEvento" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header hederModalUpdate colorModalUpdate">
         <h5 class="modal-title">Agregar productos</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -164,12 +165,13 @@ if ($resultado) {
         <div class="row m-0 p-0">
           <p class="text-md-end h3 styleTotal">Total: <span name="total"> $</span></p>
         </div>
-        <div class="modal-footer">
+        
+      </div>
+      <div class="modal-footer colorModalUpdate footerModalUpdate">
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
           <button type="button" class="btn btn-primary" id="finalizarTurno" onclick="abrirModalPago()">Finalizar
             Turno</button>
         </div>
-      </div>
     </div>
   </div>
 </div>

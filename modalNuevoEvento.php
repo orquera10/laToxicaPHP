@@ -46,9 +46,24 @@
               <!-- Opciones de canchas cargadas dinámicamente -->
             </select>
           </div>
+          <div>
+            <label for="repetirEvento" class="form-label">Repetir</label>
+          </div>
+          <div class="d-grid gap-2">
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group" id="repetirEvento">
+              <input type="radio" class="btn-check" name="repetir" id="unMes" value="unMes" autocomplete="off">
+              <label class="btn btn-primary" for="unMes">Un mes</label>
+
+              <input type="radio" class="btn-check" name="repetir" id="tresMeses" value="tresMeses" autocomplete="off">
+              <label class="btn btn-primary" for="tresMeses">Tres meses</label>
+
+              <input type="radio" class="btn-check" name="repetir" id="seisMeses" value="seisMeses" autocomplete="off">
+              <label class="btn btn-primary" for="seisMeses">Seis meses</label>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
           <button type="submit" class="btn btn-primary">Guardar Evento</button>
         </div>
       </form>
@@ -70,7 +85,7 @@
             <!-- Campo de búsqueda -->
             <div class="input-group mb-3">
               <input type="text" class="form-control" id="buscarCliente" placeholder="Buscar cliente...">
-              <button class="btn btn-primary" type="button" id="btnBuscarCliente">Buscar</button>
+              <!-- <button class="btn btn-primary" type="button" id="btnBuscarCliente">Buscar</button> -->
             </div>
           </div>
         </div>
@@ -92,7 +107,7 @@
         ?>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
