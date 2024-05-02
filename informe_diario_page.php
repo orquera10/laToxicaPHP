@@ -36,7 +36,7 @@ if (isset($_POST['fechaInforme'])) {
 <div class="container">
     <form id="fechaForm" method="post" action="">
         <div class="form-group d-flex justify-content-center mt-4">
-            <input type="date" class="form-control" id="fechaInforme" name="fechaInforme"
+            <input type="date" class="form-control despFecha" id="fechaInforme" name="fechaInforme"
                 value="<?php echo $fechaSeleccionada; ?>" onchange="document.getElementById('fechaForm').submit()">
         </div>
     </form>

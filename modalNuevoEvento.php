@@ -86,6 +86,13 @@
             <div class="input-group mb-3">
               <input type="text" class="form-control" id="buscarCliente" placeholder="Buscar cliente...">
               <!-- <button class="btn btn-primary" type="button" id="btnBuscarCliente">Buscar</button> -->
+              <button class="btn" id="agregarCliente" onclick="abrirModalNuevoCliente()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                  class="bi bi-plus-circle-fill iconAdd" viewBox="0 0 16 16">
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -113,12 +120,20 @@
   </div>
 </div>
 
+<?php
+include ('modalNuevoCliente.php');
+?>
+
 
 <!-- Script para abrir el modal de clientes -->
 <script>
   function abrirModalCliente() {
     $('#clientesModal').modal('show');
   }
+  function abrirModalNuevoCliente() {
+    $('#modalNuevoCliente').modal('show');
+  }
+
 </script>
 
 <script>

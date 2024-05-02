@@ -239,7 +239,7 @@ for ($fecha_actual = $fecha_inicio_repetir; $fecha_actual <= $fecha_fin_repetir;
         '" . $hora_inicio . "',
         '" . $hora_fin . "',
         '" . $color_evento . "',
-        '" . $fecha_actual . "',
+        '" . date('d-m-Y', strtotime($fecha_actual)) . "',
         '" . $id_cancha . "',
         0
     )";
@@ -267,7 +267,7 @@ for ($fecha_actual = $fecha_inicio_repetir; $fecha_actual <= $fecha_fin_repetir;
         PAGO_EFECTIVO
     ) VALUES (
         '$id_turno_repetido',
-        '$fecha_actual',
+        '" . date('d-m-Y', strtotime($fecha_actual)) . "',
         '$total_cancha',
         0,
         '$total_cancha',

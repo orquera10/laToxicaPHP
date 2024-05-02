@@ -20,20 +20,23 @@
         <!-- Parte 2: Lista de Productos -->
         <div class="mb-3">
           <h5>Productos:</h5>
-          <table class="table">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-                <th>Subtotal</th>
-              </tr>
-            </thead>
-            <tbody id="tablaProductosPago">
-              <!-- Agrega más filas según los productos -->
-            </tbody>
-          </table>
+          <div class="styleTabla">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio</th>
+                  <th>Subtotal</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="tablaProductosPago">
+                <!-- Agrega más filas según los productos -->
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <!-- Parte 3: Totales -->

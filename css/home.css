@@ -256,7 +256,12 @@ input {
 }
 
 .iconTrash {
-  color: var(--color-enfasis);
+  color: var(--color-primario);
+  transition: all 0.5s ease;
+}
+
+.iconTrash:hover {
+  transform: scale(1.2);
 }
 
 .titulosColumna {
@@ -280,10 +285,16 @@ input {
 
 .iconAdd {
   color: var(--color-primario);
+  transition: all 0.5s ease;
+}
+
+.iconAdd:hover {
+  transform: scale(1.2);
 }
 
 .img-small {
   max-width: 50px;
+  border-radius: 5px;
 }
 
 .contLabelDatos label {
@@ -311,7 +322,8 @@ input {
 }
 
 .listaNombres {
-  max-height: 200px;
+  min-height: 300px;
+  max-height: 400px;
   overflow-y: scroll;
 }
 
@@ -433,4 +445,8 @@ tr {
   color: var(--color-cuaternario);
   background-color: var(--color-secundario);
   border-color: var(--color-secundario);
+}
+
+.despFecha{
+  background-color: var(--color-primario) !important;
 }

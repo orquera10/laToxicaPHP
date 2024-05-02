@@ -15,6 +15,14 @@ if(isset($_REQUEST['ea'])){ ?>
 <?php } ?>
 
 <?php
+if(isset($_REQUEST['eaa'])){ ?>
+<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+  <strong>Felicitaciones!</strong> El cliente se agrego correctamente.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php } ?>
+
+<?php
 if(isset($_REQUEST['error'])){ ?>
 <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
   <strong>Error:</strong> <?php echo $_REQUEST['error']; ?>
