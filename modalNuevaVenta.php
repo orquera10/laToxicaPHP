@@ -88,6 +88,7 @@ $result = $con->query($sql);
                         <p style="font-weight: bold; font-size:1.2rem" class="mb-1 text-end">Total: <span
                                 id="totalVenta">0</span> $</p>
                         <input type="hidden" name="totalVenta" id="totalVentaInput" value="">
+                        <input type="hidden" name="detalleProductos" id="detalleProductos">
                     </div>
                     <div class="mb-3 row">
                         <h5>Pago:</h5>
@@ -164,55 +165,78 @@ $result = $con->query($sql);
         const cantidad = parseInt(document.getElementById('cantidad').value);
         const total = precio * cantidad;
 
-        // Verificar si el producto ya está en la tabla
-        const tablaProductos = document.getElementById('tablaProductosVenta');
-        const filas = tablaProductos.getElementsByTagName('tr');
-        let productoExistente = null;
-
-        for (let i = 0; i < filas.length; i++) {
-            const celdas = filas[i].getElementsByTagName('td');
-            if (celdas.length > 0 && celdas[0].innerText === productoNombre) {
-                productoExistente = filas[i];
-                break;
-            }
+        // Verificar si el campo detalleProductos ya tiene contenido
+        let detalleProductos = [];
+        const detalleProductosInput = document.getElementById('detalleProductos');
+        if (detalleProductosInput.value !== '') {
+            detalleProductos = JSON.parse(detalleProductosInput.value);
         }
+
+        // Verificar si el producto ya está en la lista de detalles de productos
+        const productoExistente = detalleProductos.find(producto => producto.id === productoId);
 
         if (productoExistente) {
-            // Actualizar la cantidad y el total del producto existente
-            const celdas = productoExistente.getElementsByTagName('td');
-            const cantidadExistente = parseInt(celdas[2].innerText);
-            const totalExistente = parseFloat(celdas[3].innerText);
-
-            celdas[2].innerText = cantidadExistente + cantidad;
-            celdas[3].innerText = totalExistente + total;
+            // Si el producto ya está en la lista, actualizar su cantidad y total
+            productoExistente.cantidad += cantidad;
+            productoExistente.total += total;
         } else {
-            // Crear una nueva fila para el producto
-            const fila = document.createElement('tr');
-            fila.innerHTML = `
-            <td>${productoNombre}</td>
-            <td>${precio}</td>
-            <td>${cantidad}</td>
-            <td>${total}</td>
-        `;
-            tablaProductos.appendChild(fila);
+            // Si el producto no está en la lista, agregarlo como un nuevo elemento
+            detalleProductos.push({
+                id: productoId,
+                nombre: productoNombre,
+                precio: precio,
+                cantidad: cantidad,
+                total: total
+            });
         }
 
-        // Calcular el total de la venta
-        let totalVenta = 0;
-        for (let i = 0; i < filas.length; i++) {
-            const celdas = filas[i].getElementsByTagName('td');
-            if (celdas.length > 0) {
-                totalVenta += parseFloat(celdas[3].innerText);
+        // Convertir el arreglo a formato JSON y asignarlo al campo detalleProductos
+        detalleProductosInput.value = JSON.stringify(detalleProductos);
+
+        // Actualizar la tabla de productos agregados
+        const tablaProductos = document.getElementById('tablaProductosVenta');
+
+        // Obtener las filas existentes en la tabla
+        const filasExistentes = tablaProductos.querySelectorAll('tr');
+
+        // Iterar sobre los detalles de productos y actualizar o agregar las filas correspondientes
+        detalleProductos.forEach(producto => {
+            // Verificar si el producto ya está en la tabla
+            const filaExistente = Array.from(filasExistentes).find(fila => fila.dataset.id === producto.id);
+
+            if (filaExistente) {
+                // Si la fila ya existe, actualizar los valores
+                filaExistente.cells[2].textContent = producto.cantidad;
+                filaExistente.cells[3].textContent = producto.total;
+            } else {
+                // Si la fila no existe, agregar una nueva fila
+                const nuevaFila = tablaProductos.insertRow();
+                nuevaFila.dataset.id = producto.id;
+                nuevaFila.innerHTML = `
+                <td>${producto.nombre}</td>
+                <td>${producto.precio}</td>
+                <td>${producto.cantidad}</td>
+                <td>${producto.total}</td>
+            `;
             }
-        }
+        });
+
+        // Calcular y mostrar el total de la venta
+        calcularMostrarTotalVenta(detalleProductos);
+
+        // Limpiar los campos después de agregar el producto
+        document.getElementById('cantidad').value = 1;
+    }
+
+    function calcularMostrarTotalVenta(detalleProductos) {
+        // Calcular el total de la venta
+        let totalVenta = detalleProductos.reduce((total, producto) => total + producto.total, 0);
 
         // Mostrar el total de la venta
         document.getElementById('totalVenta').innerText = totalVenta;
 
+        // Asignar el total de la venta al campo oculto
         document.getElementById('totalVentaInput').value = totalVenta;
-
-        // Limpiar los campos después de agregar el producto
-        document.getElementById('cantidad').value = 1;
     }
 
     function filtrarProductos() {
@@ -233,6 +257,4 @@ $result = $con->query($sql);
             }
         }
     }
-
-
 </script>
