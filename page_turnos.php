@@ -5,19 +5,24 @@ include 'header.php';
 
 <?php
 include ('config.php');
+
 $SqlEventos = "SELECT 
                   turnos.*, 
                   clientes.NOMBRE as nombre_usuario, 
-                  canchas.NOMBRE as nombre_cancha, 
+                  canchas.NOMBRE as nombre_cancha,
+                  ticket.id_CLIENTE,
                   ticket.TOTAL_CANCHA,
                   ticket.TOTAL_DETALLE,
                   ticket.TOTAL
                 FROM turnos 
-                INNER JOIN clientes ON turnos.id_CLIENTE = clientes._id 
                 INNER JOIN canchas ON turnos.id_CANCHA = canchas._id
-                LEFT JOIN ticket ON turnos._id = ticket.id_TURNO";
+                LEFT JOIN ticket ON turnos._id = ticket.id_TURNO
+                LEFT JOIN clientes ON ticket.id_CLIENTE = clientes._id";
+
 $resulEventos = mysqli_query($con, $SqlEventos);
 ?>
+
+
 
 <div class="container">
   <div class="row">
@@ -34,6 +39,9 @@ include ('headerUsuario.php');
 include ('barraNavegacion.php');
 ?>
 
+<?php
+include ('modalNuevaVenta.php');
+?>
 <div class="d-flex justify-content-center">
   <div id="calendar" class="m-4 calendario"></div>
 </div>
@@ -110,7 +118,7 @@ include 'common_scripts.php';
           $end = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_FIN']));
 
           ?>
-                            {
+                                {
             _id: '<?php echo $dataEvento['_id']; ?>',
             title: '<?php echo $dataEvento['nombre_usuario']; ?>',
             start: '<?php echo $start; ?>',

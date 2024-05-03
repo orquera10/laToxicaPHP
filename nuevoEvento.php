@@ -121,7 +121,6 @@ $repetir = isset($_POST['repetir']) ? $_POST['repetir'] : '';
 if (empty($repetir)) {
     // Insertar el turno único en la base de datos con la misma información que el turno original
     $sql_insert_turno = "INSERT INTO turnos (
-        id_CLIENTE,
         HORA_INICIO,
         HORA_FIN,
         COLOR,
@@ -129,7 +128,6 @@ if (empty($repetir)) {
         id_CANCHA,
         FINALIZADO
     ) VALUES (
-        '" . $cliente_id . "',
         '" . $hora_inicio . "',
         '" . $hora_fin . "',
         '" . $color_evento . "',
@@ -156,6 +154,7 @@ if (empty($repetir)) {
     // Insertar el ticket para el turno con el mismo total y fecha que el turno original
     $sql_insert_ticket = "INSERT INTO ticket (
         id_TURNO,
+        id_CLIENTE,
         FECHA,
         TOTAL_CANCHA,
         TOTAL_DETALLE,
@@ -164,6 +163,7 @@ if (empty($repetir)) {
         PAGO_EFECTIVO
     ) VALUES (
         '$id_turno',
+        '$cliente_id',
         '$fecha_actual',
         '$total_cancha',
         0,
@@ -227,7 +227,6 @@ switch ($repetir) {
 for ($fecha_actual = $fecha_inicio_repetir; $fecha_actual <= $fecha_fin_repetir; $fecha_actual = date('Y-m-d', strtotime('+1 week', strtotime($fecha_actual)))) {
     // Insertar el turno repetido en la base de datos con la misma información que el turno original
     $sql_insert_turno_repetido = "INSERT INTO turnos (
-        id_CLIENTE,
         HORA_INICIO,
         HORA_FIN,
         COLOR,
@@ -235,7 +234,6 @@ for ($fecha_actual = $fecha_inicio_repetir; $fecha_actual <= $fecha_fin_repetir;
         id_CANCHA,
         FINALIZADO
     ) VALUES (
-        '" . $cliente_id . "',
         '" . $hora_inicio . "',
         '" . $hora_fin . "',
         '" . $color_evento . "',
@@ -259,6 +257,7 @@ for ($fecha_actual = $fecha_inicio_repetir; $fecha_actual <= $fecha_fin_repetir;
     // Insertar el ticket para el turno repetido con el mismo total y fecha que el turno original
     $sql_insert_ticket_repetido = "INSERT INTO ticket (
         id_TURNO,
+        id_CLIENTE,
         FECHA,
         TOTAL_CANCHA,
         TOTAL_DETALLE,
@@ -267,6 +266,7 @@ for ($fecha_actual = $fecha_inicio_repetir; $fecha_actual <= $fecha_fin_repetir;
         PAGO_EFECTIVO
     ) VALUES (
         '$id_turno_repetido',
+        '$cliente_id',
         '" . date('d-m-Y', strtotime($fecha_actual)) . "',
         '$total_cancha',
         0,

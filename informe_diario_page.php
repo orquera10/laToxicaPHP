@@ -16,12 +16,13 @@ if (isset($_POST['fechaInforme'])) {
     $fechaSeleccionada = date('d-m-Y', strtotime($fechaSeleccionada));
 
     // Consulta para obtener los datos de la tabla de turnos y de la tabla de clientes
-    $sql = "SELECT t.id_CLIENTE, c.NOMBRE AS nombre_cliente, t.FECHA, t.HORA_INICIO, t.HORA_FIN, cn.NOMBRE AS nombre_cancha, tk.TOTAL_CANCHA, tk.TOTAL_DETALLE, tk.TOTAL, tk.PAGO_EFECTIVO, tk.PAGO_TRANSFERENCIA 
+    $sql = "SELECT tk.id_CLIENTE, c.NOMBRE AS nombre_cliente, t.FECHA, t.HORA_INICIO, t.HORA_FIN, cn.NOMBRE AS nombre_cancha, tk.TOTAL_CANCHA, tk.TOTAL_DETALLE, tk.TOTAL, tk.PAGO_EFECTIVO, tk.PAGO_TRANSFERENCIA 
             FROM turnos t
-            INNER JOIN clientes c ON t.id_CLIENTE = c._id
-            INNER JOIN canchas cn ON t.id_CANCHA = cn._id
             INNER JOIN ticket tk ON t._id = tk.id_TURNO
+            INNER JOIN clientes c ON tk.id_CLIENTE = c._id
+            INNER JOIN canchas cn ON t.id_CANCHA = cn._id
             WHERE t.FECHA = '$fechaSeleccionada' AND t.FINALIZADO = 1";
+
 
     // Ejecutar la consulta
     $resultado_query = mysqli_query($con, $sql);
