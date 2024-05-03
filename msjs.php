@@ -9,7 +9,7 @@ if(isset($_REQUEST['e'])){ ?>
 <?php
 if(isset($_REQUEST['ea'])){ ?>
 <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
-  <strong>Felicitaciones!</strong> El evento fue actualizado correctamente.
+  <strong>Felicitaciones!</strong> La venta se realizo correctamente.
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 <?php } ?>

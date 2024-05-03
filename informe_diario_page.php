@@ -8,6 +8,7 @@ include 'config.php'; // Suponiendo que aquí se encuentra la configuración de 
 
 // Inicializar $resultado como un array vacío
 $resultado = [];
+$fechaSeleccionada = date("d-m-Y");
 
 // Verificar si se ha seleccionado una fecha
 if (isset($_POST['fechaInforme'])) {
@@ -16,12 +17,12 @@ if (isset($_POST['fechaInforme'])) {
     $fechaSeleccionada = date('d-m-Y', strtotime($fechaSeleccionada));
 
     // Consulta para obtener los datos de la tabla de turnos y de la tabla de clientes
-    $sql = "SELECT tk.id_CLIENTE, c.NOMBRE AS nombre_cliente, t.FECHA, t.HORA_INICIO, t.HORA_FIN, cn.NOMBRE AS nombre_cancha, tk.TOTAL_CANCHA, tk.TOTAL_DETALLE, tk.TOTAL, tk.PAGO_EFECTIVO, tk.PAGO_TRANSFERENCIA 
+    $sql = "SELECT tk.id_CLIENTE, c.NOMBRE AS nombre_cliente, t.HORA_INICIO, t.HORA_FIN, cn.NOMBRE AS nombre_cancha, tk.TOTAL_CANCHA, tk.FECHA, tk.TOTAL_DETALLE, tk.TOTAL, tk.PAGO_EFECTIVO, tk.PAGO_TRANSFERENCIA 
             FROM turnos t
             INNER JOIN ticket tk ON t._id = tk.id_TURNO
             INNER JOIN clientes c ON tk.id_CLIENTE = c._id
             INNER JOIN canchas cn ON t.id_CANCHA = cn._id
-            WHERE t.FECHA = '$fechaSeleccionada' AND t.FINALIZADO = 1";
+            WHERE DATE_FORMAT(STR_TO_DATE(tk.FECHA, '%d-%m-%Y %H:%i'), '%d-%m-%Y') = '$fechaSeleccionada' AND t.FINALIZADO = 1";
 
 
     // Ejecutar la consulta
@@ -31,14 +32,14 @@ if (isset($_POST['fechaInforme'])) {
     while ($fila = mysqli_fetch_assoc($resultado_query)) {
         $resultado[] = $fila;
     }
-}
+} 
 ?>
 
 <div class="container">
     <form id="fechaForm" method="post" action="">
         <div class="form-group d-flex justify-content-center mt-4">
             <input type="date" class="form-control despFecha" id="fechaInforme" name="fechaInforme"
-                value="<?php echo $fechaSeleccionada; ?>" onchange="document.getElementById('fechaForm').submit()">
+                value="<?php echo date('d-m-Y', strtotime($fechaSeleccionada)); ?>" onchange="document.getElementById('fechaForm').submit()">
         </div>
     </form>
     <div class="rounded tablaTurnosAll my-4 shadow p-2" style="overflow-x: auto;">

@@ -170,16 +170,22 @@ input {
   background-color: var(--color-primario) !important;
 }
 
-.nav-item a {
-  color: var(--color-secundario) !important;
+.nav-item {
+  color: var(--color-secundario);
+  transition: all 0.5s ease;
 }
 
-.nav-item a:hover {
+.nav-link{
+  color: var(--color-secundario) !important;
+  transition: all 0.5s ease;
+}
+
+.nav-link:hover{
   color: var(--color-cuaternario) !important;
 }
 
 .nav-item:hover {
-  background-color: var(--color-secundario);
+  background-color: var(--color-terciario);
   border-radius: 5px;
 }
 
@@ -449,4 +455,18 @@ tr {
 
 .despFecha{
   background-color: var(--color-primario) !important;
+}
+
+.swal2-modal{
+  background-color: var(--color-secundario);
+  color: var(--color-primario);
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
+  background-color: var(--color-primario) !important;
+  color: var(--color-secundario) !important;
+  border-color: var(--color-primario) !important;
+  border: var(--color-secundario)  solid 2px !important;
+  font-weight: bold;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }

@@ -17,7 +17,8 @@ $SqlEventos = "SELECT
                 FROM turnos 
                 INNER JOIN canchas ON turnos.id_CANCHA = canchas._id
                 LEFT JOIN ticket ON turnos._id = ticket.id_TURNO
-                LEFT JOIN clientes ON ticket.id_CLIENTE = clientes._id";
+                LEFT JOIN clientes ON ticket.id_CLIENTE = clientes._id
+                WHERE VENTA = 0";
 
 $resulEventos = mysqli_query($con, $SqlEventos);
 ?>
@@ -118,7 +119,7 @@ include 'common_scripts.php';
           $end = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_FIN']));
 
           ?>
-                                {
+                                      {
             _id: '<?php echo $dataEvento['_id']; ?>',
             title: '<?php echo $dataEvento['nombre_usuario']; ?>',
             start: '<?php echo $start; ?>',
@@ -295,7 +296,7 @@ include 'common_scripts.php';
 </script>
 
 <!-- Script para manejar la selección de cliente ------------------------------------------->
-<script>
+<!-- <script>
   // Función para manejar la selección de cliente
   $(document).on('click', '.seleccionar-cliente', function () {
     var cliente_id = $(this).data('id');
@@ -306,6 +307,32 @@ include 'common_scripts.php';
     $('#cliente_id').val(cliente_id);
     // Cerrar solo el modal de selección de clientes
     $('#clientesModal').modal('hide');
+  });
+</script> -->
+<script>
+  // Función para manejar la selección de cliente
+  $(document).on('click', '.seleccionar-cliente', function () {
+    var cliente_id = $(this).data('id');
+    var cliente_nombre = $(this).text();
+
+    // Verificar si el modal de venta está activo
+    if ($('#exampleModal').hasClass('show')) {
+      // Si el modal de venta está activo, actualizar el valor del input del cliente en ese modal
+      $('#evento').val(cliente_nombre);
+      $('#cliente_id').val(cliente_id);
+      $('#clientesModal').modal('hide'); // Cerrar el modal de venta      
+    }
+    // Verificar si el modal de carga de evento está activo
+    else if ($('#modalVenta').hasClass('show')) {
+      // Si el modal de carga de evento está activo, actualizar el valor del input del cliente en ese modal
+      $('#eventoVenta').val(cliente_nombre);
+      $('#cliente_id_evento_venta').val(cliente_id);
+      $('#clientesModal').modal('hide'); // Cerrar el modal de venta  
+    }
+    else {
+      // No se está mostrando ningún modal, manejar el caso según sea necesario
+      console.log('Ningún modal activo.');
+    }
   });
 </script>
 
@@ -528,6 +555,60 @@ include 'common_scripts.php';
   $('#productosModal').on('shown.bs.modal', function () {
     $('.tarjeta').show();
   });
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('#formVenta').submit(function (event) {
+      // Evitar que el formulario se envíe normalmente
+      event.preventDefault();
+
+      // Obtener los datos del formulario
+      var formData = $(this).serialize();
+
+      // Realizar la solicitud AJAX
+      $.ajax({
+        type: 'POST',
+        url: 'nuevaVenta.php',
+        data: formData,
+        dataType: 'json',
+        success: function (response) {
+          if (response.success) {
+            // Aquí puedes manejar la respuesta del servidor, por ejemplo, mostrar un mensaje de éxito
+            Swal.fire({
+              title: '¡Venta realizada!',
+              text: 'La venta se ha registrado correctamente.',
+              icon: 'success',
+              confirmButtonText: 'Aceptar'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = 'page_turnos.php';
+              }
+            });
+          } else {
+            // Mostrar un mensaje de error utilizando SweetAlert2
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Error en la venta: ' + response.message,
+              confirmButtonText: 'Aceptar'
+            });
+          }
+
+        },
+        error: function (xhr, status, error) {
+          // Mostrar mensaje de error con SweetAlert
+          Swal.fire({
+            title: 'Error',
+            text: 'Error al enviar la venta: ' + error,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      });
+    });
+  });
+
 </script>
 
 </body>

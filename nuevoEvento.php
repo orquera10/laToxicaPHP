@@ -126,13 +126,15 @@ if (empty($repetir)) {
         COLOR,
         FECHA,
         id_CANCHA,
-        FINALIZADO
+        FINALIZADO,
+        VENTA
     ) VALUES (
         '" . $hora_inicio . "',
         '" . $hora_fin . "',
         '" . $color_evento . "',
         '" . $fecha . "',
         '" . $id_cancha . "',
+        0,
         0
     )";
 
@@ -182,7 +184,7 @@ if (empty($repetir)) {
     }
 
     // Redirigir a la página de turnos con un mensaje de éxito
-    header("Location:page_turnos.php?success=El evento se insertó correctamente para el día $fecha.");
+    header("Location:page_turnos.php?e");
     exit; // Terminar la ejecución del script
 }
 
@@ -232,13 +234,15 @@ for ($fecha_actual = $fecha_inicio_repetir; $fecha_actual <= $fecha_fin_repetir;
         COLOR,
         FECHA,
         id_CANCHA,
-        FINALIZADO
+        FINALIZADO,
+        VENTA
     ) VALUES (
         '" . $hora_inicio . "',
         '" . $hora_fin . "',
         '" . $color_evento . "',
         '" . date('d-m-Y', strtotime($fecha_actual)) . "',
         '" . $id_cancha . "',
+        0,
         0
     )";
 
