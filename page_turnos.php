@@ -93,6 +93,7 @@ include 'common_scripts.php';
         $("input[name=hidden_hora_inicio]").val(fechaInicio);
         // $("input[name=hidden_hora_fin]").val(fechaFinal);
 
+        //carga el desplegable de las canchas
         $.ajax({
           url: 'cargarDesplegableCancha.php',
           type: 'POST',

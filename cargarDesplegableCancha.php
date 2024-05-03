@@ -1,29 +1,14 @@
 <?php
 include ("config.php");
 
-// Consulta SQL para seleccionar los nombres de las canchas de fútbol
-$sql = "SELECT _id, NOMBRE FROM canchas";
+// Consulta SQL para seleccionar los nombres de las canchas de fútbol excluyendo la cancha con ID 9
+$sql = "SELECT _id, NOMBRE FROM canchas WHERE _id != 9";
 
 // Ejecutar la consulta
 $canchas = mysqli_query($con, $sql);
 
 // Obtener la fecha del campo oculto
 $fecha_inicio = isset($_POST['fecha']) ? $_POST['fecha'] : '';
-
-// // Si la fecha de inicio está presente, la procesamos
-// if ($fecha_inicio) {
-//     // Convertir la fecha a un objeto DateTime
-//     $fecha_obj = new DateTime($fecha_inicio);
-
-//     // Obtener el día de la semana (1 para lunes, 7 para domingo)
-//     $dia_semana = $fecha_obj->format('N');
-
-//     // Verificar si es fin de semana (sábado o domingo)
-//     $es_fin_de_semana = $dia_semana >= 6;
-// } else {
-//     // Si no se proporcionó la fecha, asumimos que no es fin de semana
-//     $es_fin_de_semana = false;
-// }
 
 $html = '';
 

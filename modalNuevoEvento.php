@@ -22,7 +22,7 @@
             <div class="col">
               <label for="select_hora_inicio" class="form-label">Hora Entrada</label>
               <select class="form-select" name="select_hora_inicio" id="select_hora_inicio">
-                <?php for ($i = 15; $i <= 23; $i++) {
+                <?php for ($i = 7; $i <= 23; $i++) {
                   echo "<option value='$i:00'>$i:00</option>";
                 } ?>
               </select>
@@ -30,7 +30,7 @@
             <div class="col">
               <label for="select_hora_fin" class="form-label">Hora Salida</label>
               <select class="form-select" name="select_hora_fin" id="select_hora_fin">
-                <?php for ($i = 16; $i <= 24; $i++) {
+                <?php for ($i = 8; $i <= 24; $i++) {
                   echo "<option value='$i:00'>$i:00</option>";
                 } ?>
               </select>
