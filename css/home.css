@@ -470,3 +470,10 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
   font-weight: bold;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
+
+.fa-user{
+  color: var(--color-primario);
+  padding: 13px;
+  background-color: var(--color-terciario);
+  border-radius: 50%;
+}

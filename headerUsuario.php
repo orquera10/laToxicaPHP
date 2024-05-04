@@ -48,7 +48,7 @@ if (isset($_COOKIE['USUARIO']) && isset($_COOKIE['TIPO'])) {
 
                 <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
                     data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                    <i class="fa-solid fa-user"></i>
                 </a>
                 <ul class="dropdown-menu text-small" style="">
                     <li><a class="dropdown-item" href="#">Perfil</a></li>

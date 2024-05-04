@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Verificar si el total coincide con la suma de los pagos
     if ($total != 0 && $total == $sumaPagos) {
         // Calcular la fecha actual
-        $fecha = date("Y-m-d H:i:s");
+        $fecha = date("d-m-Y H:i:s");
 
         // Insertar un nuevo turno con FINALIZADO en 1
         $sql_insert_turno = "INSERT INTO turnos (FINALIZADO, id_CANCHA, VENTA) VALUES (1, 9, 1)";
