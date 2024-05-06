@@ -7,7 +7,7 @@ include 'barraNavegacion.php';
 include 'config.php'; // Suponiendo que aquí se encuentra la configuración de la conexión a la base de datos
 
 // Variable para almacenar la consulta SQL
-$sql = "SELECT * FROM producto";
+$sql = "SELECT * FROM producto WHERE VISIBLE = 1";
 
 // Variable para almacenar el resultado de la consulta SQL
 $result = mysqli_query($con, $sql);
@@ -56,8 +56,8 @@ if (mysqli_num_rows($result) > 0) {
                     echo "<td>" . $producto['PRECIO'] . " $</td>";
                     echo "<td>" . $producto['STOCK'] . "</td>";
                     echo "<td>";
-                    echo "<a href='editar_producto.php?id=" . $producto['_id'] . "'><i class='fas fa-edit iconEditProducto'></i></a>";
-                    echo "<a href='eliminar_producto.php?id=" . $producto['_id'] . "'><i class='fas fa-trash-alt iconTrashProducto'></i></a>";
+                    echo "<a href='#' onclick='abrirModalEditar(" . json_encode($producto) . ")'><i class='fas fa-edit iconEditProducto'></i></a>";
+                    echo "<a href='#' onclick='eliminarProducto(" . $producto['_id'] . ")'><i class='fas fa-trash-alt iconTrashProducto'></i></a>";
                     echo "</td>";
                     echo "</tr>";
                 }
@@ -76,7 +76,10 @@ if (mysqli_num_rows($result) > 0) {
     </div>
 </div>
 
+
 <?php
+include 'modalModificarProducto.php';
+include 'modalAgregarProducto.php';
 include 'common_scripts.php';
 ?>
 
@@ -95,6 +98,53 @@ include 'common_scripts.php';
         });
     });
 </script>
+
+<script>
+    // Función para manejar el clic en el botón de eliminar producto
+    function eliminarProducto(id) {
+        // Confirmar con el usuario antes de eliminar el producto
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminarlo'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Realizar una solicitud AJAX para eliminar el producto
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "eliminar_producto.php?id=" + id, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Obtener la respuesta del servidor
+                        var response = JSON.parse(xhr.responseText);
+                        // Mostrar una alerta con Sweet Alert
+                        if (response.success) {
+                            Swal.fire({
+                                title: '¡Eliminado!',
+                                text: response.message,
+                                icon: 'success'
+                            }).then(function () {
+                                // Recargar la página después de eliminar el producto
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error'
+                            });
+                        }
+                    }
+                };
+                xhr.send();
+            }
+        });
+    }
+</script>
+
 
 </body>
 

@@ -495,7 +495,7 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
 }
 
 .tablaProductos{
-  max-height: 60vh;
+  max-height: 50vh;
   overflow-x: auto;
 }
 
@@ -531,7 +531,7 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
 }
 /*-----------------------------------------------*/
 
-#buscarProducto{
+#buscarProducto, #buscarCliente{
   background-color: var(--color-cuaternario);
   color: var(--color-secundario);
 }
@@ -540,4 +540,37 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
   color: var(--color-terciario);
   margin: 10px;
   font-size: 1.3rem;
+}
+
+.tarjetasCanchas .card{
+  background-color: var(--color-cuaternario);
+  --bs-card-border-width: none;
+  border-radius: 20px;
+}
+
+.tarjetasCanchas .card .card-img-top {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.tarjetasCanchas .card button{
+  width: 100%;
+}
+
+.tarjetasCanchas .card .card-title{
+  color: var(--color-secundario);
+}
+
+.tarjetasCanchas .card p{
+  color: var(--color-secundario);
+  font-weight: 400;
+}
+
+.tarjetasCanchas .card button{
+  border: none;
+}
+
+.tarjetasCanchas .card input{
+  color: var(--color-primario);
+  background-color: var(--color-secundario);
 }
