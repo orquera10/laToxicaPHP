@@ -2,7 +2,7 @@
 // Verificar si se recibieron los parámetros esperados
 if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['pagoTransferencia'])) {
     // Establecer la conexión con la base de datos (reemplaza con tus propios datos)
-    require ("config.php");
+    require("config.php");
 
     // Obtener los valores de los parámetros
     $idTurno = $_POST['idTurno'];
@@ -26,11 +26,15 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
         exit(); // Terminar el script
     }
     
+    // Obtener la fecha y hora actual
+    $fecha_actual = date("d-m-Y H:i:s");
+
     // Preparar la consulta SQL para actualizar las tablas turno y ticket
     $sql = "UPDATE turnos AS t
             JOIN ticket AS ti ON t._id = ti.id_TURNO
             SET ti.PAGO_EFECTIVO = ?, 
                 ti.PAGO_TRANSFERENCIA = ?,
+                ti.FECHA = ?, 
                 t.FINALIZADO = 1
             WHERE t._id = ?";
 
@@ -38,7 +42,7 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
     $stmt = mysqli_prepare($con, $sql);
 
     // Vincular los parámetros con la declaración SQL
-    mysqli_stmt_bind_param($stmt, "ddd", $pagoEfectivo, $pagoTransferencia, $idTurno);
+    mysqli_stmt_bind_param($stmt, "ddsd", $pagoEfectivo, $pagoTransferencia, $fecha_actual, $idTurno);
 
     // Ejecutar la consulta
     if(mysqli_stmt_execute($stmt)) {

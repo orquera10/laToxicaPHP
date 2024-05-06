@@ -15,7 +15,7 @@ body {
   --color-enfasis: #e1574e;
   --color-enfasis-secundario: #e49c97;
   --color-terciario: #315257;
-  --color-cuaternario: #ffeaa8;
+  --color-cuaternario: #F9F5D2;
 }
 
 #calendar {
@@ -356,7 +356,14 @@ input {
 .tablaTurnosAll {
   min-height: 200px;
   background-color: var(--color-cuaternario);
+  border-radius: 20px !important;
 }
+
+.tablaTurnosAll .table>:not(caption)>*>* {
+  color: var(--color-secundario) !important;
+  
+}
+
 
 #fechaInforme {
   max-width: 200px;
@@ -373,6 +380,15 @@ tfoot,
 th,
 thead,
 tr {
+  border-color: var(--color-secundario);
+}
+
+.styleTabla tbody,
+.styleTabla td,
+.styleTabla tfoot,
+.styleTabla th,
+.styleTabla thead,
+.styleTabla tr {
   border-color: var(--color-primario);
 }
 
@@ -471,9 +487,57 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-.fa-user{
+.iconProfile{
   color: var(--color-primario);
   padding: 13px;
   background-color: var(--color-terciario);
   border-radius: 50%;
+}
+
+.tablaProductos{
+  max-height: 60vh;
+  overflow-x: auto;
+}
+
+.tablaProductos table td, .tablaProductos table tr{
+  font-size: 1rem;
+}
+
+.tablaProductos img{
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/*scrol modificacion-----------------------------*/
+.tablaProductos::-webkit-scrollbar {
+  /* Ocultar el scrollbar vertical */
+  width: 0;
+}
+
+.tablaProductos::-webkit-scrollbar-thumb {
+  /* Establecer el scrollbar como un rectángulo */
+  background-color: var(--color-secundario);
+  border-radius: 5px; /* Redondear los bordes del scrollbar */
+}
+
+.tablaProductos::-webkit-scrollbar-track {
+  /* No mostrar el track del scrollbar */
+  background-color: transparent;
+}
+
+/* Para navegadores que no son basados en WebKit (como Firefox) */
+.tablaProductos {
+  scrollbar-width: none; /* Ocultar el scrollbar */
+}
+/*-----------------------------------------------*/
+
+#buscarProducto{
+  background-color: var(--color-cuaternario);
+  color: var(--color-secundario);
+}
+
+.iconEditProducto ,.iconTrashProducto{
+  color: var(--color-terciario);
+  margin: 10px;
+  font-size: 1.3rem;
 }

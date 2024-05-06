@@ -22,7 +22,7 @@
                     </a>
                     <ul class="dropdown-menu dropMenu">
                         <li><a class="dropdown-item" href="#">Clientes</a></li>
-                        <li><a class="dropdown-item" href="#">Productos</a></li>
+                        <li><a class="dropdown-item" href="productos_page.php">Productos</a></li>
                         <li><a class="dropdown-item" href="#">Canchas</a></li>
                     </ul>
                 </li>

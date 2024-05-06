@@ -17,7 +17,7 @@ if (isset($_POST['fechaInforme'])) {
     $fechaSeleccionada = date('d-m-Y', strtotime($fechaSeleccionada));
 
     // Consulta para obtener los datos de la tabla de turnos y de la tabla de clientes
-    $sql = "SELECT tk.id_CLIENTE, c.NOMBRE AS nombre_cliente, t.HORA_INICIO, t.HORA_FIN, cn.NOMBRE AS nombre_cancha, tk.TOTAL_CANCHA, tk.FECHA, tk.TOTAL_DETALLE, tk.TOTAL, tk.PAGO_EFECTIVO, tk.PAGO_TRANSFERENCIA 
+    $sql = "SELECT tk.id_CLIENTE, c.NOMBRE AS nombre_cliente, t.FECHA AS fecha_reserva, t.HORA_INICIO, t.HORA_FIN, cn.NOMBRE AS nombre_cancha, tk.TOTAL_CANCHA, tk.FECHA AS fecha_ticket, tk.TOTAL_DETALLE, tk.TOTAL, tk.PAGO_EFECTIVO, tk.PAGO_TRANSFERENCIA 
             FROM turnos t
             INNER JOIN ticket tk ON t._id = tk.id_TURNO
             INNER JOIN clientes c ON tk.id_CLIENTE = c._id
@@ -42,16 +42,17 @@ if (isset($_POST['fechaInforme'])) {
                 value="<?php echo date('d-m-Y', strtotime($fechaSeleccionada)); ?>" onchange="document.getElementById('fechaForm').submit()">
         </div>
     </form>
-    <div class="rounded tablaTurnosAll my-4 shadow p-2" style="overflow-x: auto;">
+    <div class="rounded tablaTurnosAll my-4 shadow py-2 px-4" style="overflow-x: auto;">
         <table class="table">
             <thead>
                 <tr class="align-middle">
                     <th>ID Cliente</th>
                     <th>Nombre Cliente</th>
-                    <th>Fecha</th>
+                    <th>Fecha Pago</th>
+                    <th>Cancha</th>
+                    <th>Fecha Reserva</th>
                     <th>Hora Inicio</th>
                     <th>Hora Fin</th>
-                    <th>Cancha</th>
                     <th>Total Cancha</th>
                     <th>Total Productos</th>
                     <th>Total</th>
@@ -66,10 +67,11 @@ if (isset($_POST['fechaInforme'])) {
                     echo "<tr class='align-middle'>";
                     echo "<td>" . $fila['id_CLIENTE'] . "</td>";
                     echo "<td>" . $fila['nombre_cliente'] . "</td>";
-                    echo "<td>" . $fila['FECHA'] . "</td>";
+                    echo "<td>" . $fila['fecha_ticket'] . "</td>";
+                    echo "<td>" . $fila['nombre_cancha'] . "</td>";
+                    echo "<td>" . $fila['fecha_reserva'] . "</td>";
                     echo "<td>" . $fila['HORA_INICIO'] . "</td>";
                     echo "<td>" . $fila['HORA_FIN'] . "</td>";
-                    echo "<td>" . $fila['nombre_cancha'] . "</td>";
                     echo "<td>" . $fila['TOTAL_CANCHA'] . "</td>";
                     echo "<td>" . $fila['TOTAL_DETALLE'] . "</td>";
                     echo "<td style='font-weight: bold;font-size: 0.8rem;' >" . $fila['TOTAL'] . "</td>";
@@ -81,12 +83,13 @@ if (isset($_POST['fechaInforme'])) {
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="6" style="font-weight:bold;">Totales</td>
-                    <td><?php echo array_sum(array_column($resultado, 'TOTAL_CANCHA')); ?></td>
-                    <td><?php echo array_sum(array_column($resultado, 'TOTAL_DETALLE')); ?></td>
-                    <td style='font-weight: bold;font-size: 0.8rem;'><?php echo array_sum(array_column($resultado, 'TOTAL')); ?></td>
-                    <td><?php echo array_sum(array_column($resultado, 'PAGO_EFECTIVO')); ?></td>
-                    <td><?php echo array_sum(array_column($resultado, 'PAGO_TRANSFERENCIA')); ?></td>
+                    <td colspan="6"></td>
+                    <td style='font-weight: bold;font-size: 0.8rem;'>Totales</td>
+                    <td style='font-weight: bold;font-size: 0.8rem;'><?php echo array_sum(array_column($resultado, 'TOTAL_CANCHA')); ?></td>
+                    <td style='font-weight: bold;font-size: 0.8rem;'><?php echo array_sum(array_column($resultado, 'TOTAL_DETALLE')); ?></td>
+                    <td style='font-weight: bold;font-size: 1rem;'><?php echo array_sum(array_column($resultado, 'TOTAL')); ?></td>
+                    <td style='font-weight: bold;font-size: 0.8rem;'><?php echo array_sum(array_column($resultado, 'PAGO_EFECTIVO')); ?></td>
+                    <td style='font-weight: bold;font-size: 0.8rem;'><?php echo array_sum(array_column($resultado, 'PAGO_TRANSFERENCIA')); ?></td>
                 </tr>
             </tfoot>
         </table>

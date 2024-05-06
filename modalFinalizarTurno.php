@@ -57,7 +57,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
         <!-- Botón para realizar alguna acción, como guardar los datos -->
         <button type="button" class="btn btn-primary" id="btnFinalizar">Guardar</button>
       </div>

@@ -3,7 +3,7 @@
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Incluir la conexión a la base de datos
     include('config.php');
-    date_default_timezone_set('America/Argentina/Buenos_Aires');
+    
 
     // Obtener los datos de la venta del formulario
     $idCliente = $_POST['cliente_id_evento_venta'];
