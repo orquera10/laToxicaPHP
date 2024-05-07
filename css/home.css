@@ -447,6 +447,11 @@ tr {
   border-color: var(--color-primario) !important;
 }
 
+.modal textarea{
+  background-color: var(--color-cuaternario) !important;
+  border-color: var(--color-primario) !important;
+}
+
 .modal select{
   background-color: var(--color-cuaternario) !important;
   border-color: var(--color-primario) !important;
@@ -574,3 +579,13 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
   color: var(--color-primario);
   background-color: var(--color-secundario);
 }
+
+.filtrosProductos p{
+  color: var(--color-primario);
+}
+
+.filtrosProductos select{
+  color: var(--color-secundario);
+  background-color: var(--color-cuaternario);
+}
+

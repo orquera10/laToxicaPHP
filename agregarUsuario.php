@@ -11,7 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Verificar si los campos obligatorios están vacíos
     if (empty($nombre) || empty($email) || empty($telefono)) {
-        echo "Por favor, complete todos los campos obligatorios.";
+        // Si faltan campos obligatorios, redirigir de vuelta a la página actual con un mensaje de error
+        header("Location: " . $_SERVER['HTTP_REFERER'] . "?error=Por favor, complete todos los campos obligatorios.");
         exit; // Terminar la ejecución del script
     }
 
@@ -20,8 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $resultado_verificar_telefono = mysqli_query($con, $sql_verificar_telefono);
 
     if (mysqli_num_rows($resultado_verificar_telefono) > 0) {
-        // Si el teléfono ya existe en la base de datos, mostrar un mensaje de error
-        header("Location:page_turnos.php?error=El teléfono ya está registrado.");
+        // Si el teléfono ya existe en la base de datos, redirigir de vuelta a la página actual con un mensaje de error
+        header("Location: " . $_SERVER['HTTP_REFERER'] . "?error=El teléfono ya está registrado.");
         exit; // Terminar la ejecución del script
     }
 
@@ -30,9 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Ejecutar la consulta SQL utilizando la conexión existente en config.php
     if (mysqli_query($con, $sql)) {
-        header("Location:page_turnos.php?eaa=Usuario agregado correctamente.");
+        // Si la inserción es exitosa, redirigir de vuelta a la página actual con un mensaje de éxito
+        header("Location: " . $_SERVER['HTTP_REFERER'] . "?eaa");
     } else {
-        header("Location:page_turnos.php?error=Error al agregar usuario: " . mysqli_error($con));
+        // Si hay un error al ejecutar la consulta SQL, redirigir de vuelta a la página actual con un mensaje de error
+        header("Location: " . $_SERVER['HTTP_REFERER'] . "?error=Error al agregar cliente: " . mysqli_error($con));
     }
 } else {
     // Si no se ha enviado el formulario mediante POST, mostrar un mensaje de error

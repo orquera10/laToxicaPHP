@@ -25,11 +25,26 @@ if (mysqli_num_rows($result) > 0) {
 ?>
 
 <div class="container">
-    <div class="row m-0 p-0">
-        <div class="col-12 col-md-3 mt-4">
+    <div class="row m-0 p-0 filtrosProductos">
+        <div class="d-flex col-12 col-md-6 mt-4">
+            <p class="my-auto me-3">Busqueda:</p>
             <input type="text" class="form-control" id="buscarProducto" placeholder="Buscar por nombre">
         </div>
+        <!-- Menú desplegable para seleccionar el criterio de ordenamiento -->
+        <div class="d-flex mt-4 col-md-6">
+            <p class="my-auto me-3">Filtro:</p>
+            <select class="form-select" id="ordenarPor" onchange="ordenarProductos()">
+                <option value="">Ninguno</option>
+                <option value="id">ID</option>
+                <option value="nombre">Nombre</option>
+                <option value="precio">Precio</option>
+                <option value="stock">Stock</option>
+            </select>
+        </div>
     </div>
+
+
+
     <!-- Campo de búsqueda -->
     <div class="rounded tablaTurnosAll tablaProductos my-4 shadow py-2 px-4">
         <table class="table">
@@ -144,6 +159,62 @@ include 'common_scripts.php';
         });
     }
 </script>
+
+<script>
+    // Función para ordenar productos según el criterio seleccionado en el menú desplegable
+    function ordenarProductos() {
+        var criterio = document.getElementById("ordenarPor").value;
+
+        // Obtener las filas de la tabla de productos
+        var filas = document.querySelectorAll(".tablaProductos tbody tr");
+
+        // Convertir las filas en un array para poder ordenarlas
+        var filasArray = Array.from(filas);
+
+        // Ordenar las filas según el criterio seleccionado
+        if (criterio === "stock") {
+            filasArray.sort(function (a, b) {
+                var stockA = parseInt(a.getElementsByTagName("td")[5].textContent);
+                var stockB = parseInt(b.getElementsByTagName("td")[5].textContent);
+                return stockA - stockB;
+            });
+        } else if (criterio === "nombre") {
+            filasArray.sort(function (a, b) {
+                var nombreA = a.getElementsByTagName("td")[2].textContent.toLowerCase();
+                var nombreB = b.getElementsByTagName("td")[2].textContent.toLowerCase();
+                if (nombreA < nombreB) {
+                    return -1;
+                }
+                if (nombreA > nombreB) {
+                    return 1;
+                }
+                return 0;
+            });
+        } else if (criterio === "id") {
+            filasArray.sort(function (a, b) {
+                var idA = parseInt(a.getElementsByTagName("td")[1].textContent);
+                var idB = parseInt(b.getElementsByTagName("td")[1].textContent);
+                return idA - idB;
+            });
+        } else if (criterio === "precio") {
+            filasArray.sort(function (a, b) {
+                var precioA = parseFloat(a.getElementsByTagName("td")[4].textContent);
+                var precioB = parseFloat(b.getElementsByTagName("td")[4].textContent);
+                return precioA - precioB;
+            });
+        }
+
+        // Eliminar las filas existentes de la tabla
+        var tabla = document.querySelector(".tablaProductos tbody");
+        tabla.innerHTML = "";
+
+        // Agregar las filas ordenadas a la tabla
+        filasArray.forEach(function (fila) {
+            tabla.appendChild(fila);
+        });
+    }
+</script>
+
 
 
 </body>

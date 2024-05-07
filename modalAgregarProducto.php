@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 <!-- Formulario para agregar un nuevo producto -->
-                <form id="formAgregarProducto">
+                <form id="formAgregarProducto" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="nombreProducto" class="form-label">Nombre:</label>
                         <input type="text" class="form-control" id="nombreProducto" name="nombreProducto">
@@ -25,6 +25,10 @@
                     <div class="mb-3">
                         <label for="stockProducto" class="form-label">Stock:</label>
                         <input type="number" class="form-control" id="stockProducto" name="stockProducto">
+                    </div>
+                    <div class="mb-3">
+                        <label for="imagenProducto" class="form-label">Imagen:</label>
+                        <input type="file" class="form-control" id="imagenProducto" name="imagenProducto">
                     </div>
                 </form>
             </div>
@@ -50,6 +54,7 @@
         var descripcion = document.getElementById('descripcionProducto').value;
         var precio = document.getElementById('precioProducto').value;
         var stock = document.getElementById('stockProducto').value;
+        var imagen = document.getElementById('imagenProducto').files[0]; // Obtener la imagen seleccionada
 
         // Crear un objeto FormData para enviar los datos del formulario
         var formData = new FormData();
@@ -57,6 +62,7 @@
         formData.append('descripcionProducto', descripcion);
         formData.append('precioProducto', precio);
         formData.append('stockProducto', stock);
+        formData.append('imagenProducto', imagen); // Agregar la imagen al FormData
 
         // Realizar una solicitud AJAX para guardar el producto
         var xhr = new XMLHttpRequest();

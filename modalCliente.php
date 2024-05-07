@@ -26,7 +26,7 @@
                 <!-- Contenido dinámico de la lista de clientes -->
                 <?php
                 // Consulta SQL para seleccionar los nombres de los clientes
-                $sql_clientes = "SELECT _id, NOMBRE FROM clientes";
+                $sql_clientes = "SELECT _id, NOMBRE FROM clientes WHERE VISIBLE = 1";
                 // Ejecutar la consulta
                 $clientes = mysqli_query($con, $sql_clientes);
                 if (mysqli_num_rows($clientes) > 0) {
