@@ -8,12 +8,54 @@ if (isset($_POST['cancha_id']) && isset($_POST['nuevo_precio'])) {
     $cancha_id = mysqli_real_escape_string($con, $_POST['cancha_id']);
     $nuevo_precio = mysqli_real_escape_string($con, $_POST['nuevo_precio']);
 
+    // Consulta SQL para obtener el precio anterior de la cancha
+    $sql_precio_anterior = "SELECT PRECIO FROM canchas WHERE _id = '$cancha_id'";
+    $result_precio_anterior = mysqli_query($con, $sql_precio_anterior);
+    $row_precio_anterior = mysqli_fetch_assoc($result_precio_anterior);
+    $precio_anterior = $row_precio_anterior['PRECIO'];
+
     // Consulta SQL para actualizar el precio en la base de datos
     $sql = "UPDATE canchas SET PRECIO = '$nuevo_precio' WHERE _id = '$cancha_id'";
 
     // Ejecutar la consulta y verificar si fue exitosa
     if (mysqli_query($con, $sql)) {
         echo "Precio actualizado correctamente.";
+
+        // Calcular la diferencia de precios
+        // $diferencia_precio = $nuevo_precio - $precio_anterior;
+
+        // Obtener la fecha actual
+        $fecha_actual = date('d-m-Y'); // Formato correcto para comparaciones de fecha en MySQL
+
+
+        // Consulta SQL para actualizar los tickets relacionados
+        $sql_tickets = "SELECT ticket._id AS id_ticket, ticket.TOTAL_CANCHA, turnos.HORA_INICIO, turnos.HORA_FIN
+                        FROM ticket
+                        INNER JOIN turnos ON ticket.id_TURNO = turnos._id
+                        WHERE turnos.id_CANCHA = '$cancha_id' AND turnos.FECHA >= '$fecha_actual'";
+        $result_tickets = mysqli_query($con, $sql_tickets);
+
+
+        // Actualizar los tickets
+        while ($row_ticket = mysqli_fetch_assoc($result_tickets)) {
+            $id_ticket = $row_ticket['id_ticket'];
+            $hora_inicio = $row_ticket['HORA_INICIO'];
+            $hora_fin = $row_ticket['HORA_FIN'];
+            $duracion = strtotime($hora_fin) - strtotime($hora_inicio); // Diferencia en segundos
+            $duracion_horas = $duracion / (60 * 60); // Convertir a horas
+
+            // Verificar si el ID de la cancha es 8
+            if ($cancha_id == 8) {
+                // Si el ID de la cancha es 8, actualizar solo TOTAL_CANCHA con el nuevo precio
+                $nuevo_total_cancha = $nuevo_precio;
+            } else {
+                // Si el ID de la cancha no es 8, actualizar TOTAL_CANCHA y TOTAL con el nuevo precio
+                $nuevo_total_cancha = $duracion_horas * $nuevo_precio;
+            }
+            $sql_actualizar_ticket = "UPDATE ticket SET TOTAL_CANCHA = '$nuevo_total_cancha', TOTAL = '$nuevo_total_cancha' WHERE _id = '$id_ticket'";
+            mysqli_query($con, $sql_actualizar_ticket);
+        }
+
     } else {
         echo "Error al actualizar el precio: " . mysqli_error($con);
     }
