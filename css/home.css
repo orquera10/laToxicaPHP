@@ -588,4 +588,3 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
   color: var(--color-secundario);
   background-color: var(--color-cuaternario);
 }
-
