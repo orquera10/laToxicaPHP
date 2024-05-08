@@ -120,7 +120,7 @@ include 'common_scripts.php';
           $end = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_FIN']));
 
           ?>
-                                      {
+                                                                    {
             _id: '<?php echo $dataEvento['_id']; ?>',
             title: '<?php echo $dataEvento['nombre_usuario']; ?>',
             start: '<?php echo $start; ?>',
@@ -499,56 +499,73 @@ include 'common_scripts.php';
 <!-- Guardar detalle del pago por transferencia y efectivo -->
 <script>
   $(document).ready(function () {
-    $('#btnFinalizar').click(function () {
-      // Obtener los valores de los campos
-      var idEvento = $('#idEvento').val();
-      var pagoEfectivo = $('#pagoEfectivo').val();
-      var pagoTransf = $('#pagoTransf').val();
+  $('#btnFinalizar').click(function () {
+    // Obtener los valores de los campos
+    var idEvento = $('#idEvento').val();
+    var pagoEfectivo = $('#pagoEfectivo').val();
+    var pagoTransf = $('#pagoTransf').val();
 
-      // Realizar la solicitud AJAX
-      $.ajax({
-        url: 'finalizarTurno.php', // Ruta al script PHP
-        type: 'POST',
-        data: {
-          idTurno: idEvento,
-          pagoEfectivo: pagoEfectivo,
-          pagoTransferencia: pagoTransf
-        },
-        dataType: 'json',
-        success: function (response) {
-          if (response.success) {
-            // Mostrar un mensaje de éxito utilizando SweetAlert2
-            Swal.fire({
-              icon: 'success',
-              title: '¡Turno finalizado!',
-              text: 'El turno se finalizó correctamente.',
-              confirmButtonText: 'Aceptar'
-            }).then((result) => {
-              // Redirigir al usuario al page_turnos.php
-              window.location.href = 'page_turnos.php';
-            });
-          } else {
-            // Mostrar un mensaje de error utilizando SweetAlert2
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Ocurrió un error al finalizar el turno: ' + response.message,
-              confirmButtonText: 'Aceptar'
-            });
-          }
-        },
-        error: function (xhr, status, error) {
-          // Mostrar un mensaje de error en caso de problemas con la solicitud AJAX
+    // Recopilar los datos de la tabla tablaPagos
+    var nombrePagos = [];
+    var montoTransferencias = [];
+    var montoEfectivos = [];
+    $('#tablaPagos tr').each(function () {
+      var nombrePago = $(this).find('td:eq(0)').text();
+      var montoTransferencia = $(this).find('td:eq(1)').text();
+      var montoEfectivo = $(this).find('td:eq(2)').text();
+      nombrePagos.push(nombrePago);
+      montoTransferencias.push(montoTransferencia);
+      montoEfectivos.push(montoEfectivo);
+    });
+
+    // Realizar la solicitud AJAX
+    $.ajax({
+      url: 'finalizarTurno.php', // Ruta al script PHP
+      type: 'POST',
+      data: {
+        idTurno: idEvento,
+        pagoEfectivo: pagoEfectivo,
+        pagoTransferencia: pagoTransf,
+        nombrePagos: nombrePagos,
+        montoTransferencias: montoTransferencias,
+        montoEfectivos: montoEfectivos
+      },
+      dataType: 'json',
+      success: function (response) {
+        if (response.success) {
+          // Mostrar un mensaje de éxito utilizando SweetAlert2
+          Swal.fire({
+            icon: 'success',
+            title: '¡Turno finalizado!',
+            text: 'El turno se finalizó correctamente.',
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            // Redirigir al usuario al page_turnos.php
+            window.location.href = 'page_turnos.php';
+          });
+        } else {
+          // Mostrar un mensaje de error utilizando SweetAlert2
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Ocurrió un error al procesar la solicitud: ' + error,
+            text: 'Ocurrió un error al finalizar el turno: ' + response.message,
             confirmButtonText: 'Aceptar'
           });
         }
-      });
+      },
+      error: function (xhr, status, error) {
+        // Mostrar un mensaje de error en caso de problemas con la solicitud AJAX
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un error al procesar la solicitud: ' + error,
+          confirmButtonText: 'Aceptar'
+        });
+      }
     });
   });
+});
+
 </script>
 
 <script>
@@ -609,6 +626,147 @@ include 'common_scripts.php';
       });
     });
   });
+
+</script>
+
+<!-- <script>
+  // Evento de click para abrir el modal al hacer clic en el botón "Agregar Pago"
+  $(document).ready(function () {
+    $('#btnAgregarPago').click(function () {
+      $('#modalAgregarPago').modal('show');
+    });
+    // Función para agregar un nuevo pago a la tabla
+    $("#btnGuardarPago").click(function () {
+      // Obtener los valores ingresados en el formulario
+      var nombrePago = $("#nombrePago").val();
+      var montoTransferencia = $("#montoTransferencia").val();
+      var montoEfectivo = $("#montoEfectivo").val();
+
+      // Validar que se ingresen los datos necesarios
+      if (nombrePago !== "" && montoTransferencia !== "" && montoEfectivo !== "") {
+        // Construir la fila de la tabla con los datos ingresados
+        var newRow = "<tr><td>" + nombrePago + "</td><td>" + montoTransferencia + "</td><td>" + montoEfectivo + "</td></tr>";
+
+        // Agregar la nueva fila a la tabla
+        $("#tablaPagos").append(newRow);
+
+        // Limpiar los campos del formulario después de agregar el pago
+        $("#nombrePago").val("");
+        $("#montoTransferencia").val("");
+        $("#montoEfectivo").val("");
+
+        // Cerrar el modal después de guardar el pago
+        $("#modalAgregarPago").modal("hide");
+        $("#modalPago").modal("show");
+
+      } else {
+        alert("Por favor, complete todos los campos del formulario.");
+      }
+    });
+  });
+</script> -->
+
+<script>
+  // Función para calcular y mostrar los totales en los campos de pago
+  function calcularTotales() {
+    // Calcular la suma de los montos de transferencia
+    var sumaMontoTransferencia = 0;
+    $("#tablaPagos tr").each(function () {
+      var montoTransferencia = parseFloat($(this).find('td:nth-child(2)').text());
+      sumaMontoTransferencia += montoTransferencia;
+    });
+
+    // Calcular la suma de los montos en efectivo
+    var sumaMontoEfectivo = 0;
+    $("#tablaPagos tr").each(function () {
+      var montoEfectivo = parseFloat($(this).find('td:nth-child(3)').text());
+      sumaMontoEfectivo += montoEfectivo;
+    });
+    // Mostrar las sumas en los campos de pago
+    $("#pagoTransf").val(sumaMontoTransferencia);
+    $("#pagoEfectivo").val(sumaMontoEfectivo);
+  }
+
+  // Función para calcular la cantidad restante para alcanzar el total
+  function calcularFaltaParaTotal(totalGeneral, pagoTransf, pagoEfectivo) {
+    var totalPagos = pagoTransf + pagoEfectivo;
+    var faltaParaTotal = totalGeneral - totalPagos;
+    return faltaParaTotal;
+  }
+
+  // Función para calcular la cantidad restante y actualizarla en el modal
+  function calcularCantidadRestante() {
+    var totalGeneral = parseFloat($("#totalFinalizarPago").text());
+    var pagoTransf = parseFloat($("#pagoTransf").val());
+    var pagoEfectivo = parseFloat($("#pagoEfectivo").val());
+    var faltaParaTotal = calcularFaltaParaTotal(totalGeneral, pagoTransf, pagoEfectivo);
+    $("#faltaParaTotal").text(faltaParaTotal);
+  }
+
+  $(document).ready(function () {
+    // Función para abrir el modal de agregar nuevo pago
+    $("#btnAgregarPago").click(function () {
+      $("#modalPago").modal("hide");
+      $("#modalAgregarPago").modal("show");
+    });
+
+    // Función para agregar un nuevo pago a la tabla
+    $("#btnGuardarPago").click(function () {
+      // Obtener los valores ingresados en el formulario
+      var nombrePago = $("#nombrePago").val();
+      var montoTransferencia = parseFloat($("#montoTransferencia").val());
+      var montoEfectivo = parseFloat($("#montoEfectivo").val());
+
+      // Validar que se ingrese el nombre del pago
+      if (nombrePago !== "") {
+        // Construir la fila de la tabla con los datos ingresados
+        var newRow = "<tr class='align-middle'><td>" + nombrePago + "</td><td>" + montoTransferencia + "</td><td>" + montoEfectivo + "</td><td><button class='btn btnEliminarPago'><i class='fas fa-trash-alt btnDeletePago'></i></button></td></tr>";
+
+        // Agregar la nueva fila a la tabla
+        $("#tablaPagos").append(newRow);
+
+        // Recalcular los totales y mostrarlos en los campos de pago
+        calcularTotales();
+
+        // Limpiar los campos del formulario después de agregar el pago
+        $("#nombrePago").val("");
+        $("#montoTransferencia").val("0");
+        $("#montoEfectivo").val("0");
+
+        // Cerrar el modal después de guardar el pago
+        $("#modalAgregarPago").modal("hide");
+        $("#modalPago").modal("show");
+      } else {
+        alert("Por favor, ingrese el nombre del pago.");
+      }
+    });
+    $("#btnCerrarModalPago").click(function () {
+      // Limpiar los campos del formulario después de agregar el pago
+      $("#nombrePago").val("");
+      $("#montoTransferencia").val("0");
+      $("#montoEfectivo").val("0");
+      $("#modalAgregarPago").modal("hide");
+      $("#modalPago").modal("show");
+    });
+
+    // Función para eliminar un pago de la tabla
+    $(document).on("click", ".btnEliminarPago", function () {
+      $(this).closest("tr").remove();
+      calcularTotales();
+      calcularCantidadRestante();
+    });
+
+    //Calcular la cantidad restante cuando se muestre el modal
+    $('#modalPago').on('shown.bs.modal', function (e) {
+      calcularCantidadRestante();
+    });
+
+    // Recalcular la cantidad restante cuando cambien los valores de pagoTransf y pagoEfectivo
+    $("#pagoTransf, #pagoEfectivo").change(function () {
+      calcularCantidadRestante();
+    });
+  });
+
 
 </script>
 
