@@ -50,10 +50,16 @@
         <!-- Parte 4: Inputs para tipo de pago -->
         <div class="mb-3">
           <h5>Pago:</h5>
-          <label for="pagoEfectivo" class="col-sm-12 control-label">Pago efectivo: </label>
-          <input type="number" class="form-control" name="pagoEfectivo" id="pagoEfectivo" value="0" required />
-          <label for="pagoTransf" class="col-sm-12 control-label">Pago Transferencia: </label>
-          <input type="number" class="form-control" name="pagoTransf" id="pagoTransf" value="0" required />
+          <div class="row m-0 p-0">
+            <div class="col-md-6">
+              <label for="pagoEfectivo" class="col-sm-12 control-label">Pago efectivo: </label>
+              <input type="number" class="form-control" name="pagoEfectivo" id="pagoEfectivo" value="0" required />
+            </div>
+            <div class="col-md-6">
+              <label for="pagoTransf" class="col-sm-12 control-label">Pago Transferencia: </label>
+              <input type="number" class="form-control" name="pagoTransf" id="pagoTransf" value="0" required />
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -64,4 +70,3 @@
     </div>
   </div>
 </div>
-

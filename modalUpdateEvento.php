@@ -130,17 +130,17 @@ if ($resultado) {
                     </div>
                     <!-- Parte 2: Detalles del producto seleccionado -->
                     <div class="row m-4">
-                      <div class="col-12 col-md-6">
+                      <div class="col-12 col-md-5">
                         <label for="nombreProducto">Nombre del Producto:</label>
                         <input type="text" class="form-control" id="nombreProducto" oninput="filtrarProductos()"
                           placeholder="Producto...">
                         <input type="hidden" id="idProducto" name="idProducto">
                       </div>
-                      <div class="col-12 col-md-6">
+                      <div class="col-12 col-md-4">
                         <label for="precioProducto">Precio:</label>
                         <input type="text" class="form-control" id="precioProducto" disabled>
                       </div>
-                      <div class="col-12 col-md-6 mt-3">
+                      <div class="col-12 col-md-3">
                         <label for="cantidadProducto">Cantidad:</label>
                         <input type="number" class="form-control" id="cantidadProducto" value="1" min="1">
                       </div>

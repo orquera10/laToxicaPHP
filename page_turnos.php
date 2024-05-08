@@ -67,7 +67,7 @@ include 'common_scripts.php';
         right: "month,agendaWeek,agendaDay"
       },
 
-      minTime: '09:00:00', // Configuración para empezar a mostrar horarios desde el mediodía
+      minTime: '07:00:00', // Configuración para empezar a mostrar horarios desde el mediodía
       maxTime: '24:00:00', // Configuración para terminar de mostrar horarios a medianoche
 
       locale: 'es',
