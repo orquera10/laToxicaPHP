@@ -6,7 +6,7 @@ if (isset($_POST['idEvento'])) {
     $idEvento = $_POST['idEvento'];
 
     // Consulta preparada SQL para obtener los productos
-    $sql = "SELECT p.NOMBRE AS producto, d.CANTIDAD AS cantidad, p.PRECIO AS precio, d.CANTIDAD * p.PRECIO AS total, p._id AS idProducto, p.URL_IMG AS url_img
+    $sql = "SELECT p.NOMBRE AS producto, d.CANTIDAD AS cantidad, d.PRECIO AS precio, d.CANTIDAD * d.PRECIO AS total, p._id AS idProducto, p.URL_IMG AS url_img
             FROM turnos e
             JOIN ticket t ON e._id = t.id_TURNO
             JOIN detalle_ticket d ON t._id = d.id_TICKET

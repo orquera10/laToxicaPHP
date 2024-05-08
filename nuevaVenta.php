@@ -41,9 +41,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $id_producto = $detalle['id'];
                     $cantidad = $detalle['cantidad'];
 
-                    // Insertar el detalle del producto en detalle_ticket
-                    $sql_insert_detalle = "INSERT INTO detalle_ticket (id_TICKET, ID_PRODUCTO, CANTIDAD) 
-                                            VALUES ('$id_ticket', '$id_producto', '$cantidad')";
+                    // Obtener el precio del producto de la tabla producto
+                    $sql_precio_producto = "SELECT PRECIO FROM producto WHERE _id = '$id_producto'";
+                    $result_precio_producto = $con->query($sql_precio_producto);
+                    $row_precio_producto = $result_precio_producto->fetch_assoc();
+                    $precio_producto = $row_precio_producto['PRECIO'];
+
+                    // Insertar el detalle del producto en detalle_ticket con el precio correspondiente
+                    $sql_insert_detalle = "INSERT INTO detalle_ticket (id_TICKET, ID_PRODUCTO, PRECIO, CANTIDAD) 
+                                            VALUES ('$id_ticket', '$id_producto', '$precio_producto', '$cantidad')";
 
                     if ($con->query($sql_insert_detalle)) {
                         // Reducir el stock del producto en la tabla producto
@@ -82,4 +88,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     echo json_encode(array("success" => false, "message" => "La solicitud debe ser de tipo POST"));
 }
 ?>
+
 
