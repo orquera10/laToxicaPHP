@@ -53,7 +53,6 @@ if (mysqli_num_rows($result) > 0) {
                     <th></th>
                     <th>ID</th>
                     <th>Nombre</th>
-                    <th>Descripción</th>
                     <th>Precio</th>
                     <th>Stock</th>
                     <th></th>
@@ -67,7 +66,6 @@ if (mysqli_num_rows($result) > 0) {
                     echo "<td><img src='" . $producto['URL_IMG'] . "' alt='" . $producto['NOMBRE'] . "' style='max-width: 100px; max-height: 100px;'></td>";
                     echo "<td>" . $producto['_id'] . "</td>";
                     echo "<td>" . $producto['NOMBRE'] . "</td>";
-                    echo "<td>" . $producto['DESCRIPCION'] . "</td>";
                     echo "<td>" . $producto['PRECIO'] . " $</td>";
                     echo "<td>" . $producto['STOCK'] . "</td>";
                     echo "<td>";

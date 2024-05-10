@@ -6,7 +6,7 @@ include 'config.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Recibir los datos del formulario
     $nombreProducto = $_POST['nombreProducto'];
-    $descripcionProducto = $_POST['descripcionProducto'];
+    
     $precioProducto = $_POST['precioProducto'];
     $stockProducto = $_POST['stockProducto'];
     $idProducto = $_POST['idProducto'];
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (move_uploaded_file($imagenTempPath, $imagenRutaCompleta)) {
             // La imagen se movió correctamente, ahora puedes guardar la ruta en la base de datos
             // Actualizar la ruta de la imagen en la base de datos
-            $sql = "UPDATE producto SET URL_IMG = '$imagenRutaCompleta', NOMBRE = '$nombreProducto', DESCRIPCION = '$descripcionProducto', PRECIO = $precioProducto, STOCK = $stockProducto WHERE _id = $idProducto";
+            $sql = "UPDATE producto SET URL_IMG = '$imagenRutaCompleta', NOMBRE = '$nombreProducto', PRECIO = $precioProducto, STOCK = $stockProducto WHERE _id = $idProducto";
             mysqli_query($con, $sql);
 
             // Si la consulta se realizó correctamente, podrías enviar una respuesta JSON de éxito
@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // No se ha cargado una nueva imagen, solo actualiza los otros campos del producto
         // Aquí deberías realizar la consulta SQL para actualizar los otros campos del producto
-        $sql = "UPDATE producto SET NOMBRE = '$nombreProducto', DESCRIPCION = '$descripcionProducto', PRECIO = $precioProducto, STOCK = $stockProducto WHERE _id = $idProducto";
+        $sql = "UPDATE producto SET NOMBRE = '$nombreProducto', PRECIO = $precioProducto, STOCK = $stockProducto WHERE _id = $idProducto";
         mysqli_query($con, $sql);
 
         // Si la consulta se realizó correctamente, podrías enviar una respuesta JSON de éxito

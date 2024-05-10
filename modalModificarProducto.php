@@ -13,11 +13,6 @@
                         <input type="text" class="form-control" id="editarNombreProducto" name="editarNombreProducto">
                     </div>
                     <div class="mb-3">
-                        <label for="editarDescripcionProducto" class="form-label">Descripción:</label>
-                        <textarea class="form-control" id="editarDescripcionProducto" name="editarDescripcionProducto"
-                            rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
                         <label for="editarPrecioProducto" class="form-label">Precio:</label>
                         <input type="number" class="form-control" id="editarPrecioProducto" name="editarPrecioProducto">
                     </div>
@@ -56,7 +51,7 @@
     function abrirModalEditar(producto) {
         // Llenar los campos del formulario con la información del producto seleccionado
         document.getElementById('editarNombreProducto').value = producto['NOMBRE'];
-        document.getElementById('editarDescripcionProducto').value = producto['DESCRIPCION'];
+        
         document.getElementById('editarPrecioProducto').value = producto['PRECIO'];
         document.getElementById('editarStockProducto').value = producto['STOCK'];
         document.getElementById('idProductoEditar').value = producto['_id'];
@@ -71,7 +66,7 @@
     function guardarCambiosProducto() {
         // Obtener los valores del formulario
         var nombre = document.getElementById('editarNombreProducto').value;
-        var descripcion = document.getElementById('editarDescripcionProducto').value;
+        
         var precio = document.getElementById('editarPrecioProducto').value;
         var stock = document.getElementById('editarStockProducto').value;
         var idProducto = document.getElementById('idProductoEditar').value;
@@ -80,7 +75,7 @@
         // Crear un objeto FormData con los datos del formulario
         var formData = new FormData();
         formData.append('nombreProducto', nombre);
-        formData.append('descripcionProducto', descripcion);
+        
         formData.append('precioProducto', precio);
         formData.append('stockProducto', stock);
         formData.append('idProducto', idProducto);

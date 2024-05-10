@@ -15,7 +15,6 @@ if ($resultado) {
     $producto = array(
       'id' => $row['_id'],
       'nombre' => $row['NOMBRE'],
-      'descripcion' => $row['DESCRIPCION'],
       'url_img' => $row['URL_IMG'],
       'precio' => $row['PRECIO']
     );
@@ -49,9 +48,15 @@ if ($resultado) {
               <h5 class="mb-3 p-0">Datos Turno</h5>
 
               <div class="d-flex col-12 p-0">
-                <p class="mr-2">Nombre:</p>
+                <p class="mr-2 mb-0">Nombre:</p>
                 <label id="evento" name="evento" class="ms-2"></label>
+
               </div>
+              <div class="d-flex col-12 p-0 mb-2">
+                <div id="wpContenedor">
+                </div>
+              </div>
+
               <div class="d-flex col-12 p-0">
                 <p class="mr-2">Hora Entrada:</p>
                 <label id="fecha_inicio" name="fecha_inicio" class="ms-2"></label>
@@ -121,7 +126,6 @@ if ($resultado) {
                                 alt="<?php echo $producto['nombre']; ?>">
                               <div class="card-body">
                                 <p class="card-title"><?php echo $producto['nombre']; ?></p>
-                                <p class="card-text"><?php echo $producto['descripcion']; ?></p>
                               </div>
                             </div>
                           </div>

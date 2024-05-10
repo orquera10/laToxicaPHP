@@ -6,7 +6,6 @@ include 'config.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Recibir los datos del formulario
     $nombreProducto = $_POST['nombreProducto'];
-    $descripcionProducto = $_POST['descripcionProducto'];
     $precioProducto = $_POST['precioProducto'];
     $stockProducto = $_POST['stockProducto'];
 
@@ -30,8 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // La imagen se movió correctamente, ahora puedes guardar la ruta en la base de datos
 
             // Consulta SQL para insertar el nuevo producto en la base de datos
-            $sql = "INSERT INTO producto (NOMBRE, DESCRIPCION, PRECIO, STOCK, URL_IMG) 
-                    VALUES ('$nombreProducto', '$descripcionProducto', $precioProducto, $stockProducto, '$imagenRutaCompleta')";
+            $sql = "INSERT INTO producto (NOMBRE, PRECIO, STOCK, URL_IMG) 
+                    VALUES ('$nombreProducto', $precioProducto, $stockProducto, '$imagenRutaCompleta')";
 
             // Ejecutar la consulta
             if (mysqli_query($con, $sql)) {

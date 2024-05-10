@@ -8,7 +8,8 @@ include ('config.php');
 
 $SqlEventos = "SELECT 
                   turnos.*, 
-                  clientes.NOMBRE as nombre_usuario, 
+                  clientes.NOMBRE as nombre_usuario,
+                  clientes.TELEFONO as telefono_usuario, 
                   canchas.NOMBRE as nombre_cancha,
                   ticket.id_CLIENTE,
                   ticket.TOTAL_CANCHA,
@@ -120,9 +121,10 @@ include 'common_scripts.php';
           $end = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_FIN']));
 
           ?>
-                                                                    {
+                                                                          {
             _id: '<?php echo $dataEvento['_id']; ?>',
             title: '<?php echo $dataEvento['nombre_usuario']; ?>',
+            telefono: '<?php echo $dataEvento['telefono_usuario']; ?>',
             start: '<?php echo $start; ?>',
             end: '<?php echo $end; ?>',
             color: '<?php echo $dataEvento['COLOR']; ?>',
@@ -231,6 +233,10 @@ include 'common_scripts.php';
         $('label[name=fecha_inicio').text(event.start.format('HH:mm'));
         $('label[name=fecha_fin').text(event.end.format("HH:mm"));
         $('label[name=cancha').text(event.cancha);
+
+
+        $('#wpContenedor').html(`<a href="https://api.whatsapp.com/send?phone=${event.telefono}" target="_blank">
+    <i class="fab fa-whatsapp"></i> ${event.telefono}</a>`);
 
         $('.colorModalUpdate').css('background-color', event.color);
 
@@ -499,72 +505,72 @@ include 'common_scripts.php';
 <!-- Guardar detalle del pago por transferencia y efectivo -->
 <script>
   $(document).ready(function () {
-  $('#btnFinalizar').click(function () {
-    // Obtener los valores de los campos
-    var idEvento = $('#idEvento').val();
-    var pagoEfectivo = $('#pagoEfectivo').val();
-    var pagoTransf = $('#pagoTransf').val();
+    $('#btnFinalizar').click(function () {
+      // Obtener los valores de los campos
+      var idEvento = $('#idEvento').val();
+      var pagoEfectivo = $('#pagoEfectivo').val();
+      var pagoTransf = $('#pagoTransf').val();
 
-    // Recopilar los datos de la tabla tablaPagos
-    var nombrePagos = [];
-    var montoTransferencias = [];
-    var montoEfectivos = [];
-    $('#tablaPagos tr').each(function () {
-      var nombrePago = $(this).find('td:eq(0)').text();
-      var montoTransferencia = $(this).find('td:eq(1)').text();
-      var montoEfectivo = $(this).find('td:eq(2)').text();
-      nombrePagos.push(nombrePago);
-      montoTransferencias.push(montoTransferencia);
-      montoEfectivos.push(montoEfectivo);
-    });
+      // Recopilar los datos de la tabla tablaPagos
+      var nombrePagos = [];
+      var montoTransferencias = [];
+      var montoEfectivos = [];
+      $('#tablaPagos tr').each(function () {
+        var nombrePago = $(this).find('td:eq(0)').text();
+        var montoTransferencia = $(this).find('td:eq(1)').text();
+        var montoEfectivo = $(this).find('td:eq(2)').text();
+        nombrePagos.push(nombrePago);
+        montoTransferencias.push(montoTransferencia);
+        montoEfectivos.push(montoEfectivo);
+      });
 
-    // Realizar la solicitud AJAX
-    $.ajax({
-      url: 'finalizarTurno.php', // Ruta al script PHP
-      type: 'POST',
-      data: {
-        idTurno: idEvento,
-        pagoEfectivo: pagoEfectivo,
-        pagoTransferencia: pagoTransf,
-        nombrePagos: nombrePagos,
-        montoTransferencias: montoTransferencias,
-        montoEfectivos: montoEfectivos
-      },
-      dataType: 'json',
-      success: function (response) {
-        if (response.success) {
-          // Mostrar un mensaje de éxito utilizando SweetAlert2
-          Swal.fire({
-            icon: 'success',
-            title: '¡Turno finalizado!',
-            text: 'El turno se finalizó correctamente.',
-            confirmButtonText: 'Aceptar'
-          }).then((result) => {
-            // Redirigir al usuario al page_turnos.php
-            window.location.href = 'page_turnos.php';
-          });
-        } else {
-          // Mostrar un mensaje de error utilizando SweetAlert2
+      // Realizar la solicitud AJAX
+      $.ajax({
+        url: 'finalizarTurno.php', // Ruta al script PHP
+        type: 'POST',
+        data: {
+          idTurno: idEvento,
+          pagoEfectivo: pagoEfectivo,
+          pagoTransferencia: pagoTransf,
+          nombrePagos: nombrePagos,
+          montoTransferencias: montoTransferencias,
+          montoEfectivos: montoEfectivos
+        },
+        dataType: 'json',
+        success: function (response) {
+          if (response.success) {
+            // Mostrar un mensaje de éxito utilizando SweetAlert2
+            Swal.fire({
+              icon: 'success',
+              title: '¡Turno finalizado!',
+              text: 'El turno se finalizó correctamente.',
+              confirmButtonText: 'Aceptar'
+            }).then((result) => {
+              // Redirigir al usuario al page_turnos.php
+              window.location.href = 'page_turnos.php';
+            });
+          } else {
+            // Mostrar un mensaje de error utilizando SweetAlert2
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Ocurrió un error al finalizar el turno: ' + response.message,
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        },
+        error: function (xhr, status, error) {
+          // Mostrar un mensaje de error en caso de problemas con la solicitud AJAX
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Ocurrió un error al finalizar el turno: ' + response.message,
+            text: 'Ocurrió un error al procesar la solicitud: ' + error,
             confirmButtonText: 'Aceptar'
           });
         }
-      },
-      error: function (xhr, status, error) {
-        // Mostrar un mensaje de error en caso de problemas con la solicitud AJAX
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Ocurrió un error al procesar la solicitud: ' + error,
-          confirmButtonText: 'Aceptar'
-        });
-      }
+      });
     });
   });
-});
 
 </script>
 

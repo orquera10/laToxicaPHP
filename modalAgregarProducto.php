@@ -15,10 +15,6 @@
                         <input type="text" class="form-control" id="nombreProducto" name="nombreProducto">
                     </div>
                     <div class="mb-3">
-                        <label for="descripcionProducto" class="form-label">Descripción:</label>
-                        <textarea class="form-control" id="descripcionProducto" name="descripcionProducto"></textarea>
-                    </div>
-                    <div class="mb-3">
                         <label for="precioProducto" class="form-label">Precio:</label>
                         <input type="number" class="form-control" id="precioProducto" name="precioProducto">
                     </div>
@@ -51,7 +47,7 @@
     function guardarProducto() {
         // Obtener los datos del formulario
         var nombre = document.getElementById('nombreProducto').value;
-        var descripcion = document.getElementById('descripcionProducto').value;
+        
         var precio = document.getElementById('precioProducto').value;
         var stock = document.getElementById('stockProducto').value;
         var imagen = document.getElementById('imagenProducto').files[0]; // Obtener la imagen seleccionada
@@ -59,7 +55,7 @@
         // Crear un objeto FormData para enviar los datos del formulario
         var formData = new FormData();
         formData.append('nombreProducto', nombre);
-        formData.append('descripcionProducto', descripcion);
+        
         formData.append('precioProducto', precio);
         formData.append('stockProducto', stock);
         formData.append('imagenProducto', imagen); // Agregar la imagen al FormData
