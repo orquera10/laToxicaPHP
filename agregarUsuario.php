@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Verificar si el teléfono ya existe en la base de datos
-    $sql_verificar_telefono = "SELECT * FROM clientes WHERE TELEFONO = '$telefono'";
+    $sql_verificar_telefono = "SELECT * FROM clientes WHERE TELEFONO = '$telefono' AND VISIBLE = 1";
     $resultado_verificar_telefono = mysqli_query($con, $sql_verificar_telefono);
 
     if (mysqli_num_rows($resultado_verificar_telefono) > 0) {

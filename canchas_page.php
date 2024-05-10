@@ -25,9 +25,9 @@ if (mysqli_num_rows($result) > 0) {
 ?>
 
 <div class="container">
-    <div class="row tarjetasCanchas">
+    <div class="row tarjetasCanchas my-5">
         <?php foreach ($canchas as $cancha): ?>
-            <div class="col-md-3 my-5">
+            <div class="col-md-3 my-2">
                 <div class="card">
                     <img src="img/canchas/cancha_(<?php echo $cancha['_id']; ?>).png" class="card-img-top"
                         alt="Imagen de la cancha <?php echo $cancha['_id']; ?>">

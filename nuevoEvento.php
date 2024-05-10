@@ -27,6 +27,10 @@ if ($id_cancha == 7) {
     $color_evento = "#8FE14E"; // Color azul para la Cancha 2
 } elseif ($id_cancha == 8) {
     $color_evento = "#EA7BF3"; // Color naranja para Cumpleaños
+} elseif ($id_cancha == 10) {
+    $color_evento = "#FFFFFF"; // Color naranja para Escuelita
+} elseif ($id_cancha == 11) {
+    $color_evento = "#98A2FA"; // Color naranja para Promocion
 } else {
     $color_evento = "#4E9BE1"; // Color predeterminado azul
 }
@@ -57,29 +61,28 @@ if ($id_cancha == 8) {
 // Inicializar la consulta SQL
 $sql = "";
 
-if ($id_cancha == 7) {
-    $sql = "SELECT t.* FROM turnos t
-            INNER JOIN canchas c ON t.id_CANCHA = c._id
-            WHERE t.FECHA = '$fecha' 
-            AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
-            OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
-            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1' OR c.NOMBRE = 'Cancha 2' OR c.NOMBRE = 'Cumpleaños')";
-} elseif ($id_cancha == 8) {
-    $sql = "SELECT t.* FROM turnos t
-            INNER JOIN canchas c ON t.id_CANCHA = c._id
-            WHERE t.FECHA = '$fecha' 
-            AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
-            OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
-            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1' OR c.NOMBRE = 'Cancha 2' OR c.NOMBRE = 'Cancha 1 y Cancha 2')";
-} else {
-    // Consulta SQL para verificar si hay solapamiento de turnos
-    $sql = "SELECT t.* FROM turnos t
-            INNER JOIN canchas c ON t.id_CANCHA = c._id
-            WHERE t.FECHA = '$fecha' 
-            AND ((t.HORA_INICIO < '$hora_fin' AND t.HORA_FIN > '$hora_inicio') 
-            OR (t.HORA_INICIO <= '$hora_inicio' AND t.HORA_FIN >= '$hora_fin'))
-            AND (t.id_CANCHA = $id_cancha OR c.NOMBRE = 'Cancha 1 y Cancha 2' OR c.NOMBRE = 'Cumpleaños')";
-}
+$sql = "SELECT t.* FROM turnos t
+        INNER JOIN canchas c ON t.id_CANCHA = c._id
+        WHERE t.FECHA = '$fecha' 
+        AND (
+            (STR_TO_DATE(t.HORA_INICIO, '%H:%i') < '$hora_fin' AND STR_TO_DATE(t.HORA_FIN, '%H:%i') > '$hora_inicio') 
+            OR 
+            (STR_TO_DATE(t.HORA_INICIO, '%H:%i') <= '$hora_inicio' AND STR_TO_DATE(t.HORA_FIN, '%H:%i') >= '$hora_fin')
+        )
+        AND (
+            t.id_CANCHA = $id_cancha 
+            OR 
+            (c._id IN (5, 6, 8, 10, 11) AND $id_cancha = 7)
+            OR 
+            (c._id IN (5, 6, 7, 10, 11) AND $id_cancha = 8)
+            OR 
+            (c._id IN (5, 6, 7, 8, 11) AND $id_cancha = 10)
+            OR 
+            (c._id IN (5, 6, 7, 8, 10) AND $id_cancha = 11)
+            OR 
+            (c._id IN (7, 8, 10, 11) AND $id_cancha NOT IN (7, 8, 10, 11))
+        )";
+
 
 // Ejecutar consulta
 $resultado = mysqli_query($con, $sql);

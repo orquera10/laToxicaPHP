@@ -14,15 +14,27 @@
                     </div>
                     <div class="mb-3">
                         <label for="editarDescripcionProducto" class="form-label">Descripción:</label>
-                        <textarea class="form-control" id="editarDescripcionProducto" name="editarDescripcionProducto" rows="3"></textarea>
+                        <textarea class="form-control" id="editarDescripcionProducto" name="editarDescripcionProducto"
+                            rows="3"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="editarPrecioProducto" class="form-label">Precio:</label>
                         <input type="number" class="form-control" id="editarPrecioProducto" name="editarPrecioProducto">
                     </div>
-                    <div class="mb-3">
-                        <label for="editarStockProducto" class="form-label">Stock:</label>
-                        <input type="number" class="form-control" id="editarStockProducto" name="editarStockProducto">
+                    <div class="mb-3 row">
+                        <div class="col-6" >
+                            <label for="editarStockProducto" class="form-label">Stock Actual:</label>
+                            <input type="number" class="form-control" id="editarStockProducto"
+                                name="editarStockProducto">
+                        </div>
+                        <div class="col-6" >
+                            <label for="agregarAlStock" class="form-label">Agregar al Stock:</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="agregarAlStock" name="agregarAlStock">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    id="btnAgregarStock">Agregar</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="editarImagenProducto" class="form-label">Imagen:</label>
@@ -33,7 +45,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="guardarCambiosProducto()">Guardar Cambios</button>
+                <button type="button" class="btn btn-primary" onclick="guardarCambiosProducto()">Guardar
+                    Cambios</button>
             </div>
         </div>
     </div>
@@ -76,7 +89,7 @@
         // Realizar una solicitud AJAX para guardar los cambios del producto
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "modificar_producto.php", true);
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 // Obtener la respuesta del servidor
                 var response = xhr.responseText;
@@ -85,7 +98,7 @@
                     title: '¡Cambios guardados!',
                     text: 'Se modificó correctamente el producto',
                     icon: 'success'
-                }).then(function() {
+                }).then(function () {
                     // Recargar la página después de guardar los cambios
                     window.location.reload();
                 });
@@ -93,4 +106,29 @@
         };
         xhr.send(formData);
     }
+</script>
+
+<script>
+    document.getElementById('btnAgregarStock').addEventListener('click', function () {
+        // Obtener el valor ingresado en el campo de agregar al stock
+        var agregarAlStock = parseFloat(document.getElementById('agregarAlStock').value);
+
+        // Obtener el valor actual del stock
+        var stockActual = parseFloat(document.getElementById('editarStockProducto').value);
+
+        // Verificar si el valor ingresado es válido
+        if (!isNaN(agregarAlStock)) {
+            // Sumar el valor ingresado al stock actual
+            var nuevoStock = stockActual + agregarAlStock;
+
+            // Actualizar el valor del campo de stock
+            document.getElementById('editarStockProducto').value = nuevoStock;
+
+            // Limpiar el campo de agregar al stock
+            document.getElementById('agregarAlStock').value = '';
+        } else {
+            // Mostrar un mensaje de error si el valor ingresado no es válido
+            alert('Por favor, ingrese un número válido.');
+        }
+    });
 </script>

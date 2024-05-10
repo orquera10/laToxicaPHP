@@ -29,7 +29,7 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
     }
 
     // Obtener la fecha y hora actual
-    $fecha_actual = date("Y-m-d H:i:s");
+    $fecha_actual = date("d-m-Y H:i:s");
 
     // Iniciar una transacción
     mysqli_autocommit($con, false);

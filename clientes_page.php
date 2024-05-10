@@ -38,7 +38,7 @@ if (mysqli_num_rows($result) > 0) {
             <p class="my-auto me-3">Busqueda:</p>
             <input type="text" class="form-control" id="buscarCliente" placeholder="Buscar por nombre">
         </div>
-        <div class="d-flex col-12 col-md-6 mt-4">
+        <div class="d-flex col-12 col-md-3 mt-4">
             <p class="my-auto me-3">Filtro:</p>
             <select class="form-select" id="filtroCliente" onchange="ordenarClientes()">
                 <option value="todos">Todos</option>
@@ -96,6 +96,12 @@ include 'modalModificarCliente.php';
 include 'modalNuevoCliente.php';
 include 'common_scripts.php';
 ?>
+
+<script>
+    setTimeout(function () {
+        $(".alert").slideUp(300);
+    }, 3000);
+</script>
 
 <script>
     function abrirModalAgregarCliente() {

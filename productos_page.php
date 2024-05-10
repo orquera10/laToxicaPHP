@@ -31,7 +31,7 @@ if (mysqli_num_rows($result) > 0) {
             <input type="text" class="form-control" id="buscarProducto" placeholder="Buscar por nombre">
         </div>
         <!-- Menú desplegable para seleccionar el criterio de ordenamiento -->
-        <div class="d-flex mt-4 col-md-6">
+        <div class="d-flex mt-4 col-md-3">
             <p class="my-auto me-3">Filtro:</p>
             <select class="form-select" id="ordenarPor" onchange="ordenarProductos()">
                 <option value="">Ninguno</option>
