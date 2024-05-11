@@ -20,7 +20,7 @@
                         <div class="col-6" >
                             <label for="editarStockProducto" class="form-label">Stock Actual:</label>
                             <input type="number" class="form-control" id="editarStockProducto"
-                                name="editarStockProducto">
+                                name="editarStockProducto" disabled>
                         </div>
                         <div class="col-6" >
                             <label for="agregarAlStock" class="form-label">Agregar al Stock:</label>

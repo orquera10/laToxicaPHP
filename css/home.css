@@ -601,3 +601,7 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
   font-weight: 200;
   font-size: 0.9rem;
 }
+
+.tablasInformes p{
+  color: var(--color-primario);
+}

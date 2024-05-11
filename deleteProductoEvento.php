@@ -1,5 +1,5 @@
 <?php
-include('config.php');
+include ('config.php');
 
 // Verificar si se recibió el idProducto y el idEvento
 if (isset($_POST['idProducto'], $_POST['idEvento'])) {
@@ -53,6 +53,24 @@ if (isset($_POST['idProducto'], $_POST['idEvento'])) {
 
                     // Ejecutar la consulta SQL
                     if (mysqli_query($con, $sql_update_stock)) {
+                        // Actualizar el total de los productos en el ticket
+                        $sql_total_productos = "SELECT SUM(detalle_ticket.PRECIO * detalle_ticket.CANTIDAD) AS total 
+                                                FROM detalle_ticket 
+                                                INNER JOIN producto ON detalle_ticket.id_PRODUCTO = producto._id 
+                                                WHERE detalle_ticket.id_TICKET = $idTicket";
+                        $result_total_productos = mysqli_query($con, $sql_total_productos);
+                        $fila_total_productos = mysqli_fetch_assoc($result_total_productos);
+                        $total_productos = $fila_total_productos['total'];
+
+                        // Actualizar el total del ticket
+                        $sql_update_total = "UPDATE ticket SET TOTAL_DETALLE = '$total_productos' WHERE _id = $idTicket";
+                        mysqli_query($con, $sql_update_total);
+
+                        // Actualizar el total general del ticket
+                        $total_general = $total_productos + $total_cancha;
+                        $sql_update_total_general = "UPDATE ticket SET TOTAL = '$total_general' WHERE _id = $idTicket";
+                        mysqli_query($con, $sql_update_total_general);
+
                         echo "Producto eliminado correctamente y stock actualizado";
                     } else {
                         echo "Error al actualizar el stock del producto: " . mysqli_error($con);
@@ -72,6 +90,4 @@ if (isset($_POST['idProducto'], $_POST['idEvento'])) {
 } else {
     echo "No se recibió el id del producto o el id del evento";
 }
-
 ?>
-
