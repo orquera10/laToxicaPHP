@@ -18,8 +18,8 @@ if ($existe == 1) {
     $firma_tipo = hash_hmac('sha256', $tipo_usuario, 'clave_secreta');
 
     // Establecer cookies para el usuario y el tipo de usuario junto con la firma
-    setcookie("USUARIO", $usuario . '|' . $firma_usuario, time() + 3600, '/', '', true, true);
-    setcookie("TIPO", $tipo_usuario . '|' . $firma_tipo, time() + 3600, '/', '', true, true);
+    setcookie("USUARIO", $usuario . '|' . $firma_usuario, time() + 32400, '/', '', true, true);
+    setcookie("TIPO", $tipo_usuario . '|' . $firma_tipo, time() + 32400, '/', '', true, true);
 
     // Redireccionar a otra página
     header("Location: page_turnos.php");

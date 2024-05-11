@@ -6,10 +6,10 @@ session_start();
 session_destroy();
 
 // Eliminar la cookie de usuario manualmente
-setcookie("USUARIO", "", time() - 3600); // Establece el tiempo de expiración en el pasado para eliminar la cookie
+setcookie("USUARIO", "", time() - 32400, '/', '', true, true); // 9 horas = 9 * 3600 segundos
 
 // Eliminar la cookie de tipo de usuario manualmente
-setcookie("TIPO", "", time() - 3600); // Establece el tiempo de expiración en el pasado para eliminar la cookie
+setcookie("TIPO", "", time() - 32400, '/', '', true, true); // 9 horas = 9 * 3600 segundos
 
 // Redirigir al usuario a la página de inicio
 header("Location: index.php");
