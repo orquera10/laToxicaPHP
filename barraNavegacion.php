@@ -26,9 +26,16 @@
                         <li><a class="dropdown-item" href="canchas_page.php">Canchas</a></li>
                     </ul>
                 </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link m-2 m-lg-0" href="informe_diario_page.php">Informes</a>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle m-2 m-lg-0" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Informes
+                    </a>
+                    <ul class="dropdown-menu dropMenu">
+                        <li><a class="dropdown-item" href="informe_diario_page.php">Diario</a></li>
+                        <li><a class="dropdown-item" href="informe_mensual_page.php">Mensual</a></li>
+                    </ul>
                 </li>
 
             </ul>
