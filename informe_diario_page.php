@@ -28,7 +28,7 @@ if (isset($_POST['fechaInforme'])) {
 
     $fechaSeleccionadaFinal = date('d-m-Y 04:00', strtotime('+1 day', strtotime($fechaSeleccionada)));
 
-    $sql = "SELECT tk.id_CLIENTE, 
+    $sql = "SELECT tk._id AS id_TICKET, 
     c.NOMBRE AS nombre_cliente, 
     t.FECHA AS fecha_reserva, 
     t.HORA_INICIO, 
@@ -59,11 +59,11 @@ if (isset($_POST['fechaInforme'])) {
 ?>
 
 <div class="container tablasInformes">
-    <p class="mt-5 h4" >Informe Diario</p>
+    <p class="mt-5 h4">Informe Diario</p>
     <!-- Formulario para seleccionar la fecha -->
     <form id="fechaForm" method="post" action="" class="my-4">
         <div class="form-group mt-4 d-flex align-items-center">
-            <p class="my-0 me-2 p-0" style="font-weight: bold; font-size: 0.8rem" >Seleccionar fecha: </p>
+            <p class="my-0 me-2 p-0" style="font-weight: bold; font-size: 0.8rem">Seleccionar fecha: </p>
             <input type="date" class="form-control despFecha" id="fechaInforme" name="fechaInforme"
                 value="<?php echo date('Y-m-d', strtotime($fechaSeleccionada)); ?>"
                 onchange="document.getElementById('fechaForm').submit()">
@@ -78,7 +78,7 @@ if (isset($_POST['fechaInforme'])) {
                     <!-- Cabecera de la tabla -->
                     <thead>
                         <tr class="align-middle">
-                            <th>ID Cliente</th>
+                            <th>ID Ticket</th>
                             <th>Nombre Cliente</th>
                             <th>Fecha Pago</th>
                             <th>Cancha</th>
@@ -95,7 +95,7 @@ if (isset($_POST['fechaInforme'])) {
                     <tbody>
                         <!-- Consulta para obtener los datos de la tabla ticket -->
                         <?php
-                        $sqlTurnos = "SELECT tk.id_CLIENTE, 
+                        $sqlTurnos = "SELECT tk._id AS id_TICKET, 
                                         c.NOMBRE AS nombre_cliente, 
                                         t.FECHA AS fecha_reserva, 
                                         t.HORA_INICIO, 
@@ -121,7 +121,7 @@ if (isset($_POST['fechaInforme'])) {
                         while ($filaTurno = mysqli_fetch_assoc($resultado_turnos)) {
                             // Mostrar los datos en la fila
                             echo "<tr class='align-middle'>";
-                            echo "<td>" . $filaTurno['id_CLIENTE'] . "</td>";
+                            echo "<td><a href='#' class='id-ticket-link' data-id-ticket='" . $filaTurno['id_TICKET'] . "'>" . $filaTurno['id_TICKET'] . "</a></td>";
                             echo "<td>" . $filaTurno['nombre_cliente'] . "</td>";
                             echo "<td>" . $filaTurno['fecha_ticket'] . "</td>";
                             echo "<td>" . $filaTurno['nombre_cancha'] . "</td>";
@@ -228,11 +228,52 @@ if (isset($_POST['fechaInforme'])) {
     </div>
 </div>
 
+<!-- Agregar un Modal HTML -->
+<div class="modal fade" id="detalleTicketModal" tabindex="-1" aria-labelledby="detalleTicketModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleTicketModalLabel">Detalles del Ticket</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="detallePagoTableBody">
 
-
-
+            </div>
+        </div>
+    </div>
 </div>
 
+
+<script>
+    // JavaScript para manejar el clic en los enlaces de ID Ticket
+    $(document).ready(function () {
+        // Manejar el clic en los enlaces de ID Ticket
+        $('.id-ticket-link').click(function (e) {
+            e.preventDefault(); // Prevenir el comportamiento predeterminado del enlace
+
+            // Obtener el ID del ticket del atributo data
+            var idTicket = $(this).data('id-ticket');
+
+            // Enviar una solicitud AJAX para obtener los detalles del ticket
+            $.ajax({
+                url: 'obtener_detalles_ticket.php',
+                type: 'GET',
+                data: { id: idTicket },
+                success: function (response) {
+                    // Mostrar los detalles del ticket en el modal
+                    $('#detallePagoTableBody').html(response);
+                    $('#detalleTicketModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Error al obtener los detalles del ticket.');
+                }
+            });
+        });
+    });
+
+</script>
 
 <?php
 include 'common_scripts.php';

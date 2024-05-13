@@ -172,8 +172,8 @@ include 'common_scripts.php';
         // Ordenar las filas según el criterio seleccionado
         if (criterio === "stock") {
             filasArray.sort(function (a, b) {
-                var stockA = parseInt(a.getElementsByTagName("td")[5].textContent);
-                var stockB = parseInt(b.getElementsByTagName("td")[5].textContent);
+                var stockA = parseInt(a.getElementsByTagName("td")[4].textContent);
+                var stockB = parseInt(b.getElementsByTagName("td")[4].textContent);
                 return stockA - stockB;
             });
         } else if (criterio === "nombre") {
@@ -196,8 +196,8 @@ include 'common_scripts.php';
             });
         } else if (criterio === "precio") {
             filasArray.sort(function (a, b) {
-                var precioA = parseFloat(a.getElementsByTagName("td")[4].textContent);
-                var precioB = parseFloat(b.getElementsByTagName("td")[4].textContent);
+                var precioA = parseFloat(a.getElementsByTagName("td")[3].textContent);
+                var precioB = parseFloat(b.getElementsByTagName("td")[3].textContent);
                 return precioA - precioB;
             });
         }
