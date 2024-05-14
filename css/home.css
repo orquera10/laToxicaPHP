@@ -605,3 +605,13 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
 .tablasInformes p{
   color: var(--color-primario);
 }
+
+#btnCerrarDia{
+  width: 100%;
+}
+
+.btn:disabled{
+  color: #838383;
+  background-color: var(--color-terciario);
+  border-color: var(--color-secundario);
+}

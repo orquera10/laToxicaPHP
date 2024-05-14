@@ -19,9 +19,46 @@ $fechaSeleccionada = date("d-m-Y");
 $fechaSeleccionadaInicial = date('d-m-Y 07:00', strtotime($fechaSeleccionada));
 $fechaSeleccionadaFinal = date('d-m-Y 04:00', strtotime('+1 day', strtotime($fechaSeleccionada)));
 
+// Consulta para verificar si ya existe una entrada para la fecha seleccionada
+$sql_verificar = "SELECT _id FROM `resumen_dias` WHERE `FECHA` = '$fechaSeleccionada'";
+$resultado_verificar = mysqli_query($con, $sql_verificar);
+
+// Verificar si la consulta devuelve filas
+if (mysqli_num_rows($resultado_verificar) == 0) {
+    // No hay entrada para esta fecha, proceder con la inserción
+    $sql_insertar = "INSERT INTO `resumen_dias` (`FECHA`) VALUES ('$fechaSeleccionada')";
+    mysqli_query($con, $sql_insertar);
+    // Obtener el ID generado
+    $id_resumen = mysqli_insert_id($con);
+} else {
+    // Ya existe una entrada en la tabla para la fecha seleccionada, obtener su ID
+    $fila_resumen = mysqli_fetch_assoc($resultado_verificar);
+    $id_resumen = $fila_resumen['_id'];
+}
+
+
 // Verificar si se ha seleccionado una fecha
 if (isset($_POST['fechaInforme'])) {
     $fechaSeleccionada = $_POST['fechaInforme'];
+    // Formatear la fecha al formato "d-m-Y"
+    $fechaSeleccionada = date('d-m-Y', strtotime($fechaSeleccionada));
+
+    // Consulta para verificar si ya existe una entrada para la fecha seleccionada
+    $sql_verificar = "SELECT _id FROM `resumen_dias` WHERE `FECHA` = '$fechaSeleccionada'";
+    $resultado_verificar = mysqli_query($con, $sql_verificar);
+
+    // Verificar si la consulta devuelve filas
+    if (mysqli_num_rows($resultado_verificar) == 0) {
+        // No hay entrada para esta fecha, proceder con la inserción
+        $sql_insertar = "INSERT INTO `resumen_dias` (`FECHA`) VALUES ('$fechaSeleccionada')";
+        mysqli_query($con, $sql_insertar);
+        // Obtener el ID generado
+        $id_resumen = mysqli_insert_id($con);
+    } else {
+        // Ya existe una entrada en la tabla para la fecha seleccionada, obtener su ID
+        $fila_resumen = mysqli_fetch_assoc($resultado_verificar);
+        $id_resumen = $fila_resumen['_id'];
+    }
 
     // Convertir la fecha al formato dd-mm-aaaa usando STR_TO_DATE()
     $fechaSeleccionadaInicial = date('d-m-Y 07:00', strtotime($fechaSeleccionada));
@@ -225,6 +262,32 @@ if (isset($_POST['fechaInforme'])) {
                 </table>
             </div>
         </div>
+
+        <?php
+        // Realizar una consulta para obtener el valor de FINALIZADO
+        $sqlFinalizado = "SELECT FINALIZADO FROM `resumen_dias` WHERE `FECHA` = '$fechaSeleccionada'";
+        $resultado_finalizado = mysqli_query($con, $sqlFinalizado);
+
+        // Verificar si se obtuvo el resultado de la consulta
+        if ($resultado_finalizado) {
+            // Obtener el valor de FINALIZADO
+            $fila_finalizado = mysqli_fetch_assoc($resultado_finalizado);
+            $finalizado = $fila_finalizado['FINALIZADO'];
+
+            // Determinar si el botón debe estar habilitado o deshabilitado
+            $disabled = ($finalizado == 1) ? "disabled" : "";
+        } else {
+            // En caso de error en la consulta, asumir que el botón está deshabilitado
+            $disabled = "disabled";
+        }
+        ?>
+
+        <!-- Botón Cerrar Día con la propiedad disabled según el valor de FINALIZADO -->
+        <div class="row">
+            <div class="col-md-6 my-4">
+                <button class="btn btn-primary" id="btnCerrarDia" <?php echo $disabled; ?>>Cerrar Día</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -244,9 +307,11 @@ if (isset($_POST['fechaInforme'])) {
     </div>
 </div>
 
+<?php
+include 'common_scripts.php';
+?>
 
 <script>
-    // JavaScript para manejar el clic en los enlaces de ID Ticket
     $(document).ready(function () {
         // Manejar el clic en los enlaces de ID Ticket
         $('.id-ticket-link').click(function (e) {
@@ -271,13 +336,77 @@ if (isset($_POST['fechaInforme'])) {
                 }
             });
         });
-    });
 
+        $('#btnCerrarDia').click(function () {
+            var totalFilas = $('.tablaProductosStock tbody tr').length - 1; // Excluir la última fila
+            var filasGuardadas = 0;
+            var idResumen = <?php echo $id_resumen; ?>; // Obtener el ID de resumen_dias
+
+            $('.tablaProductosStock tbody tr').each(function (index) {
+                // Verificar si es la última fila
+                if (index === totalFilas) return;
+
+                var idProducto = $(this).find('td:eq(0)').text(); // Obtener el ID del producto
+                var cantidadVendida = $(this).find('td:eq(3)').text(); // Obtener la cantidad vendida
+
+                // Realizar una solicitud AJAX para guardar en la tabla de stock
+                $.ajax({
+                    url: 'quitar_stock.php',
+                    type: 'POST',
+                    data: {
+                        id_resumen: idResumen, // Enviar el ID de resumen_dias
+                        id_producto: idProducto,
+                        egreso: cantidadVendida
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        filasGuardadas++;
+                        if (filasGuardadas === totalFilas) {
+                            // Cambiar el valor de FINALIZADO a 1 en la tabla resumen_dias
+                            $.ajax({
+                                url: 'actualizar_finalizado_dia.php',
+                                type: 'POST',
+                                data: { id_resumen: idResumen },
+                                success: function (response) {
+                                    // Mostrar SweetAlert si todas las filas se han guardado correctamente
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Éxito',
+                                        text: 'Se cerro correctamente el dia'
+                                    }).then(function () {
+                                        // Recargar la página
+                                        location.reload();
+                                    });
+                                },
+                                error: function () {
+                                    // Mostrar SweetAlert si hay un error al actualizar FINALIZADO
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Ha ocurrido un error al actualizar FINALIZADO'
+                                    });
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        // Mostrar SweetAlert si hay un error en la solicitud AJAX
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al procesar la solicitud'
+                        });
+                    }
+                });
+            });
+        });
+
+
+
+
+    });
 </script>
 
-<?php
-include 'common_scripts.php';
-?>
 
 </body>
 
