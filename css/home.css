@@ -34,9 +34,9 @@ body {
 }
 
 /****************/
-input {
+/* input {
   display: none;
-}
+} */
 
 .fc-content {
   color: var(--color-secundario) !important;
@@ -614,4 +614,8 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
   color: #838383;
   background-color: var(--color-terciario);
   border-color: var(--color-secundario);
+}
+
+.formInfMensual label{
+  color: var(--color-primario);
 }
