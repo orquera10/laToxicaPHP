@@ -2,7 +2,7 @@
 $pageTitle = "Login";
 include 'header.php';
 ?>
-<div class="container-fluid h-100">
+<div class="container-fluid vh-100">
     <div class="row h-100">
         <div class="col-12 col-md-4 h-100">
             <div class="row justify-content-center h-100 align-items-center contenedorLogin">

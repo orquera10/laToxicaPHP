@@ -208,7 +208,7 @@ if (isset($_POST['fechaInforme'])) {
                             <th>Nombre Producto</th>
                             <th>Precio</th>
                             <th>Cantidad Vendida</th>
-                            <th>Stock Actual</th> <!-- Nueva columna para mostrar el stock -->
+                            
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -219,8 +219,7 @@ if (isset($_POST['fechaInforme'])) {
                                         producto.NOMBRE AS nombre_producto, 
                                         producto.PRECIO, 
                                         SUM(detalle_ticket.CANTIDAD) AS total_cantidad,
-                                        SUM(detalle_ticket.PRECIO * detalle_ticket.CANTIDAD) AS total_producto,
-                                        producto.STOCK  -- Agregar el campo STOCK
+                                        SUM(detalle_ticket.PRECIO * detalle_ticket.CANTIDAD) AS total_producto
                                  FROM detalle_ticket 
                                  INNER JOIN ticket ON detalle_ticket.id_TICKET = ticket._id 
                                  INNER JOIN producto ON detalle_ticket.id_PRODUCTO = producto._id 
@@ -247,14 +246,14 @@ if (isset($_POST['fechaInforme'])) {
                             echo "<td>" . $filaProducto['nombre_producto'] . "</td>";
                             echo "<td>" . $filaProducto['PRECIO'] . "</td>";
                             echo "<td>" . $filaProducto['total_cantidad'] . "</td>";
-                            echo "<td>" . $filaProducto['STOCK'] . "</td>"; // Mostrar el stock
+                            
                             echo "<td style='font-weight: bold;font-size: 0.8rem;'>" . $totalProducto . "</td>";
                             echo "</tr>";
                         }
                         ?>
                         <!-- Total general -->
                         <tr class='align-middle'>
-                            <td colspan="4"></td>
+                            <td colspan="3"></td>
                             <td style='font-weight: bold; font-size: 0.8rem;'>Total General</td>
                             <td style='font-weight: bold; font-size: 1rem;'><?php echo $totalGeneral; ?></td>
                         </tr>

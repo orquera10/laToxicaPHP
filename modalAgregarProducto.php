@@ -18,10 +18,10 @@
                         <label for="precioProducto" class="form-label">Precio:</label>
                         <input type="number" class="form-control" id="precioProducto" name="precioProducto">
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label for="stockProducto" class="form-label">Stock:</label>
                         <input type="number" class="form-control" id="stockProducto" name="stockProducto">
-                    </div>
+                    </div> -->
                     <div class="mb-3">
                         <label for="imagenProducto" class="form-label">Imagen:</label>
                         <input type="file" class="form-control" id="imagenProducto" name="imagenProducto">
@@ -49,7 +49,7 @@
         var nombre = document.getElementById('nombreProducto').value;
         
         var precio = document.getElementById('precioProducto').value;
-        var stock = document.getElementById('stockProducto').value;
+        // var stock = document.getElementById('stockProducto').value;
         var imagen = document.getElementById('imagenProducto').files[0]; // Obtener la imagen seleccionada
 
         // Crear un objeto FormData para enviar los datos del formulario
@@ -57,7 +57,7 @@
         formData.append('nombreProducto', nombre);
         
         formData.append('precioProducto', precio);
-        formData.append('stockProducto', stock);
+        // formData.append('stockProducto', stock);
         formData.append('imagenProducto', imagen); // Agregar la imagen al FormData
 
         // Realizar una solicitud AJAX para guardar el producto

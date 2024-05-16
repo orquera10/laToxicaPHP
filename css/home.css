@@ -7,7 +7,7 @@
 }
 
 body {
-  height: 100vh;
+  /* height: 100vh; */
   background-color: var(--color-secundario);
 }
 
@@ -618,4 +618,9 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
 
 .formInfMensual label{
   color: var(--color-primario);
+}
+
+.tituloInformeMes{
+  color: var(--color-primario);
+  font-weight: bold;
 }
