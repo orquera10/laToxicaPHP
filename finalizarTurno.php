@@ -2,7 +2,7 @@
 // Verificar si se recibieron los parámetros esperados
 if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['pagoTransferencia']) && isset($_POST['nombrePagos']) && isset($_POST['montoTransferencias']) && isset($_POST['montoEfectivos'])) {
     // Establecer la conexión con la base de datos (reemplaza con tus propios datos)
-    require("config.php");
+    require ("config.php");
 
     // Obtener los valores de los parámetros
     $idTurno = $_POST['idTurno'];
@@ -71,8 +71,46 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
         }
     }
 
+    // Obtener los productos relacionados con el id_TICKET desde la tabla detalle_ticket
+    $sql_detalle_ticket = "SELECT id_PRODUCTO, CANTIDAD FROM detalle_ticket WHERE id_TICKET = ?";
+    $stmt_detalle_ticket = mysqli_prepare($con, $sql_detalle_ticket);
+    mysqli_stmt_bind_param($stmt_detalle_ticket, "i", $idTicket);
+    mysqli_stmt_execute($stmt_detalle_ticket);
+    $success = mysqli_stmt_bind_result($stmt_detalle_ticket, $idProducto, $cantidadProducto);
+
+    if ($success) {
+        // Preparar la consulta SQL para insertar registros en la tabla stock
+        $sql_insert_stock = "INSERT INTO stock (id_PRODUCTO, TIPO, CANTIDAD) VALUES (?, 'EGRESO', ?)";
+        $stmt_insert_stock = mysqli_prepare($con, $sql_insert_stock);
+
+        // Iterar sobre los productos y ejecutar la consulta para cada uno
+        while (mysqli_stmt_fetch($stmt_detalle_ticket)) {
+            mysqli_stmt_bind_param($stmt_insert_stock, "ii", $idProducto, $cantidadProducto);
+            $success = mysqli_stmt_execute($stmt_insert_stock);
+            // Verificar si hubo algún error en la ejecución de la consulta
+            if (!$success) {
+                // Si hay un error, hacer rollback y mostrar un mensaje de error
+                mysqli_rollback($con);
+                echo json_encode(array("success" => false, "message" => "Error al insertar productos en la tabla stock: " . mysqli_error($con)));
+                exit();
+            }
+        }
+    } else {
+        // Si hay un error, hacer rollback y mostrar un mensaje de error
+        mysqli_rollback($con);
+        echo json_encode(array("success" => false, "message" => "Error al insertar productos en la tabla stock: " . mysqli_error($con)));
+        exit();
+    }
+
+
     // Si llegamos aquí, todo se ejecutó correctamente, hacer commit
     mysqli_commit($con);
+
+    // Cerrar la consulta de detalle_ticket
+    mysqli_stmt_close($stmt_detalle_ticket);
+
+    // Cerrar la declaración de inserción en stock
+    mysqli_stmt_close($stmt_insert_stock);
 
     // Cerrar las declaraciones y la conexión
     mysqli_stmt_close($stmt_update);
@@ -85,4 +123,7 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
     // Si no se recibieron todos los parámetros esperados, mostrar un mensaje de error
     echo json_encode(array("success" => false, "message" => "Error: Todos los parámetros necesarios no fueron proporcionados."));
 }
+
+
+
 ?>
