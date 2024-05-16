@@ -16,8 +16,26 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['date'])) {
 
     $selectedDatePeriodo = date('m-Y', strtotime($selectedDate));
 
+    // Consulta para verificar si ya existe una entrada para la fecha seleccionada
+    $sql_verificar = "SELECT _id FROM `periodo` WHERE `FECHA` = '$selectedDatePeriodo'";
+    $resultado_verificar = mysqli_query($con, $sql_verificar);
+
+    // Verificar si la consulta devuelve filas
+    if (mysqli_num_rows($resultado_verificar) == 0) {
+        // No hay entrada para esta fecha, proceder con la inserción
+        $sql_insertar = "INSERT INTO `periodo` (`FECHA`) VALUES ('$selectedDatePeriodo')";
+        mysqli_query($con, $sql_insertar);
+        // Obtener el ID generado
+        $id_periodo = mysqli_insert_id($con);
+    } else {
+        // Ya existe una entrada en la tabla para la fecha seleccionada, obtener su ID
+        $fila_resumen = mysqli_fetch_assoc($resultado_verificar);
+        $id_periodo = $fila_resumen['_id'];
+    }
+
+
     // Consulta para obtener el stock de cada producto en el mes seleccionado
-    $sql = "SELECT p.NOMBRE, COALESCE(sm.STOCK_INICIAL, 0) AS STOCK_INICIAL, COALESCE(SUM(s.INGRESO), 0) AS INGRESO_TOTAL, COALESCE(SUM(s.EGRESO), 0) AS EGRESO_TOTAL,
+    $sql = "SELECT p._id, p.NOMBRE, COALESCE(sm.STOCK_INICIAL, 0) AS STOCK_INICIAL, COALESCE(SUM(s.INGRESO), 0) AS INGRESO_TOTAL, COALESCE(SUM(s.EGRESO), 0) AS EGRESO_TOTAL,
                    COALESCE(SUM(s.INGRESO), 0) - COALESCE(SUM(s.EGRESO), 0) AS STOCK_FINAL
             FROM producto p
             LEFT JOIN stock s ON p._id = s.id_PRODUCTO
@@ -55,9 +73,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['date'])) {
     <?php if (isset($result)): ?>
         <p class="tituloInformeMes">Informe de Stock - <?php echo date('m Y', strtotime($selectedDate)); ?></p>
         <div class="rounded tablaTurnosAll tablaMes my-4 shadow py-2 px-4">
-            <table class="table">
+            <table class="table tablaStockMes">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Producto</th>
                         <th>Stock Inicial</th>
                         <th>Ingreso</th>
@@ -69,6 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['date'])) {
                     <?php
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
+                        echo "<td>" . $row['_id'] . "</td>";
                         echo "<td>" . $row['NOMBRE'] . "</td>";
                         echo "<td>" . $row['STOCK_INICIAL'] . "</td>";
                         echo "<td>" . $row['INGRESO_TOTAL'] . "</td>";
@@ -113,5 +133,60 @@ if (isset($stmt)) {
 }
 ?>
 
+<script>
+    $(document).ready(function () {
+
+        $('#btnCerrarMes').click(function () {
+            var totalFilas = $('.tablaStockMes tbody tr').length; // Excluir la última fila
+            var filasGuardadas = 0;
+            var idPeriodoNuevo = <?php echo $id_periodo; ?>; // Obtener el ID de periodo para el mes siguiente------------------------
+
+            $('.tablaStockMes tbody tr').each(function (index) {
+                // Verificar si es la última fila
+                if (index === totalFilas) return;
+
+                var stokInicial = $(this).find('td:eq(2)').text(); // Obtener stock incial
+                var idProducto = $(this).find('td:eq(0)').text(); // Obtener id producto
+
+                // Realizar una solicitud AJAX para guardar en la tabla de stock
+                $.ajax({
+                    url: 'cerrar_mes.php',
+                    type: 'POST',
+                    data: {
+                        stokInicial: stokInicial, // Enviar el ID de resumen_dias
+                        id_producto: idProducto,
+                        id_periodo: idPeriodoNuevo
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                                    // Mostrar SweetAlert si todas las filas se han guardado correctamente
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Éxito',
+                                        text: 'Se cerro correctamente el mes'
+                                    }).then(function () {
+                                        // Recargar la página
+                                        location.reload();
+                                    });
+                                },
+                    error: function () {
+                        // Mostrar SweetAlert si hay un error en la solicitud AJAX
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al procesar la solicitud'
+                        });
+                    }
+                });
+            });
+        });
+
+
+
+
+    });
+</script>
+
 </body>
 
+</html>
