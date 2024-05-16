@@ -80,12 +80,14 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
 
     if ($success) {
         // Preparar la consulta SQL para insertar registros en la tabla stock
-        $sql_insert_stock = "INSERT INTO stock (id_PRODUCTO, TIPO, CANTIDAD) VALUES (?, 'EGRESO', ?)";
+        $tipo = 'EGRESO';
+        $sql_insert_stock = "INSERT INTO stock (id_PRODUCTO, TIPO, CANTIDAD) VALUES (?, ?, ?)";
         $stmt_insert_stock = mysqli_prepare($con, $sql_insert_stock);
 
         // Iterar sobre los productos y ejecutar la consulta para cada uno
         while (mysqli_stmt_fetch($stmt_detalle_ticket)) {
-            mysqli_stmt_bind_param($stmt_insert_stock, "ii", $idProducto, $cantidadProducto);
+            mysqli_stmt_bind_param($stmt_insert_stock, "isi", $idProducto, $tipo, $cantidadProducto);
+
             $success = mysqli_stmt_execute($stmt_insert_stock);
             // Verificar si hubo algún error en la ejecución de la consulta
             if (!$success) {
