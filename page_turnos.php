@@ -715,36 +715,42 @@ include 'common_scripts.php';
       $("#modalAgregarPago").modal("show");
     });
 
-    // Función para agregar un nuevo pago a la tabla
     $("#btnGuardarPago").click(function () {
-      // Obtener los valores ingresados en el formulario
-      var nombrePago = $("#nombrePago").val();
-      var montoTransferencia = parseFloat($("#montoTransferencia").val());
-      var montoEfectivo = parseFloat($("#montoEfectivo").val());
+  // Obtener los valores ingresados en el formulario
+  var nombrePago = $("#nombrePago").val();
+  var montoTransferencia = $("#montoTransferencia").val().trim() !== "" ? parseFloat($("#montoTransferencia").val()) : 0;
+  var montoEfectivo = $("#montoEfectivo").val().trim() !== "" ? parseFloat($("#montoEfectivo").val()) : 0;
 
-      // Validar que se ingrese el nombre del pago
-      if (nombrePago !== "") {
-        // Construir la fila de la tabla con los datos ingresados
-        var newRow = "<tr class='align-middle'><td>" + nombrePago + "</td><td>" + montoTransferencia + "</td><td>" + montoEfectivo + "</td><td><button class='btn btnEliminarPago'><i class='fas fa-trash-alt btnDeletePago'></i></button></td></tr>";
+  // Validar que se ingrese el nombre del pago y que al menos uno de los montos sea mayor que 0
+  if (nombrePago !== "" && (montoTransferencia > 0 || montoEfectivo > 0)) {
+    // Construir la fila de la tabla con los datos ingresados
+    var newRow = "<tr class='align-middle'><td>" + nombrePago + "</td><td>" + montoTransferencia + "</td><td>" + montoEfectivo + "</td><td><button class='btn btnEliminarPago'><i class='fas fa-trash-alt btnDeletePago'></i></button></td></tr>";
 
-        // Agregar la nueva fila a la tabla
-        $("#tablaPagos").append(newRow);
+    // Agregar la nueva fila a la tabla
+    $("#tablaPagos").append(newRow);
 
-        // Recalcular los totales y mostrarlos en los campos de pago
-        calcularTotales();
+    // Recalcular los totales y mostrarlos en los campos de pago
+    calcularTotales();
 
-        // Limpiar los campos del formulario después de agregar el pago
-        $("#nombrePago").val("");
-        $("#montoTransferencia").val("0");
-        $("#montoEfectivo").val("0");
+    // Limpiar los campos del formulario después de agregar el pago
+    $("#nombrePago").val("");
+    $("#montoTransferencia").val("0");
+    $("#montoEfectivo").val("0");
 
-        // Cerrar el modal después de guardar el pago
-        $("#modalAgregarPago").modal("hide");
-        $("#modalPago").modal("show");
-      } else {
-        alert("Por favor, ingrese el nombre del pago.");
-      }
+    // Cerrar el modal después de guardar el pago
+    $("#modalAgregarPago").modal("hide");
+    $("#modalPago").modal("show");
+  } else {
+    // Mostrar SweetAlert2 en lugar de alert
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Por favor, ingrese el nombre del pago y asegúrese de que al menos uno de los montos sea mayor que 0.',
     });
+  }
+});
+
+
     $("#btnCerrarModalPago").click(function () {
       // Limpiar los campos del formulario después de agregar el pago
       $("#nombrePago").val("");

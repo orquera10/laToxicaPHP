@@ -72,7 +72,7 @@
           </div>
           <!-- Botón para abrir el modal de agregar nuevo pago -->
           <div class="d-flex justify-content-center">
-            <button class="btn" id="btnAgregarPago" onclick="abrirModalProductos()">
+            <button class="btn" id="btnAgregarPago">
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                 class="bi bi-plus-circle-fill iconAdd" viewBox="0 0 16 16">
                 <path
@@ -82,8 +82,8 @@
           </div>
 
           <div class="row m-0 p-0 mt-4">
-            <div class="col-md-6">
-              <label for="pagoTransf mt-2" class="col-sm-12 control-label">Pago Transferencia: </label>
+            <div class="col-md-6 mt-2">
+              <label for="pagoTransf" class="col-sm-12 control-label">Pago Transferencia: </label>
               <input type="number" class="form-control" name="pagoTransf" id="pagoTransf" value="0" required />
             </div>
             <div class="col-md-6 mt-2">
