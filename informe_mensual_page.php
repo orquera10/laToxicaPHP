@@ -16,27 +16,58 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['date'])) {
 
     $selectedDatePeriodo = date('m-Y', strtotime($selectedDate));
 
-    // Consulta para verificar si ya existe una entrada para la fecha seleccionada
-    $sql_verificar = "SELECT _id FROM `periodo` WHERE `FECHA` = '$selectedDatePeriodo'";
-    $resultado_verificar = mysqli_query($con, $sql_verificar);
+    // Calcular el siguiente periodo
+    $selectedDatePeriodoSiguiente = date('m-Y', strtotime("+1 month", strtotime($selectedDate)));
 
-    // Verificar si la consulta devuelve filas
-    if (mysqli_num_rows($resultado_verificar) == 0) {
-        // No hay entrada para esta fecha, proceder con la inserción
-        $sql_insertar = "INSERT INTO `periodo` (`FECHA`) VALUES ('$selectedDatePeriodo')";
-        mysqli_query($con, $sql_insertar);
-        // Obtener el ID generado
-        $id_periodo = mysqli_insert_id($con);
+    // Variable para almacenar el _id del periodo actual
+    $periodoActualID = null;
+
+    // Verificar si el periodo actual ya existe en la tabla periodo
+    $sqlCheckPeriodoActual = "SELECT _id FROM periodo WHERE FECHA = ?";
+    $stmtCheckPeriodoActual = $con->prepare($sqlCheckPeriodoActual);
+    $stmtCheckPeriodoActual->bind_param("s", $selectedDatePeriodo);
+    $stmtCheckPeriodoActual->execute();
+    $resultCheckPeriodoActual = $stmtCheckPeriodoActual->get_result();
+
+    if ($resultCheckPeriodoActual->num_rows > 0) {
+        // Si el periodo actual existe, obtener su _id
+        $rowCheckPeriodoActual = $resultCheckPeriodoActual->fetch_assoc();
+        $periodoActualID = $rowCheckPeriodoActual['_id'];
     } else {
-        // Ya existe una entrada en la tabla para la fecha seleccionada, obtener su ID
-        $fila_resumen = mysqli_fetch_assoc($resultado_verificar);
-        $id_periodo = $fila_resumen['_id'];
+        // Si no existe, se puede manejar un error o insertar el periodo actual si necesario
+        // En este ejemplo, asumimos que el periodo actual debe existir previamente
+        die("El periodo actual no existe en la base de datos.");
+    }
+
+    // Variable para almacenar el _id del periodo
+    $periodoSiguienteId = null;
+
+    // Verificar si el siguiente periodo ya existe en la tabla periodo
+    $sqlCheckPeriodo = "SELECT _id FROM periodo WHERE FECHA = ?";
+    $stmtCheckPeriodo = $con->prepare($sqlCheckPeriodo);
+    $stmtCheckPeriodo->bind_param("s", $selectedDatePeriodoSiguiente);
+    $stmtCheckPeriodo->execute();
+    $resultCheckPeriodo = $stmtCheckPeriodo->get_result();
+
+    if ($resultCheckPeriodo->num_rows > 0) {
+        // Si el periodo existe, obtener su _id
+        $rowCheckPeriodo = $resultCheckPeriodo->fetch_assoc();
+        $periodoSiguienteId = $rowCheckPeriodo['_id'];
+    } else {
+        // Si no existe, insertar el nuevo periodo en la tabla periodo
+        $sqlInsertPeriodo = "INSERT INTO periodo (FECHA) VALUES (?)";
+        $stmtInsertPeriodo = $con->prepare($sqlInsertPeriodo);
+        $stmtInsertPeriodo->bind_param("s", $selectedDatePeriodoSiguiente);
+        $stmtInsertPeriodo->execute();
+
+        // Obtener el _id del nuevo periodo insertado
+        $periodoSiguienteId = $stmtInsertPeriodo->insert_id;
     }
 
 
     // Consulta para obtener el stock de cada producto en el mes seleccionado
     $sql = "SELECT p._id, p.NOMBRE, COALESCE(sm.STOCK_INICIAL, 0) AS STOCK_INICIAL, COALESCE(SUM(s.INGRESO), 0) AS INGRESO_TOTAL, COALESCE(SUM(s.EGRESO), 0) AS EGRESO_TOTAL,
-                   COALESCE(SUM(s.INGRESO), 0) - COALESCE(SUM(s.EGRESO), 0) AS STOCK_FINAL
+                   STOCK_INICIAL + (COALESCE(SUM(s.INGRESO), 0) - COALESCE(SUM(s.EGRESO), 0)) AS STOCK_FINAL
             FROM producto p
             LEFT JOIN stock s ON p._id = s.id_PRODUCTO
             LEFT JOIN resumen_dias rd ON s.id_DIA = rd._id
@@ -102,8 +133,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['date'])) {
         </div>
         <?php
         // Realizar una consulta para obtener el valor de FINALIZADO
-        $sqlFinalizado = "SELECT FINALIZADO FROM `periodo` WHERE `FECHA` = '$selectedDatePeriodo'";
-        $resultado_finalizado = mysqli_query($con, $sqlFinalizado);
+        $sqlFinalizado = "SELECT FINALIZADO FROM `periodo` WHERE `FECHA` = ?";
+        $stmtFinalizado = $con->prepare($sqlFinalizado);
+        $stmtFinalizado->bind_param("s", $selectedDatePeriodo);
+        $stmtFinalizado->execute();
+        $resultado_finalizado = $stmtFinalizado->get_result();
 
         // Verificar si se obtuvo el resultado de la consulta
         if ($resultado_finalizado) {
@@ -137,52 +171,50 @@ if (isset($stmt)) {
     $(document).ready(function () {
 
         $('#btnCerrarMes').click(function () {
-            var totalFilas = $('.tablaStockMes tbody tr').length; // Excluir la última fila
+            var totalFilas = $('.tablaStockMes tbody tr').length;
             var filasGuardadas = 0;
-            var idPeriodoNuevo = <?php echo $id_periodo; ?>; // Obtener el ID de periodo para el mes siguiente------------------------
 
-            $('.tablaStockMes tbody tr').each(function (index) {
-                // Verificar si es la última fila
-                if (index === totalFilas) return;
+            var promises = [];
 
-                var stokInicial = $(this).find('td:eq(2)').text(); // Obtener stock incial
-                var idProducto = $(this).find('td:eq(0)').text(); // Obtener id producto
+            var idPeriodoSiguiente = <?php echo $periodoSiguienteId; ?>; // Obtener el ID de resumen_dias
+            var idPeriodoActual = <?php echo $periodoActualID; ?>; // Obtener el ID de resumen_dias
 
-                // Realizar una solicitud AJAX para guardar en la tabla de stock
-                $.ajax({
+            $('.tablaStockMes tbody tr').each(function () {
+                var stokInicial = $(this).find('td:eq(5)').text();
+                var idProducto = $(this).find('td:eq(0)').text();
+
+                var request = $.ajax({
                     url: 'cerrar_mes.php',
                     type: 'POST',
                     data: {
-                        stokInicial: stokInicial, // Enviar el ID de resumen_dias
+                        stokInicial: stokInicial,
                         id_producto: idProducto,
-                        id_periodo: idPeriodoNuevo
+                        id_periodo_siguiente: idPeriodoSiguiente,
+                        id_periodo_actual: idPeriodoActual
                     },
-                    dataType: 'json',
-                    success: function (response) {
-                                    // Mostrar SweetAlert si todas las filas se han guardado correctamente
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Éxito',
-                                        text: 'Se cerro correctamente el mes'
-                                    }).then(function () {
-                                        // Recargar la página
-                                        location.reload();
-                                    });
-                                },
-                    error: function () {
-                        // Mostrar SweetAlert si hay un error en la solicitud AJAX
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al procesar la solicitud'
-                        });
-                    }
+                    dataType: 'json'
+                });
+
+                promises.push(request);
+            });
+
+            $.when.apply($, promises).then(function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: 'Se cerro correctamente el mes'
+                }).then(function () {
+                    location.reload();
+                });
+            }, function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ha ocurrido un error al procesar la solicitud'
                 });
             });
+
         });
-
-
-
 
     });
 </script>
