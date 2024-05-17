@@ -624,3 +624,12 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
   color: var(--color-primario);
   font-weight: bold;
 }
+
+.listaNombresVentas a{
+  background-color: var(--color-cuaternario);
+  color: var(--color-secundario);
+}
+
+#modalPago .modal-dialog{
+  min-width: 80vw;
+}

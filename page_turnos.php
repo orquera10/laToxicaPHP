@@ -119,9 +119,8 @@ include 'common_scripts.php';
           // Concatenar la fecha y la hora de inicio y fin
           $start = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_INICIO']));
           $end = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_FIN']));
-
-          ?>
-                                                                          {
+        ?>
+          {
             _id: '<?php echo $dataEvento['_id']; ?>',
             title: '<?php echo $dataEvento['nombre_usuario']; ?>',
             telefono: '<?php echo $dataEvento['telefono_usuario']; ?>',
@@ -712,7 +711,7 @@ include 'common_scripts.php';
   $(document).ready(function () {
     // Función para abrir el modal de agregar nuevo pago
     $("#btnAgregarPago").click(function () {
-      $("#modalPago").modal("hide");
+      // $("#modalPago").modal("hide");
       $("#modalAgregarPago").modal("show");
     });
 
@@ -772,9 +771,42 @@ include 'common_scripts.php';
       calcularCantidadRestante();
     });
   });
-
-
+    
 </script>
+
+<!-- Script para buscar nombres coincidentes -->
+<script>
+$(document).ready(function() {
+    // Función para buscar nombres coincidentes
+    function buscarNombresCoincidentes() {
+        var nombre = $('#nombrePago').val(); // Obtener el valor del campo de entrada de nombre
+
+        // Realizar una solicitud AJAX para buscar nombres coincidentes
+        $.ajax({
+            url: 'buscar_nombres.php',
+            method: 'POST',
+            data: { nombre: nombre }, // Enviar el nombre ingresado al servidor
+            success: function(response) {
+                // Mostrar los nombres coincidentes en el div correspondiente
+                $('#nombresCoincidentes').html(response);
+
+                // Agregar evento de clic a los nombres mostrados
+                $('#nombresCoincidentes .nombre-coincidente').click(function() {
+                    var nombreSeleccionado = $(this).text(); // Obtener el nombre seleccionado
+                    $('#nombrePago').val(nombreSeleccionado); // Insertar el nombre seleccionado en el campo de entrada de nombre
+                    $('#nombresCoincidentes').html(''); // Limpiar la lista de nombres coincidentes
+                });
+            }
+        });
+    }
+
+    // Detectar cambios en el campo de entrada de nombre
+    $('#nombrePago').on('input', function() {
+        buscarNombresCoincidentes(); // Llamar a la función para buscar nombres coincidentes
+    });
+});
+</script>
+
 
 
 </body>

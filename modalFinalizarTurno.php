@@ -83,12 +83,12 @@
 
           <div class="row m-0 p-0 mt-4">
             <div class="col-md-6">
+              <label for="pagoTransf mt-2" class="col-sm-12 control-label">Pago Transferencia: </label>
+              <input type="number" class="form-control" name="pagoTransf" id="pagoTransf" value="0" required />
+            </div>
+            <div class="col-md-6 mt-2">
               <label for="pagoEfectivo" class="col-sm-12 control-label">Pago efectivo: </label>
               <input type="number" class="form-control" name="pagoEfectivo" id="pagoEfectivo" value="0" required />
-            </div>
-            <div class="col-md-6">
-              <label for="pagoTransf" class="col-sm-12 control-label">Pago Transferencia: </label>
-              <input type="number" class="form-control" name="pagoTransf" id="pagoTransf" value="0" required />
             </div>
             <div class="mt-3 d-flex justify-content-center">
               <p>Faltante: <span id="faltaParaTotal">0</span></p>
@@ -108,7 +108,7 @@
 <!-- Modal -->
 <div class="modal fade" id="modalAgregarPago" tabindex="-1" aria-labelledby="modalAgregarPagoLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content shadow">
       <div class="modal-header">
         <h5 class="modal-title" id="modalAgregarPagoLabel">Agregar Nuevo Pago</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -119,7 +119,10 @@
           <div class="mb-3">
             <label for="nombrePago" class="form-label">Nombre:</label>
             <input type="text" class="form-control" id="nombrePago" name="nombrePago" required>
+            <!-- Div para mostrar nombres coincidentes -->
+            <div id="nombresCoincidentes" class="list-group" style="max-height: 90px; overflow-y: auto;"></div>
           </div>
+
           <div class="mb-3">
             <label for="montoTransferencia" class="form-label">Monto Transferencia:</label>
             <input type="number" class="form-control" id="montoTransferencia" name="montoTransferencia" value="0"

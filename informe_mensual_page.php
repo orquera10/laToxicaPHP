@@ -64,6 +64,15 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['date'])) {
         $periodoSiguienteId = $stmtInsertPeriodo->insert_id;
     }
 
+    // Consulta para obtener la lista completa de productos
+    $sqlAllProducts = "SELECT sm.id_PRODUCTO, sm.STOCK_INICIAL FROM stock_mes sm 
+                    LEFT JOIN periodo pd ON sm.id_PERIODO = pd._id
+                    WHERE pd.FECHA = '$selectedDatePeriodo'";
+    $resultAllProducts = $con->query($sqlAllProducts);
+    $allProducts = [];
+    while ($row = $resultAllProducts->fetch_assoc()) {
+        $allProducts[] = $row;
+    }
 
     // Consulta para obtener el stock de cada producto en el mes seleccionado
     $sql = "SELECT p._id, p.NOMBRE, COALESCE(sm.STOCK_INICIAL, 0) AS STOCK_INICIAL, COALESCE(SUM(s.INGRESO), 0) AS INGRESO_TOTAL, COALESCE(SUM(s.EGRESO), 0) AS EGRESO_TOTAL,
@@ -117,7 +126,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['date'])) {
                 </thead>
                 <tbody>
                     <?php
+                    $returnedProductIds = [];
                     while ($row = $result->fetch_assoc()) {
+                        $returnedProductIds[] = (int) $row['_id']; // Convertir a entero
                         echo "<tr>";
                         echo "<td>" . $row['_id'] . "</td>";
                         echo "<td>" . $row['NOMBRE'] . "</td>";
@@ -160,6 +171,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['date'])) {
     <?php endif; ?>
 </div>
 
+<script>
+    var allProducts = <?php echo json_encode($allProducts); ?>;
+    var returnedProductIds = <?php echo json_encode($returnedProductIds); ?>;
+</script>
+
 <?php
 include 'common_scripts.php';
 if (isset($stmt)) {
@@ -198,11 +214,42 @@ if (isset($stmt)) {
                 promises.push(request);
             });
 
+            // Convertir el valor de id_PRODUCTO a entero para cada objeto en allProducts
+            allProducts.forEach(function (product) {
+                product.id_PRODUCTO = parseInt(product.id_PRODUCTO);
+                product.STOCK_INICIAL = parseInt(product.STOCK_INICIAL);
+            });
+
+            // Filtrar los productos que no están en returnedProductIds
+            var missingProducts = allProducts.filter(function (product) {
+                return !returnedProductIds.includes(product.id_PRODUCTO);
+            });
+
+
+            // Hacer solicitud AJAX adicional para productos faltantes
+            if (missingProducts.length > 0) {
+                missingProducts.forEach(function (product) {
+                    var request = $.ajax({
+                        url: 'cerrar_mes.php',
+                        type: 'POST',
+                        data: {
+                            stokInicial: product.STOCK_INICIAL, // Asumiendo que el stock inicial es 0 si no se encuentra
+                            id_producto: product.id_PRODUCTO,
+                            id_periodo_siguiente: idPeriodoSiguiente,
+                            id_periodo_actual: idPeriodoActual
+                        },
+                        dataType: 'json'
+                    });
+
+                    promises.push(request);
+                });
+            }
+
             $.when.apply($, promises).then(function () {
                 Swal.fire({
                     icon: 'success',
                     title: 'Éxito',
-                    text: 'Se cerro correctamente el mes'
+                    text: 'Se cerró correctamente el mes'
                 }).then(function () {
                     location.reload();
                 });
