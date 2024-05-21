@@ -13,6 +13,7 @@ $SqlEventos = "SELECT
                   canchas.NOMBRE as nombre_cancha,
                   ticket.id_CLIENTE,
                   ticket.TOTAL_CANCHA,
+                  ticket.EXTRA,
                   ticket.TOTAL_DETALLE,
                   ticket.TOTAL
                 FROM turnos 
@@ -130,6 +131,7 @@ include 'common_scripts.php';
             cancha: '<?php echo $dataEvento['nombre_cancha']; ?>',
             finalizado: '<?php echo $dataEvento['FINALIZADO']; ?>',
             total_cancha: '<?php echo $dataEvento['TOTAL_CANCHA']; ?>',
+            extra: '<?php echo $dataEvento['EXTRA']; ?>',
             total_detalle: '<?php echo $dataEvento['TOTAL_DETALLE']; ?>',
             total: '<?php echo $dataEvento['TOTAL']; ?>'
           },
@@ -233,6 +235,7 @@ include 'common_scripts.php';
         $('label[name=fecha_fin').text(event.end.format("HH:mm"));
         $('label[name=cancha').text(event.cancha);
 
+        $('span[name=dinero_extra').text(event.extra);
 
         $('#wpContenedor').html(`<a href="https://api.whatsapp.com/send?phone=${event.telefono}" target="_blank">
     <i class="fab fa-whatsapp"></i> ${event.telefono}</a>`);
@@ -634,42 +637,66 @@ include 'common_scripts.php';
 
 </script>
 
-<!-- <script>
-  // Evento de click para abrir el modal al hacer clic en el botón "Agregar Pago"
-  $(document).ready(function () {
-    $('#btnAgregarPago').click(function () {
-      $('#modalAgregarPago').modal('show');
-    });
-    // Función para agregar un nuevo pago a la tabla
-    $("#btnGuardarPago").click(function () {
-      // Obtener los valores ingresados en el formulario
-      var nombrePago = $("#nombrePago").val();
-      var montoTransferencia = $("#montoTransferencia").val();
-      var montoEfectivo = $("#montoEfectivo").val();
+<script>
+  $(document).ready(function() {
+      // Función para buscar nombres coincidentes
+      function buscarNombresCoincidentes() {
+          var nombre = $('#nombrePago').val(); // Obtener el valor del campo de entrada de nombre
 
-      // Validar que se ingresen los datos necesarios
-      if (nombrePago !== "" && montoTransferencia !== "" && montoEfectivo !== "") {
-        // Construir la fila de la tabla con los datos ingresados
-        var newRow = "<tr><td>" + nombrePago + "</td><td>" + montoTransferencia + "</td><td>" + montoEfectivo + "</td></tr>";
+          // Realizar una solicitud AJAX para buscar nombres coincidentes
+          $.ajax({
+              url: 'buscar_nombres.php',
+              method: 'POST',
+              data: { nombre: nombre }, // Enviar el nombre ingresado al servidor
+              success: function(response) {
+                  // Mostrar los nombres coincidentes en el div correspondiente
+                  $('#nombresCoincidentes').html(response);
 
-        // Agregar la nueva fila a la tabla
-        $("#tablaPagos").append(newRow);
-
-        // Limpiar los campos del formulario después de agregar el pago
-        $("#nombrePago").val("");
-        $("#montoTransferencia").val("");
-        $("#montoEfectivo").val("");
-
-        // Cerrar el modal después de guardar el pago
-        $("#modalAgregarPago").modal("hide");
-        $("#modalPago").modal("show");
-
-      } else {
-        alert("Por favor, complete todos los campos del formulario.");
+                  // Agregar evento de clic a los nombres mostrados
+                  $('#nombresCoincidentes .nombre-coincidente').click(function() {
+                      var nombreSeleccionado = $(this).text(); // Obtener el nombre seleccionado
+                      $('#nombrePago').val(nombreSeleccionado); // Insertar el nombre seleccionado en el campo de entrada de nombre
+                      $('#nombresCoincidentes').html(''); // Limpiar la lista de nombres coincidentes
+                  });
+              }
+          });
       }
-    });
+
+      // Detectar cambios en el campo de entrada de nombre
+      $('#nombrePago').on('input', function() {
+          buscarNombresCoincidentes(); // Llamar a la función para buscar nombres coincidentes
+      });
   });
-</script> -->
+</script>
+
+<script>
+  document.getElementById("agregar_extra").addEventListener("click", function() {
+    var idEvento = $('#idEvento').val();
+
+    // Obtener el valor ingresado en extra_money
+    var extraMoney = parseInt(document.getElementById("extra_money").value);
+    // Obtener el valor actual de dinero_extra
+    var dineroExtra = parseInt(document.getElementById("dinero_extra").innerText);
+    // Sumar el valor ingresado al valor actual
+    var nuevoDineroExtra = dineroExtra + extraMoney;
+    
+    // Ejecutar la solicitud AJAX para actualizar la base de datos
+    $.ajax({
+        type: "POST",
+        url: "actualizar_extra.php",
+        data: { dinero_extra: extraMoney, idEvento: idEvento },
+        success: function(response) {
+            actualizarTotales();
+            $('span[name=dinero_extra]').text(nuevoDineroExtra);
+            $('#extra_money').val(0);
+            console.log("Base de datos actualizada correctamente.");
+        },
+        error: function(xhr, status, error) {
+            console.error("Error al actualizar la base de datos:", error);
+        }
+    });
+});
+</script>
 
 <script>
   // Función para calcular y mostrar los totales en los campos de pago
@@ -779,41 +806,6 @@ include 'common_scripts.php';
   });
     
 </script>
-
-<!-- Script para buscar nombres coincidentes -->
-<script>
-$(document).ready(function() {
-    // Función para buscar nombres coincidentes
-    function buscarNombresCoincidentes() {
-        var nombre = $('#nombrePago').val(); // Obtener el valor del campo de entrada de nombre
-
-        // Realizar una solicitud AJAX para buscar nombres coincidentes
-        $.ajax({
-            url: 'buscar_nombres.php',
-            method: 'POST',
-            data: { nombre: nombre }, // Enviar el nombre ingresado al servidor
-            success: function(response) {
-                // Mostrar los nombres coincidentes en el div correspondiente
-                $('#nombresCoincidentes').html(response);
-
-                // Agregar evento de clic a los nombres mostrados
-                $('#nombresCoincidentes .nombre-coincidente').click(function() {
-                    var nombreSeleccionado = $(this).text(); // Obtener el nombre seleccionado
-                    $('#nombrePago').val(nombreSeleccionado); // Insertar el nombre seleccionado en el campo de entrada de nombre
-                    $('#nombresCoincidentes').html(''); // Limpiar la lista de nombres coincidentes
-                });
-            }
-        });
-    }
-
-    // Detectar cambios en el campo de entrada de nombre
-    $('#nombrePago').on('input', function() {
-        buscarNombresCoincidentes(); // Llamar a la función para buscar nombres coincidentes
-    });
-});
-</script>
-
-
 
 </body>
 

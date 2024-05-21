@@ -18,6 +18,8 @@ $id_cancha = intval($_REQUEST["canchas"]);
 $hora_inicio = $_POST['select_hora_inicio'];
 $hora_fin = $_POST['select_hora_fin'];
 
+$extra = isset($_POST['extra_money']) ? $_POST['extra_money'] : 0;
+
 // Definir el color del evento basado en el nombre de la cancha
 if ($id_cancha == 7) {
     $color_evento = "#FCC30C"; // Color púrpura para la cancha 1 y cancha 2
@@ -156,12 +158,15 @@ if (empty($repetir)) {
     // Obtener la fecha del turno para el detalle
     $fecha_actual = date('d-m-Y', strtotime($fecha));
 
+    $total = $total_cancha + intval($extra);
+
     // Insertar el ticket para el turno con el mismo total y fecha que el turno original
     $sql_insert_ticket = "INSERT INTO ticket (
         id_TURNO,
         id_CLIENTE,
         FECHA,
         TOTAL_CANCHA,
+        EXTRA,
         TOTAL_DETALLE,
         TOTAL,
         PAGO_TRANSFERENCIA,
@@ -171,8 +176,9 @@ if (empty($repetir)) {
         '$cliente_id',
         '$fecha_actual',
         '$total_cancha',
+        '$extra',
         0,
-        '$total_cancha',
+        '$total',
         0,
         0
     )";
@@ -267,6 +273,7 @@ for ($fecha_actual = $fecha_inicio_repetir; $fecha_actual <= $fecha_fin_repetir;
         id_CLIENTE,
         FECHA,
         TOTAL_CANCHA,
+        EXTRA,
         TOTAL_DETALLE,
         TOTAL,
         PAGO_TRANSFERENCIA,
@@ -276,8 +283,9 @@ for ($fecha_actual = $fecha_inicio_repetir; $fecha_actual <= $fecha_fin_repetir;
         '$cliente_id',
         '" . date('d-m-Y', strtotime($fecha_actual)) . "',
         '$total_cancha',
+        '$extra',
         0,
-        '$total_cancha',
+        '$total',
         0,
         0
     )";

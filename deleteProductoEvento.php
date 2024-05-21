@@ -7,7 +7,7 @@ if (isset($_POST['idProducto'], $_POST['idEvento'])) {
     $idEvento = $_POST['idEvento'];
 
     // Consulta SQL para obtener el id_TICKET correspondiente al idEvento
-    $sql_ticket = "SELECT _id, TOTAL_CANCHA FROM ticket WHERE id_TURNO = $idEvento";
+    $sql_ticket = "SELECT _id, TOTAL_CANCHA, EXTRA FROM ticket WHERE id_TURNO = $idEvento";
 
     // Ejecutar la consulta SQL
     $result_ticket = mysqli_query($con, $sql_ticket);
@@ -17,6 +17,7 @@ if (isset($_POST['idProducto'], $_POST['idEvento'])) {
         $row = mysqli_fetch_assoc($result_ticket);
         $idTicket = $row['_id'];
         $total_cancha = $row['TOTAL_CANCHA'];
+        $extra = $row['EXTRA'];
 
         // Consulta SQL para obtener la cantidad del producto en el detalle del ticket
         $sql_cantidad_producto = "SELECT CANTIDAD FROM detalle_ticket WHERE id_TICKET = $idTicket AND id_PRODUCTO = $idProducto";
@@ -67,7 +68,7 @@ if (isset($_POST['idProducto'], $_POST['idEvento'])) {
                         mysqli_query($con, $sql_update_total);
 
                         // Actualizar el total general del ticket
-                        $total_general = $total_productos + $total_cancha;
+                        $total_general = $total_productos + $total_cancha +$extra;
                         $sql_update_total_general = "UPDATE ticket SET TOTAL = '$total_general' WHERE _id = $idTicket";
                         mysqli_query($con, $sql_update_total_general);
 

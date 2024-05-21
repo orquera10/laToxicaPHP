@@ -93,9 +93,10 @@
             contentType: false,
             success: function (response) {
                 var agregarAlStock = parseFloat(document.getElementById('agregarAlStockHidden').value);
-                // Verificar si el valor ingresado es válido y realizar una solicitud AJAX para agregar el stock
-                if (!isNaN(agregarAlStock)) {
-                    
+
+                // Verificar si el valor ingresado es válido
+                if (!isNaN(agregarAlStock) && agregarAlStock > 0) {
+                    // Realizar una solicitud AJAX para agregar el stock
                     $.ajax({
                         url: 'agregar_stock.php',
                         type: 'POST',
@@ -107,7 +108,7 @@
                             // Mostrar una alerta con Sweet Alert si la solicitud fue exitosa
                             Swal.fire({
                                 title: '¡Cambios guardados!',
-                                text: 'Se modificó correctamente el producto',
+                                text: 'Se modificó correctamente el producto y se agregó stock.',
                                 icon: 'success'
                             }).then(function () {
                                 // Recargar la página después de guardar los cambios
@@ -124,8 +125,15 @@
                         }
                     });
                 } else {
-                    // Mostrar un mensaje de error si el valor ingresado no es válido
-                    alert('Por favor, ingrese un número válido.');
+                    // Mostrar una alerta con Sweet Alert si no hay stock para agregar
+                    Swal.fire({
+                        title: '¡Cambios guardados!',
+                        text: 'Se modificó correctamente el producto.',
+                        icon: 'success'
+                    }).then(function () {
+                        // Recargar la página después de guardar los cambios
+                        window.location.reload();
+                    });
                 }
             },
             error: function () {
@@ -137,6 +145,7 @@
                 });
             }
         });
+
     });
 
 

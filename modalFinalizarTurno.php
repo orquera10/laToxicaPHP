@@ -43,6 +43,7 @@
         <div class="mb-3">
           <h5>Totales:</h5>
           <p>Total Cancha: <span name="total_cancha"></span></p>
+          <p>Extra: <span name="dinero_extra"></span></p>
           <p>Total Productos: <span name="total_detalle"></span></p>
           <p>Total General: <span name='total' id="totalFinalizarPago"></span></p>
         </div>

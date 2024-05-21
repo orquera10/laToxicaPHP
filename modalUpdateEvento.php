@@ -161,10 +161,16 @@ if ($resultado) {
         </div>
         <div class="row m-0 p-0">
           <div class="col-12 col-md-4">
-            <p class="text-md-end">Total Cancha: <span name="total_cancha"> $</span></p>
+            <div class="d-flex align-items-center justify-content-center" id="extra_money_field">
+              <input type="number" class="form-control me-2" name="extra_money" id="extra_money"
+                placeholder="Extra de dinero (metegol, sapo, ...)">
+              <button class="btn btn-primary" id="agregar_extra">Agregar</button>
+            </div>
+            <p class="text-md-end mb-0 mt-3">Extra: <span name="dinero_extra" id="dinero_extra"> </span></p>
+            <p class="text-md-end">Total Cancha: <span name="total_cancha"> </span></p>
           </div>
-          <div class="col-12 col-md-8">
-            <p class="text-md-end">Total Productos: <span name="total_detalle"> $</span></p>
+          <div class="col-12 col-md-8 d-flex align-items-end justify-content-end">
+            <p class="text-md-end">Total Productos: <span name="total_detalle"> </span></p>
           </div>
         </div>
         <div class="row m-0 p-0">
@@ -173,7 +179,7 @@ if ($resultado) {
 
       </div>
       <div class="modal-footer colorModalUpdate footerModalUpdate">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="cerrarModalPago()">Cerrar</button>
         <button type="button" class="btn btn-primary" id="finalizarTurno" onclick="abrirModalPago()">Finalizar
           Turno</button>
       </div>
@@ -197,6 +203,13 @@ include ('modalFinalizarTurno.php');
 
     $('#modalUpdateEvento').modal('hide');
     $('#modalPago').modal('show');
+  }
+</script>
+
+<script>
+  function cerrarModalPago() {
+    // Recargar la página
+    location.reload();
   }
 </script>
 

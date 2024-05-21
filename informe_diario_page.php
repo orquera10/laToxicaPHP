@@ -7,6 +7,7 @@ include 'barraNavegacion.php';
 include 'config.php'; // Suponiendo que aquí se encuentra la configuración de la conexión a la base de datos
 
 $total_cancha = 0;
+$extra = 0;
 $total_productos = 0;
 $total = 0;
 $total_efectivo = 0;
@@ -71,7 +72,8 @@ if (isset($_POST['fechaInforme'])) {
     t.HORA_INICIO, 
     t.HORA_FIN, 
     cn.NOMBRE AS nombre_cancha, 
-    tk.TOTAL_CANCHA, 
+    tk.TOTAL_CANCHA,
+    tk.EXTRA, 
     tk.FECHA AS fecha_ticket, 
     tk.TOTAL_DETALLE, 
     tk.TOTAL, 
@@ -123,6 +125,7 @@ if (isset($_POST['fechaInforme'])) {
                             <th>Hora Inicio</th>
                             <th>Hora Fin</th>
                             <th>Total Cancha</th>
+                            <th>Extra</th>
                             <th>Total Productos</th>
                             <th>Total</th>
                             <th>Pago Efectivo</th>
@@ -138,7 +141,8 @@ if (isset($_POST['fechaInforme'])) {
                                         t.HORA_INICIO, 
                                         t.HORA_FIN, 
                                         cn.NOMBRE AS nombre_cancha, 
-                                        tk.TOTAL_CANCHA, 
+                                        tk.TOTAL_CANCHA,
+                                        tk.EXTRA, 
                                         tk.FECHA AS fecha_ticket, 
                                         tk.TOTAL_DETALLE, 
                                         tk.TOTAL, 
@@ -166,6 +170,7 @@ if (isset($_POST['fechaInforme'])) {
                             echo "<td>" . $filaTurno['HORA_INICIO'] . "</td>";
                             echo "<td>" . $filaTurno['HORA_FIN'] . "</td>";
                             echo "<td>" . $filaTurno['TOTAL_CANCHA'] . "</td>";
+                            echo "<td>" . $filaTurno['EXTRA'] . "</td>";
                             echo "<td>" . $filaTurno['TOTAL_DETALLE'] . "</td>";
                             echo "<td style='font-weight: bold;font-size: 0.8rem;'>" . $filaTurno['TOTAL'] . "</td>";
                             echo "<td>" . $filaTurno['PAGO_EFECTIVO'] . "</td>";
@@ -174,6 +179,7 @@ if (isset($_POST['fechaInforme'])) {
 
                             // Sumar a los totales
                             $total_cancha += $filaTurno['TOTAL_CANCHA'];
+                            $extra += $filaTurno['EXTRA'];
                             $total_productos += $filaTurno['TOTAL_DETALLE'];
                             $total += $filaTurno['TOTAL'];
                             $total_efectivo += $filaTurno['PAGO_EFECTIVO'];
@@ -187,6 +193,7 @@ if (isset($_POST['fechaInforme'])) {
                             <td colspan="6"></td>
                             <td style='font-weight: bold;font-size: 0.8rem;'>Totales</td>
                             <td style='font-weight: bold;font-size: 0.8rem;'><?php echo $total_cancha; ?></td>
+                            <td style='font-weight: bold;font-size: 0.8rem;'><?php echo $extra; ?></td>
                             <td style='font-weight: bold;font-size: 0.8rem;'><?php echo $total_productos; ?></td>
                             <td style='font-weight: bold;font-size: 1rem;'><?php echo $total; ?></td>
                             <td style='font-weight: bold;font-size: 0.8rem;'><?php echo $total_efectivo; ?></td>
