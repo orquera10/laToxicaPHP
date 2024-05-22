@@ -2,7 +2,6 @@
 
 include 'config.php';
 
-
 // Obtener la fecha actual en formato 'd-m-Y'
 $fecha_actual = date('d-m-Y');
 
@@ -30,8 +29,15 @@ if ($result->num_rows == 0) {
 $id_producto = $_POST['id_producto'];
 $cantidad = $_POST['cantidad'];
 
-// Insertar el ID del producto y la cantidad en la tabla stock
-$sql_insertar_stock = "INSERT INTO stock (id_DIA, id_PRODUCTO, INGRESO) VALUES ('$id_dia', '$id_producto', '$cantidad')";
+// Verificar si la cantidad es negativa
+if ($cantidad < 0) {
+    // Si la cantidad es negativa, registrar como EGRESO y convertir la cantidad a positiva
+    $cantidad = abs($cantidad);
+    $sql_insertar_stock = "INSERT INTO stock (id_DIA, id_PRODUCTO, EGRESO) VALUES ('$id_dia', '$id_producto', '$cantidad')";
+} else {
+    // Si la cantidad es positiva, registrar como INGRESO
+    $sql_insertar_stock = "INSERT INTO stock (id_DIA, id_PRODUCTO, INGRESO) VALUES ('$id_dia', '$id_producto', '$cantidad')";
+}
 
 if ($con->query($sql_insertar_stock) === TRUE) {
     echo "El stock se agregó correctamente";

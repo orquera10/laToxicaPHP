@@ -5,14 +5,6 @@ $sql = "SELECT _id, NOMBRE, PRECIO FROM producto";
 $result = $con->query($sql);
 ?>
 
-<div class="container d-flex justify-content-center mt-4">
-    <!-- Botón para abrir el modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalVenta" style="min-width:30%"
-        onclick="abrirModalVenta()">
-        Agregar Venta
-    </button>
-</div>
-
 <!-- Modal para agregar una nueva venta -->
 <div class="modal fade" id="modalVenta" tabindex="-1" role="dialog" aria-labelledby="modalVentaLabel"
     aria-hidden="true">

@@ -18,17 +18,25 @@
                         <input type="number" class="form-control" id="editarPrecioProducto" name="editarPrecioProducto">
                     </div>
                     <div class="mb-3 row">
-                        <div class="col-6">
+                        <div class="col-4">
                             <label for="editarStockProducto" class="form-label">Stock Actual:</label>
                             <input type="number" class="form-control" id="editarStockProducto"
                                 name="editarStockProducto" disabled>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
                             <label for="agregarAlStock" class="form-label">Agregar al Stock:</label>
                             <div class="input-group">
                                 <input type="number" class="form-control" id="agregarAlStock" name="agregarAlStock">
                                 <button class="btn btn-outline-secondary" type="button"
                                     id="btnAgregarStock">Agregar</button>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="quitarAlStock" class="form-label">Quitar al Stock:</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="quitarAlStock" name="quitarAlStock">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    id="btnQuitarAlStock">Quitar</button>
                             </div>
                         </div>
                     </div>
@@ -60,6 +68,8 @@
         document.getElementById('editarPrecioProducto').value = producto['PRECIO'];
         document.getElementById('editarStockProducto').value = producto['STOCK'];
         document.getElementById('idProductoEditar').value = producto['_id'];
+        document.getElementById('quitarAlStock').value = producto[''];
+        document.getElementById('agregarAlStock').value = producto[''];
 
         // Abrir el modal de edición
         var modal = new bootstrap.Modal(document.getElementById('modalEditarProducto'));
@@ -95,7 +105,7 @@
                 var agregarAlStock = parseFloat(document.getElementById('agregarAlStockHidden').value);
 
                 // Verificar si el valor ingresado es válido
-                if (!isNaN(agregarAlStock) && agregarAlStock > 0) {
+                if (!isNaN(agregarAlStock) && agregarAlStock !== 0) {
                     // Realizar una solicitud AJAX para agregar el stock
                     $.ajax({
                         url: 'agregar_stock.php',
@@ -105,15 +115,28 @@
                             cantidad: agregarAlStock
                         },
                         success: function (response) {
-                            // Mostrar una alerta con Sweet Alert si la solicitud fue exitosa
-                            Swal.fire({
-                                title: '¡Cambios guardados!',
-                                text: 'Se modificó correctamente el producto y se agregó stock.',
-                                icon: 'success'
-                            }).then(function () {
-                                // Recargar la página después de guardar los cambios
-                                window.location.reload();
-                            });
+                            if (agregarAlStock > 0) {
+                                // Mostrar una alerta con Sweet Alert si la solicitud fue exitosa
+                                Swal.fire({
+                                    title: '¡Cambios guardados!',
+                                    text: 'Se modificó correctamente el producto y se agregó stock.',
+                                    icon: 'success'
+                                }).then(function () {
+                                    // Recargar la página después de guardar los cambios
+                                    window.location.reload();
+                                });
+                            } else {
+                                // Mostrar una alerta con Sweet Alert si la solicitud fue exitosa
+                                Swal.fire({
+                                    title: '¡Cambios guardados!',
+                                    text: 'Se modificó correctamente el producto y se quitó stock.',
+                                    icon: 'success'
+                                }).then(function () {
+                                    // Recargar la página después de guardar los cambios
+                                    window.location.reload();
+                                });
+                            }
+
                         },
                         error: function () {
                             // Mostrar una alerta con Sweet Alert si hay un error en la solicitud
@@ -171,6 +194,34 @@
 
             // Limpiar el campo de agregar al stock
             document.getElementById('agregarAlStock').value = '';
+        } else {
+            // Mostrar un mensaje de error si el valor ingresado no es válido
+            alert('Por favor, ingrese un número válido.');
+        }
+    });
+
+
+    // Función para quitar stock al producto
+    document.getElementById('btnQuitarAlStock').addEventListener('click', function () {
+        // Obtener el valor ingresado en el campo de agregar al stock
+        var quitarAlStock = parseFloat(document.getElementById('quitarAlStock').value);
+        quitarAlStock = -quitarAlStock
+
+        // Obtener el valor actual del stock
+        var stockActual = parseFloat(document.getElementById('editarStockProducto').value);
+
+        // Verificar si el valor ingresado es válido
+        if (!isNaN(quitarAlStock)) {
+            // Sumar el valor ingresado al stock actual
+            var nuevoStock = stockActual + quitarAlStock;
+
+            // Actualizar el valor del campo de stock
+            document.getElementById('editarStockProducto').value = nuevoStock;
+            // Actualizar el valor del input oculto
+            document.getElementById('agregarAlStockHidden').value = quitarAlStock;
+
+            // Limpiar el campo de agregar al stock
+            document.getElementById('quitarAlStock').value = '';
         } else {
             // Mostrar un mensaje de error si el valor ingresado no es válido
             alert('Por favor, ingrese un número válido.');

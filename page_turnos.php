@@ -42,8 +42,21 @@ include ('headerUsuario.php');
 include ('barraNavegacion.php');
 ?>
 
+<div class="container d-flex justify-content-center mt-4">
+    <!-- Botón para abrir el modal de venta-->
+    <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#modalVenta" style="min-width:30%"
+        onclick="abrirModalVenta()">
+        Agregar Venta
+    </button>
+    <!-- Botón para abrir el modal de gasto-->
+    <button type="button" class="btn btn-primary m-1" style="min-width:30%"
+        onclick="abrirModalGasto()">
+        Agregar Gasto
+    </button>
+</div>
 <?php
 include ('modalNuevaVenta.php');
+include ('modalNuevoGasto.php');
 ?>
 <div class="d-flex justify-content-center">
   <div id="calendar" class="m-4 calendario"></div>
@@ -743,39 +756,40 @@ include 'common_scripts.php';
     });
 
     $("#btnGuardarPago").click(function () {
-  // Obtener los valores ingresados en el formulario
-  var nombrePago = $("#nombrePago").val();
-  var montoTransferencia = $("#montoTransferencia").val().trim() !== "" ? parseFloat($("#montoTransferencia").val()) : 0;
-  var montoEfectivo = $("#montoEfectivo").val().trim() !== "" ? parseFloat($("#montoEfectivo").val()) : 0;
+      // Obtener los valores ingresados en el formulario
+      var nombrePago = $("#nombrePago").val();
+      var montoTransferencia = $("#montoTransferencia").val().trim() !== "" ? parseFloat($("#montoTransferencia").val()) : 0;
+      var montoEfectivo = $("#montoEfectivo").val().trim() !== "" ? parseFloat($("#montoEfectivo").val()) : 0;
 
-  // Validar que se ingrese el nombre del pago y que al menos uno de los montos sea mayor que 0
-  if (nombrePago !== "" && (montoTransferencia > 0 || montoEfectivo > 0)) {
-    // Construir la fila de la tabla con los datos ingresados
-    var newRow = "<tr class='align-middle'><td>" + nombrePago + "</td><td>" + montoTransferencia + "</td><td>" + montoEfectivo + "</td><td><button class='btn btnEliminarPago'><i class='fas fa-trash-alt btnDeletePago'></i></button></td></tr>";
+      // Validar que se ingrese el nombre del pago y que al menos uno de los montos sea mayor que 0
+      if (nombrePago !== "" && (montoTransferencia > 0 || montoEfectivo > 0)) {
+        // Construir la fila de la tabla con los datos ingresados
+        var newRow = "<tr class='align-middle'><td>" + nombrePago + "</td><td>" + montoTransferencia + "</td><td>" + montoEfectivo + "</td><td><button class='btn btnEliminarPago'><i class='fas fa-trash-alt btnDeletePago'></i></button></td></tr>";
 
-    // Agregar la nueva fila a la tabla
-    $("#tablaPagos").append(newRow);
+        // Agregar la nueva fila a la tabla
+        $("#tablaPagos").append(newRow);
 
-    // Recalcular los totales y mostrarlos en los campos de pago
-    calcularTotales();
+        // Recalcular los totales y mostrarlos en los campos de pago
+        calcularTotales();
+        calcularCantidadRestante();
 
-    // Limpiar los campos del formulario después de agregar el pago
-    $("#nombrePago").val("");
-    $("#montoTransferencia").val("0");
-    $("#montoEfectivo").val("0");
+        // Limpiar los campos del formulario después de agregar el pago
+        $("#nombrePago").val("");
+        $("#montoTransferencia").val("0");
+        $("#montoEfectivo").val("0");
 
-    // Cerrar el modal después de guardar el pago
-    $("#modalAgregarPago").modal("hide");
-    $("#modalPago").modal("show");
-  } else {
-    // Mostrar SweetAlert2 en lugar de alert
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Por favor, ingrese el nombre del pago y asegúrese de que al menos uno de los montos sea mayor que 0.',
+        // Cerrar el modal después de guardar el pago
+        $("#modalAgregarPago").modal("hide");
+        $("#modalPago").modal("show");
+      } else {
+        // Mostrar SweetAlert2 en lugar de alert
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Por favor, ingrese el nombre del pago y asegúrese de que al menos uno de los montos sea mayor que 0.',
+        });
+      }
     });
-  }
-});
 
 
     $("#btnCerrarModalPago").click(function () {

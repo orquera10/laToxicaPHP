@@ -1,6 +1,6 @@
 <?php
 // Verificar si se recibieron los parámetros esperados
-if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['pagoTransferencia']) && isset($_POST['nombrePagos']) && isset($_POST['montoTransferencias']) && isset($_POST['montoEfectivos'])) {
+if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['pagoTransferencia'])) {
     // Establecer la conexión con la base de datos (reemplaza con tus propios datos)
     require("config.php");
 
@@ -8,9 +8,9 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
     $idTurno = $_POST['idTurno'];
     $pagoEfectivo = $_POST['pagoEfectivo'];
     $pagoTransferencia = $_POST['pagoTransferencia'];
-    $nombrePagos = $_POST['nombrePagos'];
-    $montoTransferencias = $_POST['montoTransferencias'];
-    $montoEfectivos = $_POST['montoEfectivos'];
+    $nombrePagos = isset($_POST['nombrePagos']) ? $_POST['nombrePagos'] : [];
+    $montoTransferencias = isset($_POST['montoTransferencias']) ? $_POST['montoTransferencias'] : [];
+    $montoEfectivos = isset($_POST['montoEfectivos']) ? $_POST['montoEfectivos'] : [];
 
     // Obtener el TOTAL y _id de la tabla ticket para el idTurno proporcionado
     $sql_total = "SELECT TOTAL, _id FROM ticket WHERE id_TURNO = ?";
@@ -54,20 +54,23 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
         exit();
     }
 
-    // Preparar la consulta SQL para insertar los detalles de pago en detalle_pago
-    $sql_insert_detalle_pago = "INSERT INTO detalle_pago (id_TICKET, NOMBRE, TRANSFERENCIA, EFECTIVO) VALUES (?, ?, ?, ?)";
-    $stmt_insert_detalle_pago = mysqli_prepare($con, $sql_insert_detalle_pago);
+    // Verificar si hay detalles de pago para insertar
+    if (!empty($nombrePagos) && !empty($montoTransferencias) && !empty($montoEfectivos)) {
+        // Preparar la consulta SQL para insertar los detalles de pago en detalle_pago
+        $sql_insert_detalle_pago = "INSERT INTO detalle_pago (id_TICKET, NOMBRE, TRANSFERENCIA, EFECTIVO) VALUES (?, ?, ?, ?)";
+        $stmt_insert_detalle_pago = mysqli_prepare($con, $sql_insert_detalle_pago);
 
-    // Iterar sobre los pagos y ejecutar la consulta para cada uno
-    for ($i = 0; $i < count($nombrePagos); $i++) {
-        mysqli_stmt_bind_param($stmt_insert_detalle_pago, "isdd", $idTicket, $nombrePagos[$i], $montoTransferencias[$i], $montoEfectivos[$i]);
-        $success = mysqli_stmt_execute($stmt_insert_detalle_pago);
-        // Verificar si hubo algún error en la ejecución de la consulta
-        if (!$success) {
-            // Si hay un error, hacer rollback y mostrar un mensaje de error
-            mysqli_rollback($con);
-            echo json_encode(array("success" => false, "message" => "Error al insertar detalles de pago: " . mysqli_error($con)));
-            exit();
+        // Iterar sobre los pagos y ejecutar la consulta para cada uno
+        for ($i = 0; $i < count($nombrePagos); $i++) {
+            mysqli_stmt_bind_param($stmt_insert_detalle_pago, "isdd", $idTicket, $nombrePagos[$i], $montoTransferencias[$i], $montoEfectivos[$i]);
+            $success = mysqli_stmt_execute($stmt_insert_detalle_pago);
+            // Verificar si hubo algún error en la ejecución de la consulta
+            if (!$success) {
+                // Si hay un error, hacer rollback y mostrar un mensaje de error
+                mysqli_rollback($con);
+                echo json_encode(array("success" => false, "message" => "Error al insertar detalles de pago: " . mysqli_error($con)));
+                exit();
+            }
         }
     }
 
@@ -76,7 +79,9 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
 
     // Cerrar las declaraciones y la conexión
     mysqli_stmt_close($stmt_update);
-    mysqli_stmt_close($stmt_insert_detalle_pago);
+    if (isset($stmt_insert_detalle_pago)) {
+        mysqli_stmt_close($stmt_insert_detalle_pago);
+    }
     mysqli_close($con);
 
     // Enviar una respuesta de éxito
@@ -86,3 +91,4 @@ if (isset($_POST['idTurno']) && isset($_POST['pagoEfectivo']) && isset($_POST['p
     echo json_encode(array("success" => false, "message" => "Error: Todos los parámetros necesarios no fueron proporcionados."));
 }
 ?>
+
