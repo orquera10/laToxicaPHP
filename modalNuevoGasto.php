@@ -19,7 +19,7 @@
                     </div>
                     <div class="form-group mt-2">
                         <label for="fechaGasto">Fecha</label>
-                        <input type="date" class="form-control" id="fechaGasto" name="fechaGasto" required>
+                        <input type="datetime-local" class="form-control" id="fechaGasto" name="fechaGasto" required>
                     </div>
 
                 </form>

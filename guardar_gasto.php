@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Convertir la fecha al formato 'd-m-Y'
-        $fechaGastoFormatted = date('d-m-Y', strtotime($fechaGasto));
+        $fechaGastoFormatted = date('d-m-Y H:i', strtotime($fechaGasto));
 
         // Preparar la consulta SQL para insertar el nuevo gasto
         $sql = "INSERT INTO gastos (NOMBRE, MONTO, FECHA, id_USUARIO) VALUES (?, ?, ?, ?)";

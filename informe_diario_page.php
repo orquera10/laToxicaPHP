@@ -203,6 +203,62 @@ if (isset($_POST['fechaInforme'])) {
                 </table>
             </div>
         </div>
+
+        <!-- Tabla para mostrar los gastos -->
+        <div class="col-md-6">
+            <p>Detalle de gastos</p>
+            <div class="tablaGastos rounded tablaTurnosAll my-4 shadow py-2 px-4" style="overflow-x: auto;">
+                <table class="table">
+                    <!-- Cabecera de la tabla -->
+                    <thead>
+                        <tr class="align-middle">
+                            <th>ID</th>
+                            <th>ID Usuario</th>
+                            <th>Nombre</th>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // Consulta para obtener los gastos para la fecha seleccionada
+                        $sqlGastos = "SELECT _id, id_USUARIO, NOMBRE, FECHA, MONTO FROM gastos WHERE STR_TO_DATE(FECHA, '%d-%m-%Y %H:%i') BETWEEN STR_TO_DATE('$fechaSeleccionadaInicial', '%d-%m-%Y %H:%i') AND STR_TO_DATE('$fechaSeleccionadaFinal', '%d-%m-%Y %H:%i')";
+
+                        // Ejecutar la consulta
+                        $resultado_gastos = mysqli_query($con, $sqlGastos);
+
+                        // Inicializar la variable para el total general de los montos
+                        $totalGastos = 0;
+
+                        // Mostrar los resultados en la tabla
+                        while ($filaGasto = mysqli_fetch_assoc($resultado_gastos)) {
+                            // Sumar el monto al total general
+                            $totalGastos += $filaGasto['MONTO'];
+
+                            // Mostrar los datos en la fila
+                            echo "<tr class='align-middle'>";
+                            echo "<td>" . $filaGasto['_id'] . "</td>";
+                            echo "<td>" . $filaGasto['id_USUARIO'] . "</td>";
+                            echo "<td>" . $filaGasto['NOMBRE'] . "</td>";
+                            echo "<td>" . $filaGasto['FECHA'] . "</td>";
+                            echo "<td>" . $filaGasto['MONTO'] . "</td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                    <!-- Pie de la tabla -->
+                    <tfoot>
+                        <tr class="align-middle">
+                            <td colspan="4" style="text-align: right; font-weight: bold; font-size: 0.8rem;">Total
+                                General</td>
+                            <td style='font-weight: bold;font-size: 1rem;'><?php echo $totalGastos; ?></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+
         <div class="col-md-6">
             <p>Detalle de stock</p>
             <!-- Tabla para mostrar la información de los productos -->
@@ -215,7 +271,7 @@ if (isset($_POST['fechaInforme'])) {
                             <th>Nombre Producto</th>
                             <th>Precio</th>
                             <th>Cantidad Vendida</th>
-                            
+
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -253,7 +309,7 @@ if (isset($_POST['fechaInforme'])) {
                             echo "<td>" . $filaProducto['nombre_producto'] . "</td>";
                             echo "<td>" . $filaProducto['PRECIO'] . "</td>";
                             echo "<td>" . $filaProducto['total_cantidad'] . "</td>";
-                            
+
                             echo "<td style='font-weight: bold;font-size: 0.8rem;'>" . $totalProducto . "</td>";
                             echo "</tr>";
                         }
@@ -268,6 +324,7 @@ if (isset($_POST['fechaInforme'])) {
                 </table>
             </div>
         </div>
+
 
         <?php
         // Realizar una consulta para obtener el valor de FINALIZADO
@@ -287,7 +344,35 @@ if (isset($_POST['fechaInforme'])) {
             $disabled = "disabled";
         }
         ?>
+        <div class="col-md-12">
+            <p class="h2">Ingresos</p>
+            <p><span style="font-weight: bold;">Total en Cancha:</span> <?php echo $total_cancha; ?> $</p>
+            <p><span style="font-weight: bold;">Total en Productos:</span> <?php echo $total_productos; ?> $</p>
+            <p><span style="font-weight: bold;">Total en Extras:</span> <?php echo $extra; ?> $</p>
+            <p style="font-weight: bold; font-size:1.4rem"><span>Total General:</span> <?php echo $total; ?> $</p>
 
+            <!-- Agregar totales de gastos -->
+            <?php
+            $total_gastos = 0;
+            $sqlGastos = "SELECT _id AS id_gasto, FECHA AS fecha_gasto, MONTO AS monto_gasto
+                          FROM gastos
+                          WHERE STR_TO_DATE(FECHA, '%d-%m-%Y %H:%i') BETWEEN STR_TO_DATE('$fechaSeleccionadaInicial', '%d-%m-%Y %H:%i') AND STR_TO_DATE('$fechaSeleccionadaFinal', '%d-%m-%Y %H:%i')";
+            $resultado_gastos = mysqli_query($con, $sqlGastos);
+
+            while ($filaGasto = mysqli_fetch_assoc($resultado_gastos)) {
+                $total_gastos += $filaGasto['monto_gasto'];
+            }
+            ?>
+
+            <p class="h2">Gastos</p>
+            <p style="font-weight: bold; font-size:1.4rem"><span>Total de Gastos:</span> <?php echo $total_gastos; ?> $</p>
+
+            <!-- Calcular y mostrar la diferencia -->
+            <p class="h2">Diferencia</p>
+            <p style="font-weight: bold; font-size:1.4rem"><span>Diferencia entre Ingresos y Gastos:</span>
+                <?php echo $total - $total_gastos; ?> $</p>
+
+        </div>
         <!-- Botón Cerrar Día con la propiedad disabled según el valor de FINALIZADO -->
         <div class="row">
             <div class="col-md-6 my-4">
