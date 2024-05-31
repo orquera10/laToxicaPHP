@@ -1,5 +1,5 @@
 <?php
-// Conexión a la base de datos (usando tus datos de conexión config.php)
+// Conexión a la base de datos (usando tus datos de conexión)
 require("config.php");
 
 // Verificar si se reciben los datos esperados
