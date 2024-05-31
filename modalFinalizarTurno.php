@@ -42,11 +42,12 @@
         <!-- Parte 3: Totales -->
         <div class="mb-3">
           <h5>Totales:</h5>
-          <p>Total Cancha: <span name="total_cancha"></span></p>
-          <p>Extra: <span name="dinero_extra"></span></p>
-          <p>Total Productos: <span name="total_detalle"></span></p>
-          <p>Seña: <span name="dinero_senia"></span></p>
-          <p>Total a pagar: <span name='total' id="totalFinalizarPago"></span></p>
+          <p>Total Cancha: <span name="total_cancha" id="total_cancha"></span></p>
+          <p>Extra: <span name="dinero_extra" id="dinero_extra"></span></p>
+          <p>Total Productos: <span name="total_detalle" id="total_detalle"></span></p>
+          <p style="font-size:1.2rem;" class="mb-0" >Total: <span name="total_general" id="total_general"></span></p>
+          <p style="font-size:0.8rem;">Seña: - <span name="dinero_senia" id="dinero_senia"></span></p>
+          <p style="font-size:1.2rem;">Total a pagar: <span name='total' id="totalFinalizarPago"></span></p>
         </div>
 
         <!-- Parte 4: Inputs para tipo de pago -->
@@ -143,3 +144,34 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Elementos de totales
+  const totalCancha = document.getElementById('total_cancha');
+  const dineroExtra = document.getElementById('dinero_extra');
+  const totalDetalle = document.getElementById('total_detalle');
+  
+  const totalGeneral = document.getElementById('total_general');
+
+  // Función para calcular el total general
+  function calcularTotalGeneral() {
+    const totalCanchaValue = parseFloat(totalCancha.innerText) || 0;
+    const dineroExtraValue = parseFloat(dineroExtra.innerText) || 0;
+    const totalDetalleValue = parseFloat(totalDetalle.innerText) || 0;
+    
+    const total = totalCanchaValue + dineroExtraValue + totalDetalleValue;
+    totalGeneral.innerText = total;
+  }
+
+  // Observar cambios en los elementos de totales
+  const observer = new MutationObserver(calcularTotalGeneral);
+  
+  observer.observe(totalCancha, { childList: true, subtree: true });
+  observer.observe(dineroExtra, { childList: true, subtree: true });
+  observer.observe(totalDetalle, { childList: true, subtree: true });
+
+  // Calcular el total general inicialmente
+  calcularTotalGeneral();
+});
+</script>

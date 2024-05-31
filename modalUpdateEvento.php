@@ -187,8 +187,6 @@ if ($resultado) {
           </div>
         </div>
         <div class="row m-0 p-0">
-          <p class="text-md-end mb-0">Total: <span name="total_general" id="total_general"> </span></p>
-          <p class="text-md-end mb-0">Seña: - <span name="dinero_senia" id="dinero_senia"> </span></p>
           <p class="text-md-end h3 styleTotal">Total a pagar: <span name="total"> $</span></p>
         </div>
 

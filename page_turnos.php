@@ -253,8 +253,6 @@ include 'common_scripts.php';
         $('span[name=dinero_extra').text(event.extra);
         $('span[name=dinero_senia').text(event.senia);
 
-        $('span[name=total_general').text(parseInt(event.total) + parseInt(event.senia));
-
         $('#wpContenedor').html(`<a href="https://api.whatsapp.com/send?phone=${event.telefono}" target="_blank">
     <i class="fab fa-whatsapp"></i> ${event.telefono}</a>`);
 
@@ -713,7 +711,7 @@ include 'common_scripts.php';
       var dineroExtra = parseInt(document.getElementById("dinero_extra").innerText);
       // Sumar el valor ingresado al valor actual
       var nuevoDineroExtra = dineroExtra + extraMoney;
-      var total = parseInt(document.getElementById("total_general").textContent);
+      
       // Ejecutar la solicitud AJAX para actualizar la base de datos
       $.ajax({
           type: "POST",
@@ -722,7 +720,6 @@ include 'common_scripts.php';
           success: function(response) {
               actualizarTotales();
               $('span[name=dinero_extra]').text(nuevoDineroExtra);
-              $('span[name=total_general]').text(total+extraMoney);
               $('#extra_money').val(0);
               console.log("Base de datos actualizada correctamente.");
           },
@@ -735,7 +732,6 @@ include 'common_scripts.php';
   document.getElementById("agregar_senia").addEventListener("click", function() {
     var idEvento = $('#idEvento').val();
     var seniaAnterior = parseInt(document.getElementById("dinero_senia").textContent);
-    var total = parseInt(document.getElementById("total_general").textContent);
     
     // Obtener el valor ingresado en extra_money
     var seniaMoney = parseInt(document.getElementById("senia_money").value);
@@ -747,7 +743,6 @@ include 'common_scripts.php';
         data: { dinero_senia: seniaMoney, idEvento: idEvento },
         success: function(response) {
             actualizarTotales();
-            $('span[name=total_general]').text(total-seniaAnterior+seniaMoney);
             $('span[name=dinero_senia]').text(seniaMoney);
             $('#senia_money').val(0);
             console.log("Base de datos actualizada correctamente.");
