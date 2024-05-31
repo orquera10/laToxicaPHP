@@ -150,7 +150,7 @@ if ($resultado) {
                       </div>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                       <button type="button" class="btn btn-primary" id="agregarProducto">Agregar</button>
                     </div>
                   </div>
@@ -161,12 +161,25 @@ if ($resultado) {
         </div>
         <div class="row m-0 p-0">
           <div class="col-12 col-md-4">
-            <div class="d-flex align-items-center justify-content-center" id="extra_money_field">
-              <input type="number" class="form-control me-2" name="extra_money" id="extra_money"
-                placeholder="Extra de dinero (metegol, sapo, ...)">
-              <button class="btn btn-primary" id="agregar_extra">Agregar</button>
+            <div id="extra_money_field">
+              <p class="m-0">Extras</p>
+              <div class="d-flex align-items-center justify-content-center">
+                <input type="number" class="form-control me-2" name="extra_money" id="extra_money"
+                  placeholder="Extra de dinero (metegol, sapo, ...)">
+                <button class="btn btn-primary" id="agregar_extra">Agregar</button>
+              </div>
             </div>
+
+            <div class="mt-2" id="senia_field">
+              <p class="m-0">Seña</p>
+              <div class="d-flex align-items-center justify-content-center">
+                <input type="number" class="form-control me-2" name="senia_money" id="senia_money" placeholder="Seña">
+                <button class="btn btn-primary" id="agregar_senia">Agregar</button>
+              </div>
+            </div>
+
             <p class="text-md-end mb-0 mt-3">Extra: <span name="dinero_extra" id="dinero_extra"> </span></p>
+            <p class="text-md-end mb-0">Seña: <span name="dinero_senia" id="dinero_senia"> </span></p>
             <p class="text-md-end">Total Cancha: <span name="total_cancha"> </span></p>
           </div>
           <div class="col-12 col-md-8 d-flex align-items-end justify-content-end">
@@ -174,7 +187,9 @@ if ($resultado) {
           </div>
         </div>
         <div class="row m-0 p-0">
-          <p class="text-md-end h3 styleTotal">Total: <span name="total"> $</span></p>
+          <p class="text-md-end mb-0">Total: <span name="total_general" id="total_general"> </span></p>
+          <p class="text-md-end mb-0">Seña: - <span name="dinero_senia" id="dinero_senia"> </span></p>
+          <p class="text-md-end h3 styleTotal">Total a pagar: <span name="total"> $</span></p>
         </div>
 
       </div>

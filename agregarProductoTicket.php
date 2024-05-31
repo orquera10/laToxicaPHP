@@ -124,14 +124,15 @@ function actualizarTotalTicket($idTicket, $con)
     $total_productos = $fila_total_productos['total'];
 
     // Consulta SQL para obtener el total de la cancha en el ticket
-    $sql_total_cancha = "SELECT TOTAL_CANCHA, EXTRA FROM ticket WHERE _id = '$idTicket'";
+    $sql_total_cancha = "SELECT TOTAL_CANCHA, EXTRA, SENIA FROM ticket WHERE _id = '$idTicket'";
     $result_total_cancha = mysqli_query($con, $sql_total_cancha);
     $fila_total_cancha = mysqli_fetch_assoc($result_total_cancha);
     $total_cancha = $fila_total_cancha['TOTAL_CANCHA'];
     $extra = $fila_total_cancha['EXTRA'];
+    $senia = $fila_total_cancha['SENIA'];
 
     // Calcular el nuevo total del ticket
-    $total_general = $total_cancha + $extra + $total_productos;
+    $total_general = $total_cancha + $extra + $total_productos - $senia;
 
     // Actualizar el total del ticket en la base de datos
     $sql_update_total = "UPDATE ticket SET TOTAL_DETALLE = '$total_productos', TOTAL = '$total_general' WHERE _id = '$idTicket'";

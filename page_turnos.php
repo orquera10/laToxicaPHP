@@ -14,6 +14,7 @@ $SqlEventos = "SELECT
                   ticket.id_CLIENTE,
                   ticket.TOTAL_CANCHA,
                   ticket.EXTRA,
+                  ticket.SENIA,
                   ticket.TOTAL_DETALLE,
                   ticket.TOTAL
                 FROM turnos 
@@ -145,6 +146,7 @@ include 'common_scripts.php';
             finalizado: '<?php echo $dataEvento['FINALIZADO']; ?>',
             total_cancha: '<?php echo $dataEvento['TOTAL_CANCHA']; ?>',
             extra: '<?php echo $dataEvento['EXTRA']; ?>',
+            senia: '<?php echo $dataEvento['SENIA']; ?>',
             total_detalle: '<?php echo $dataEvento['TOTAL_DETALLE']; ?>',
             total: '<?php echo $dataEvento['TOTAL']; ?>'
           },
@@ -249,6 +251,9 @@ include 'common_scripts.php';
         $('label[name=cancha').text(event.cancha);
 
         $('span[name=dinero_extra').text(event.extra);
+        $('span[name=dinero_senia').text(event.senia);
+
+        $('span[name=total_general').text(parseInt(event.total) + parseInt(event.senia));
 
         $('#wpContenedor').html(`<a href="https://api.whatsapp.com/send?phone=${event.telefono}" target="_blank">
     <i class="fab fa-whatsapp"></i> ${event.telefono}</a>`);
@@ -261,6 +266,20 @@ include 'common_scripts.php';
 
         var finalizado = parseInt(event.finalizado);
         // Verificar si el evento no está finalizado
+
+        // Desactivar o activar el botón agregar_extra según el estado del evento
+        if (finalizado === 1) {
+            $('#agregar_extra').prop('disabled', true);
+            $('#extra_money').prop('disabled', true);
+            $('#agregar_senia').prop('disabled', true);
+            $('#senia_money').prop('disabled', true);
+        } else {
+            $('#agregar_extra').prop('disabled', false);
+            $('#extra_money').prop('disabled', false);
+            $('#agregar_senia').prop('disabled', false);
+            $('#senia_money').prop('disabled', false);
+            
+        }
         if (finalizado !== 1) {
           $('#agregarProductoModalUpdate').show();
           $('#finalizarTurno').show();
@@ -683,32 +702,62 @@ include 'common_scripts.php';
 </script>
 
 <script>
-  document.getElementById("agregar_extra").addEventListener("click", function() {
-    var idEvento = $('#idEvento').val();
 
+  
+    document.getElementById("agregar_extra").addEventListener("click", function() {
+      var idEvento = $('#idEvento').val();
+
+      // Obtener el valor ingresado en extra_money
+      var extraMoney = parseInt(document.getElementById("extra_money").value);
+      // Obtener el valor actual de dinero_extra
+      var dineroExtra = parseInt(document.getElementById("dinero_extra").innerText);
+      // Sumar el valor ingresado al valor actual
+      var nuevoDineroExtra = dineroExtra + extraMoney;
+      var total = parseInt(document.getElementById("total_general").textContent);
+      // Ejecutar la solicitud AJAX para actualizar la base de datos
+      $.ajax({
+          type: "POST",
+          url: "actualizar_extra.php",
+          data: { dinero_extra: extraMoney, idEvento: idEvento },
+          success: function(response) {
+              actualizarTotales();
+              $('span[name=dinero_extra]').text(nuevoDineroExtra);
+              $('span[name=total_general]').text(total+extraMoney);
+              $('#extra_money').val(0);
+              console.log("Base de datos actualizada correctamente.");
+          },
+          error: function(xhr, status, error) {
+              console.error("Error al actualizar la base de datos:", error);
+          }
+      });
+    });
+
+  document.getElementById("agregar_senia").addEventListener("click", function() {
+    var idEvento = $('#idEvento').val();
+    var seniaAnterior = parseInt(document.getElementById("dinero_senia").textContent);
+    var total = parseInt(document.getElementById("total_general").textContent);
+    
     // Obtener el valor ingresado en extra_money
-    var extraMoney = parseInt(document.getElementById("extra_money").value);
-    // Obtener el valor actual de dinero_extra
-    var dineroExtra = parseInt(document.getElementById("dinero_extra").innerText);
-    // Sumar el valor ingresado al valor actual
-    var nuevoDineroExtra = dineroExtra + extraMoney;
+    var seniaMoney = parseInt(document.getElementById("senia_money").value);
     
     // Ejecutar la solicitud AJAX para actualizar la base de datos
     $.ajax({
         type: "POST",
-        url: "actualizar_extra.php",
-        data: { dinero_extra: extraMoney, idEvento: idEvento },
+        url: "actualizar_senia.php",
+        data: { dinero_senia: seniaMoney, idEvento: idEvento },
         success: function(response) {
             actualizarTotales();
-            $('span[name=dinero_extra]').text(nuevoDineroExtra);
-            $('#extra_money').val(0);
+            $('span[name=total_general]').text(total-seniaAnterior+seniaMoney);
+            $('span[name=dinero_senia]').text(seniaMoney);
+            $('#senia_money').val(0);
             console.log("Base de datos actualizada correctamente.");
         },
         error: function(xhr, status, error) {
             console.error("Error al actualizar la base de datos:", error);
         }
     });
-});
+  });
+
 </script>
 
 <script>

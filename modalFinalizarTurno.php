@@ -45,7 +45,8 @@
           <p>Total Cancha: <span name="total_cancha"></span></p>
           <p>Extra: <span name="dinero_extra"></span></p>
           <p>Total Productos: <span name="total_detalle"></span></p>
-          <p>Total General: <span name='total' id="totalFinalizarPago"></span></p>
+          <p>Seña: <span name="dinero_senia"></span></p>
+          <p>Total a pagar: <span name='total' id="totalFinalizarPago"></span></p>
         </div>
 
         <!-- Parte 4: Inputs para tipo de pago -->
