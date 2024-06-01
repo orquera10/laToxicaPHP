@@ -76,6 +76,7 @@ if ($resultado) {
 
             <!-- id evento oculto en el input -->
             <input type="hidden" class="form-control" name="idEvento" id="idEvento">
+            <input type="hidden" class="form-control" name="idCliente" id="idCliente">
           </div>
 
           <div class="col-12 col-md-8 my-3">

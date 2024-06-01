@@ -136,6 +136,7 @@ include 'common_scripts.php';
           ?>
             {
             _id: '<?php echo $dataEvento['_id']; ?>',
+            idCliente: '<?php echo $dataEvento['id_CLIENTE']; ?>',
             title: '<?php echo $dataEvento['nombre_usuario']; ?>',
             telefono: '<?php echo $dataEvento['telefono_usuario']; ?>',
             start: '<?php echo $start; ?>',
@@ -245,6 +246,7 @@ include 'common_scripts.php';
       eventClick: function (event) {
         var idEvento = event._id;
         $('input[name=idEvento').val(idEvento);
+        $('input[name=idCliente').val(idCliente);
         $('label[name=evento').text(event.title);
         $('label[name="fecha_turno"]').text(moment(event.fecha).format('DD-MM-YYYY'));
         $('label[name=fecha_inicio').text(event.start.format('HH:mm'));
@@ -732,6 +734,7 @@ include 'common_scripts.php';
 
   document.getElementById("agregar_senia").addEventListener("click", function () {
     var idEvento = $('#idEvento').val();
+    var idCliente = $('#idCliente').val();
     var seniaAnterior = parseInt(document.getElementById("dinero_senia").textContent);
 
     // Obtener el valor ingresado en extra_money
@@ -741,7 +744,7 @@ include 'common_scripts.php';
     $.ajax({
       type: "POST",
       url: "actualizar_senia.php",
-      data: { dinero_senia: seniaMoney, idEvento: idEvento },
+      data: { dinero_senia: seniaMoney, idEvento: idEvento, idCliente: idCliente },
       success: function (response) {
         actualizarTotales();
         $('span[name=dinero_senia]').text(seniaMoney);
