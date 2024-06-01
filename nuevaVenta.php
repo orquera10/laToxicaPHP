@@ -6,7 +6,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
 
     // Obtener los datos de la venta del formulario
-    $idCliente = $_POST['cliente_id_evento_venta'];
+    $idCliente = isset($_POST['cliente_id_evento_venta']) && !empty($_POST['cliente_id_evento_venta']) ? $_POST['cliente_id_evento_venta'] : 1;
+
     $pagoTransferencia = $_POST['pagoTransfVenta'];
     $pagoEfectivo = $_POST['pagoEfectivoVenta'];
     $total = $_POST['totalVenta'];

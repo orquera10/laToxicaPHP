@@ -44,16 +44,15 @@ include ('barraNavegacion.php');
 ?>
 
 <div class="container d-flex justify-content-center mt-4">
-    <!-- Botón para abrir el modal de venta-->
-    <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#modalVenta" style="min-width:30%"
-        onclick="abrirModalVenta()">
-        Agregar Venta
-    </button>
-    <!-- Botón para abrir el modal de gasto-->
-    <button type="button" class="btn btn-primary m-1" style="min-width:30%"
-        onclick="abrirModalGasto()">
-        Agregar Gasto
-    </button>
+  <!-- Botón para abrir el modal de venta-->
+  <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#modalVenta" style="min-width:30%"
+    onclick="abrirModalVenta()">
+    Agregar Venta
+  </button>
+  <!-- Botón para abrir el modal de gasto-->
+  <button type="button" class="btn btn-primary m-1" style="min-width:30%" onclick="abrirModalGasto()">
+    Agregar Gasto
+  </button>
 </div>
 <?php
 include ('modalNuevaVenta.php');
@@ -134,13 +133,14 @@ include 'common_scripts.php';
           // Concatenar la fecha y la hora de inicio y fin
           $start = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_INICIO']));
           $end = date('Y-m-d H:i:s', strtotime($dataEvento['FECHA'] . ' ' . $dataEvento['HORA_FIN']));
-        ?>
-          {
+          ?>
+            {
             _id: '<?php echo $dataEvento['_id']; ?>',
             title: '<?php echo $dataEvento['nombre_usuario']; ?>',
             telefono: '<?php echo $dataEvento['telefono_usuario']; ?>',
             start: '<?php echo $start; ?>',
             end: '<?php echo $end; ?>',
+            fecha: '<?php echo $dataEvento['FECHA']; ?>',
             color: '<?php echo $dataEvento['COLOR']; ?>',
             cancha: '<?php echo $dataEvento['nombre_cancha']; ?>',
             finalizado: '<?php echo $dataEvento['FINALIZADO']; ?>',
@@ -246,6 +246,7 @@ include 'common_scripts.php';
         var idEvento = event._id;
         $('input[name=idEvento').val(idEvento);
         $('label[name=evento').text(event.title);
+        $('label[name="fecha_turno"]').text(moment(event.fecha).format('DD-MM-YYYY'));
         $('label[name=fecha_inicio').text(event.start.format('HH:mm'));
         $('label[name=fecha_fin').text(event.end.format("HH:mm"));
         $('label[name=cancha').text(event.cancha);
@@ -267,16 +268,16 @@ include 'common_scripts.php';
 
         // Desactivar o activar el botón agregar_extra según el estado del evento
         if (finalizado === 1) {
-            $('#agregar_extra').prop('disabled', true);
-            $('#extra_money').prop('disabled', true);
-            $('#agregar_senia').prop('disabled', true);
-            $('#senia_money').prop('disabled', true);
+          $('#agregar_extra').prop('disabled', true);
+          $('#extra_money').prop('disabled', true);
+          $('#agregar_senia').prop('disabled', true);
+          $('#senia_money').prop('disabled', true);
         } else {
-            $('#agregar_extra').prop('disabled', false);
-            $('#extra_money').prop('disabled', false);
-            $('#agregar_senia').prop('disabled', false);
-            $('#senia_money').prop('disabled', false);
-            
+          $('#agregar_extra').prop('disabled', false);
+          $('#extra_money').prop('disabled', false);
+          $('#agregar_senia').prop('disabled', false);
+          $('#senia_money').prop('disabled', false);
+
         }
         if (finalizado !== 1) {
           $('#agregarProductoModalUpdate').show();
@@ -668,88 +669,88 @@ include 'common_scripts.php';
 </script>
 
 <script>
-  $(document).ready(function() {
-      // Función para buscar nombres coincidentes
-      function buscarNombresCoincidentes() {
-          var nombre = $('#nombrePago').val(); // Obtener el valor del campo de entrada de nombre
+  $(document).ready(function () {
+    // Función para buscar nombres coincidentes
+    function buscarNombresCoincidentes() {
+      var nombre = $('#nombrePago').val(); // Obtener el valor del campo de entrada de nombre
 
-          // Realizar una solicitud AJAX para buscar nombres coincidentes
-          $.ajax({
-              url: 'buscar_nombres.php',
-              method: 'POST',
-              data: { nombre: nombre }, // Enviar el nombre ingresado al servidor
-              success: function(response) {
-                  // Mostrar los nombres coincidentes en el div correspondiente
-                  $('#nombresCoincidentes').html(response);
+      // Realizar una solicitud AJAX para buscar nombres coincidentes
+      $.ajax({
+        url: 'buscar_nombres.php',
+        method: 'POST',
+        data: { nombre: nombre }, // Enviar el nombre ingresado al servidor
+        success: function (response) {
+          // Mostrar los nombres coincidentes en el div correspondiente
+          $('#nombresCoincidentes').html(response);
 
-                  // Agregar evento de clic a los nombres mostrados
-                  $('#nombresCoincidentes .nombre-coincidente').click(function() {
-                      var nombreSeleccionado = $(this).text(); // Obtener el nombre seleccionado
-                      $('#nombrePago').val(nombreSeleccionado); // Insertar el nombre seleccionado en el campo de entrada de nombre
-                      $('#nombresCoincidentes').html(''); // Limpiar la lista de nombres coincidentes
-                  });
-              }
+          // Agregar evento de clic a los nombres mostrados
+          $('#nombresCoincidentes .nombre-coincidente').click(function () {
+            var nombreSeleccionado = $(this).text(); // Obtener el nombre seleccionado
+            $('#nombrePago').val(nombreSeleccionado); // Insertar el nombre seleccionado en el campo de entrada de nombre
+            $('#nombresCoincidentes').html(''); // Limpiar la lista de nombres coincidentes
           });
-      }
-
-      // Detectar cambios en el campo de entrada de nombre
-      $('#nombrePago').on('input', function() {
-          buscarNombresCoincidentes(); // Llamar a la función para buscar nombres coincidentes
+        }
       });
+    }
+
+    // Detectar cambios en el campo de entrada de nombre
+    $('#nombrePago').on('input', function () {
+      buscarNombresCoincidentes(); // Llamar a la función para buscar nombres coincidentes
+    });
   });
 </script>
 
 <script>
 
-  
-    document.getElementById("agregar_extra").addEventListener("click", function() {
-      var idEvento = $('#idEvento').val();
 
-      // Obtener el valor ingresado en extra_money
-      var extraMoney = parseInt(document.getElementById("extra_money").value);
-      // Obtener el valor actual de dinero_extra
-      var dineroExtra = parseInt(document.getElementById("dinero_extra").innerText);
-      // Sumar el valor ingresado al valor actual
-      var nuevoDineroExtra = dineroExtra + extraMoney;
-      
-      // Ejecutar la solicitud AJAX para actualizar la base de datos
-      $.ajax({
-          type: "POST",
-          url: "actualizar_extra.php",
-          data: { dinero_extra: extraMoney, idEvento: idEvento },
-          success: function(response) {
-              actualizarTotales();
-              $('span[name=dinero_extra]').text(nuevoDineroExtra);
-              $('#extra_money').val(0);
-              console.log("Base de datos actualizada correctamente.");
-          },
-          error: function(xhr, status, error) {
-              console.error("Error al actualizar la base de datos:", error);
-          }
-      });
-    });
-
-  document.getElementById("agregar_senia").addEventListener("click", function() {
+  document.getElementById("agregar_extra").addEventListener("click", function () {
     var idEvento = $('#idEvento').val();
-    var seniaAnterior = parseInt(document.getElementById("dinero_senia").textContent);
-    
+
     // Obtener el valor ingresado en extra_money
-    var seniaMoney = parseInt(document.getElementById("senia_money").value);
-    
+    var extraMoney = parseInt(document.getElementById("extra_money").value);
+    // Obtener el valor actual de dinero_extra
+    var dineroExtra = parseInt(document.getElementById("dinero_extra").innerText);
+    // Sumar el valor ingresado al valor actual
+    var nuevoDineroExtra = dineroExtra + extraMoney;
+
     // Ejecutar la solicitud AJAX para actualizar la base de datos
     $.ajax({
-        type: "POST",
-        url: "actualizar_senia.php",
-        data: { dinero_senia: seniaMoney, idEvento: idEvento },
-        success: function(response) {
-            actualizarTotales();
-            $('span[name=dinero_senia]').text(seniaMoney);
-            $('#senia_money').val(0);
-            console.log("Base de datos actualizada correctamente.");
-        },
-        error: function(xhr, status, error) {
-            console.error("Error al actualizar la base de datos:", error);
-        }
+      type: "POST",
+      url: "actualizar_extra.php",
+      data: { dinero_extra: extraMoney, idEvento: idEvento },
+      success: function (response) {
+        actualizarTotales();
+        $('span[name=dinero_extra]').text(nuevoDineroExtra);
+        $('#extra_money').val(0);
+        console.log("Base de datos actualizada correctamente.");
+      },
+      error: function (xhr, status, error) {
+        console.error("Error al actualizar la base de datos:", error);
+      }
+    });
+  });
+
+  document.getElementById("agregar_senia").addEventListener("click", function () {
+    var idEvento = $('#idEvento').val();
+    var seniaAnterior = parseInt(document.getElementById("dinero_senia").textContent);
+
+    // Obtener el valor ingresado en extra_money
+    var seniaMoney = parseInt(document.getElementById("senia_money").value);
+
+    // Ejecutar la solicitud AJAX para actualizar la base de datos
+    $.ajax({
+      type: "POST",
+      url: "actualizar_senia.php",
+      data: { dinero_senia: seniaMoney, idEvento: idEvento },
+      success: function (response) {
+        actualizarTotales();
+        $('span[name=dinero_senia]').text(seniaMoney);
+        $('#senia_money').val(0);
+        console.log("Base de datos actualizada correctamente.");
+      },
+      error: function (xhr, status, error) {
+        console.error("Error al actualizar la base de datos:", error);
+      }
     });
   });
 
@@ -862,7 +863,7 @@ include 'common_scripts.php';
       calcularCantidadRestante();
     });
   });
-    
+
 </script>
 
 </body>

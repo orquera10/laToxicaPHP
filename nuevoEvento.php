@@ -285,7 +285,7 @@ for ($fecha_actual = $fecha_inicio_repetir; $fecha_actual <= $fecha_fin_repetir;
         '$total_cancha',
         '$extra',
         0,
-        '$total',
+        '$total_cancha',
         0,
         0
     )";

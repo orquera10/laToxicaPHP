@@ -56,7 +56,10 @@ if ($resultado) {
                 <div id="wpContenedor">
                 </div>
               </div>
-
+              <div class="d-flex col-12 p-0">
+                <p class="mr-2">Fecha:</p>
+                <label id="fecha_turno" name="fecha_turno" class="ms-2"></label>
+              </div>
               <div class="d-flex col-12 p-0">
                 <p class="mr-2">Hora Entrada:</p>
                 <label id="fecha_inicio" name="fecha_inicio" class="ms-2"></label>
