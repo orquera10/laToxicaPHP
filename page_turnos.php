@@ -11,7 +11,7 @@ $SqlEventos = "SELECT
                   clientes.NOMBRE as nombre_usuario,
                   clientes.TELEFONO as telefono_usuario, 
                   canchas.NOMBRE as nombre_cancha,
-                  ticket.id_CLIENTE,
+                  ticket.id_CLIENTE as clienteID,
                   ticket.TOTAL_CANCHA,
                   ticket.EXTRA,
                   ticket.SENIA,
@@ -136,7 +136,6 @@ include 'common_scripts.php';
           ?>
             {
             _id: '<?php echo $dataEvento['_id']; ?>',
-            idCliente: '<?php echo $dataEvento['id_CLIENTE']; ?>',
             title: '<?php echo $dataEvento['nombre_usuario']; ?>',
             telefono: '<?php echo $dataEvento['telefono_usuario']; ?>',
             start: '<?php echo $start; ?>',
@@ -144,13 +143,14 @@ include 'common_scripts.php';
             fecha: '<?php echo $dataEvento['FECHA']; ?>',
             color: '<?php echo $dataEvento['COLOR']; ?>',
             cancha: '<?php echo $dataEvento['nombre_cancha']; ?>',
+            idCliente: '<?php echo $dataEvento['clienteID']; ?>',
             finalizado: '<?php echo $dataEvento['FINALIZADO']; ?>',
             total_cancha: '<?php echo $dataEvento['TOTAL_CANCHA']; ?>',
-            extra: '<?php echo $dataEvento['EXTRA']; ?>',
-            senia: '<?php echo $dataEvento['SENIA']; ?>',
-            total_detalle: '<?php echo $dataEvento['TOTAL_DETALLE']; ?>',
-            total: '<?php echo $dataEvento['TOTAL']; ?>'
-          },
+              extra: '<?php echo $dataEvento['EXTRA']; ?>',
+              senia: '<?php echo $dataEvento['SENIA']; ?>',
+              total_detalle: '<?php echo $dataEvento['TOTAL_DETALLE']; ?>',
+              total: '<?php echo $dataEvento['TOTAL']; ?>'
+            },
         <?php } ?>
       ],
 
@@ -245,6 +245,7 @@ include 'common_scripts.php';
       //Abrir ventana modal para visualizar datos del turno y productos que contiene 
       eventClick: function (event) {
         var idEvento = event._id;
+        var idCliente = event.idCliente
         $('input[name=idEvento').val(idEvento);
         $('input[name=idCliente').val(idCliente);
         $('label[name=evento').text(event.title);
@@ -256,8 +257,7 @@ include 'common_scripts.php';
         $('span[name=dinero_extra').text(event.extra);
         $('span[name=dinero_senia').text(event.senia);
 
-        $('#wpContenedor').html(`<a href="https://api.whatsapp.com/send?phone=${event.telefono}" target="_blank">
-    <i class="fab fa-whatsapp"></i> ${event.telefono}</a>`);
+        $('#wpContenedor').html(`<a href="https://api.whatsapp.com/send?phone=${event.telefono}" target="_blank"><i class="fab fa-whatsapp"></i> ${event.telefono}</a>`);
 
         $('.colorModalUpdate').css('background-color', event.color);
 
@@ -735,10 +735,14 @@ include 'common_scripts.php';
   document.getElementById("agregar_senia").addEventListener("click", function () {
     var idEvento = $('#idEvento').val();
     var idCliente = $('#idCliente').val();
-    var seniaAnterior = parseInt(document.getElementById("dinero_senia").textContent);
+    
 
     // Obtener el valor ingresado en extra_money
     var seniaMoney = parseInt(document.getElementById("senia_money").value);
+    // Obtener el valor actual de dinero_extra
+    var dineroSenia = parseInt(document.getElementById("dinero_senia").innerText);
+    // Sumar el valor ingresado al valor actual
+    var nuevoDineroSenia = dineroSenia + seniaMoney;
 
     // Ejecutar la solicitud AJAX para actualizar la base de datos
     $.ajax({
@@ -747,7 +751,7 @@ include 'common_scripts.php';
       data: { dinero_senia: seniaMoney, idEvento: idEvento, idCliente: idCliente },
       success: function (response) {
         actualizarTotales();
-        $('span[name=dinero_senia]').text(seniaMoney);
+        $('span[name=dinero_senia]').text(nuevoDineroSenia);
         $('#senia_money').val(0);
         console.log("Base de datos actualizada correctamente.");
       },

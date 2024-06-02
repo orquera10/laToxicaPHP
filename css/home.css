@@ -633,3 +633,22 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
 #modalPago .modal-dialog{
   min-width: 80vw;
 }
+
+.divisor{
+  border: 1px solid var(--color-primario);
+}
+
+.tarjetaTotal{
+  background-color: var(--color-terciario);
+  border-radius: 20px;
+}
+
+.botonCerrarDia{
+  max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .botonCerrarDia {
+      max-width: 50%;
+  }
+}

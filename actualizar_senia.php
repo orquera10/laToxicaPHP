@@ -8,23 +8,22 @@ if (isset($_POST['dinero_senia']) && isset($_POST['idEvento']) && isset($_POST['
     $dinero_senia = $_POST['dinero_senia'];
     $idEvento = $_POST['idEvento'];
     $idCliente = $_POST['idCliente'];
-    $fecha = date('d-m-Y H:i'); // Formato de fecha y hora para MySQL
+    $fecha = date('d-m-Y H:i:s'); // Formato de fecha y hora para MySQL
 
     // Obtener el total actual del ticket
-    $sql_total = "SELECT SENIA, TOTAL FROM ticket WHERE ID_TURNO = $idEvento";
+    $sql_total = "SELECT TOTAL FROM ticket WHERE ID_TURNO = $idEvento";
     $resultado = mysqli_query($con, $sql_total);
 
     if ($resultado) {
         $row = mysqli_fetch_assoc($resultado);
         $total_actual = $row['TOTAL'];
-        $senia_db = $row['SENIA'];
         mysqli_free_result($resultado);
 
         // Calcular el nuevo total sumando el monto extra al total actual
-        $nuevo_total = $total_actual + $senia_db - $dinero_senia;
+        $nuevo_total = $total_actual - $dinero_senia;
 
         // Actualizar el valor SENIA y el TOTAL en la tabla ticket
-        $sql_update = "UPDATE ticket SET SENIA = $dinero_senia, TOTAL = $nuevo_total WHERE ID_TURNO = $idEvento";
+        $sql_update = "UPDATE ticket SET SENIA = SENIA + $dinero_senia, TOTAL = $nuevo_total WHERE ID_TURNO = $idEvento";
 
         if (mysqli_query($con, $sql_update)) {
             // Inserción en la tabla senias
