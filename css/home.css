@@ -652,3 +652,11 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm{
       max-width: 50%;
   }
 }
+
+.btnBaja{
+  background-color: var(--color-enfasis);
+}
+
+.btnBaja:hover{
+  background-color: var(--color-enfasis-secundario);
+}

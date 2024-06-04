@@ -122,6 +122,8 @@
                                     text: 'Se modificó correctamente el producto y se agregó stock.',
                                     icon: 'success'
                                 }).then(function () {
+                                    // Actualizar el valor del input oculto
+                                    document.getElementById('agregarAlStockHidden').value = 0;
                                     // Recargar la página después de guardar los cambios
                                     window.location.reload();
                                 });
@@ -132,6 +134,8 @@
                                     text: 'Se modificó correctamente el producto y se quitó stock.',
                                     icon: 'success'
                                 }).then(function () {
+                                    // Actualizar el valor del input oculto
+                                    document.getElementById('agregarAlStockHidden').value = 0;
                                     // Recargar la página después de guardar los cambios
                                     window.location.reload();
                                 });

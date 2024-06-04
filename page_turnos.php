@@ -53,10 +53,18 @@ include ('barraNavegacion.php');
   <button type="button" class="btn btn-primary m-1" style="min-width:30%" onclick="abrirModalGasto()">
     Agregar Gasto
   </button>
+  <!-- Botón para abrir el modal de gasto-->
+  <button type="button" class="btn btn-danger m-1 btnBaja" data-toggle="modal" data-target="#modalBajaDeStock" style="min-width:30%" 
+    onclick="abrirModalBajaStock()">
+    Devolucion
+  </button>
+  
 </div>
+
 <?php
 include ('modalNuevaVenta.php');
 include ('modalNuevoGasto.php');
+include ('modalBajaStock.php');
 ?>
 <div class="d-flex justify-content-center">
   <div id="calendar" class="m-4 calendario"></div>

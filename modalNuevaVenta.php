@@ -1,7 +1,7 @@
 <?php
 
 // Consulta SQL para obtener los productos
-$sql = "SELECT _id, NOMBRE, PRECIO FROM producto";
+$sql = "SELECT _id, NOMBRE, PRECIO FROM producto WHERE VISIBLE=1";
 $result = $con->query($sql);
 ?>
 
